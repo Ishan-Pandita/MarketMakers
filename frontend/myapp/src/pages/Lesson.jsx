@@ -7,13 +7,27 @@ function Lesson() {
   const { id } = useParams();
 
   const lesson = modules
-    .flatmap((m) => m.lessons)
+    .flatMap((m) => m.lessons)
     .find((l) => l.id === Number(id));
+  if (!lesson) return <h2>Lesson not found</h2>;
 
   const [suggestions, setSuggestions] = useState([]); //array of user suggestions
-  const [input, setInput] = useState(); //cuurent input
+  const [input, setInput] = useState(""); //cuurent input
 
-  if (!lesson) return <h2>Lesson not found</h2>;
+  //completion logic - gets all completed lessons from browser and converts to arr like [1,2,3]
+  const completedLessons =
+    JSON.parse(localStorage.getItem("completedLessons")) || []; //str->arr using json parse , if nothing exists use empty arr[]
+
+  //to check lesson is completed or not
+  const isCompleted = completedLessons.includes(lesson.id);
+  //take old completed lessons and currett lesson id and send it to local storage
+  function markCompleted() {
+    if (isCompleted) return; //prevent duplicate
+    localStorage.setItem(
+      "completedLessons",
+      JSON.stringify([...completedLessons, lesson.id])
+    );
+  }
 
   function addSuggestion() {
     if (input.trim() === "") return; //prevent empty suggestion
@@ -22,11 +36,17 @@ function Lesson() {
   }
 
   return (
-    <div style={{ passing: "20px" }}>
+    <div style={{ padding: "20px" }}>
       <h2>{lesson.title}</h2>
+
+      {isCompleted ? (
+        <p style={{ color: "green" }}>Lesson completed</p>
+      ) : (
+        <button onClick={markCompleted}>Mark as completed</button>
+      )}
       <p>{lesson.description}</p>
 
-      <h4>videos</h4>
+      <h4>Videos</h4>
       {lesson.videos.map((video, index) => (
         <p key={index}>
           <a href={video} target="_blank">
