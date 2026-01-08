@@ -10,9 +10,9 @@ router.post("/", async (req, res) => {
 });
 
 //get lesson by module
-router.get("/module/:moduleID", async (req, res) => {
+router.get("/module/:moduleid", async (req, res) => {
   const lessons = await Lesson.find({
-    moduleID: req.params.moduleID, //checks db matches the id in url with the id in db and give lesson
+    moduleid: req.params.moduleid, //checks db matches the id in url with the id in db and give lesson
   }).sort({ order: 1 });
 
   res.json(lessons);

@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
 const lessonRoutes = require("./routes/lessonRoutes");
 const suggestionRoutes = require("./routes/suggestionRoutes");
+const progressRoutes = require("./routes/progressRoutes");
 
 const app = express();
 connectDB();
@@ -17,6 +18,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/modules", moduleRoutes);
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/suggestions", suggestionRoutes);
+app.use("/api/progress", progressRoutes);
 
 app.get("/", (req, res) => {
   console.log("api hit");

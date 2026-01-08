@@ -19,7 +19,7 @@ router.post("/", protect, async (req, res) => {
 //GET suggestion by ID
 router.get("/lesson/:lessonid", async (req, res) => {
   const suggestion = await Suggestion.find({
-    lessonid: req.params.id,
+    lessonid: req.params.lessonid,
   }).populate("userid", "name role"); //just for response on ui we add name and role of user also not for database
 
   res.json(suggestion);
