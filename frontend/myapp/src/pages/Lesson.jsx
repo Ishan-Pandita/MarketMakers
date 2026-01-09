@@ -1,71 +1,56 @@
-//this component displays a single lesson dynamically based on lesson id present in URL.
-import { useParams } from "react-router-dom"; // helps read URL
-import { useState } from "react"; //for suggestion and input
-import { modules } from "../data/dummyData"; //dummy data
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import API from "../services/api";
 
 function Lesson() {
   const { id } = useParams();
+  const [lesson, setLesson] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [text, setText] = useState("");
 
-  const lesson = modules
-    .flatMap((m) => m.lessons)
-    .find((l) => l.id === Number(id));
-  if (!lesson) return <h2>Lesson not found</h2>;
-
-  const [suggestions, setSuggestions] = useState([]); //array of user suggestions
-  const [input, setInput] = useState(""); //cuurent input
-
-  //completion logic - gets all completed lessons from browser and converts to arr like [1,2,3]
-  const completedLessons =
-    JSON.parse(localStorage.getItem("completedLessons")) || []; //str->arr using json parse , if nothing exists use empty arr[]
-
-  //to check lesson is completed or not
-  const isCompleted = completedLessons.includes(lesson.id);
-  //take old completed lessons and currett lesson id and send it to local storage
-  function markCompleted() {
-    if (isCompleted) return; //prevent duplicate
-    localStorage.setItem(
-      "completedLessons",
-      JSON.stringify([...completedLessons, lesson.id])
+  useEffect(() => {
+    API.get(`lessons/${id}`).then((res) => setLesson(res.data));
+    API.get(`/suggestionns/lessons/${id}`).then((res) =>
+      setSuggestions(res.data)
     );
-  }
+  }, [id]);
 
-  function addSuggestion() {
-    if (input.trim() === "") return; //prevent empty suggestion
-    setSuggestions([...suggestions, input]); //keep older and add new at end
-    setInput(""); //clear input box after adding
+  async function addSuggestion() {
+    await API.post("/suggestions", {
+      lessonid: id,
+      text,
+    });
+    setText("");
+    const res = await API.get(`/suggestions/lesson/${id}`);
+    setSuggestions(res.data);
   }
-
+  async function markCompleted() {
+    await API.post("/progress", { lessonid: id });
+    alert("Lesson completed");
+  }
+  if (!lesson) return <p>Loading...</p>;
   return (
-    <div style={{ padding: "20px" }}>
+    <div>
       <h2>{lesson.title}</h2>
-
-      {isCompleted ? (
-        <p style={{ color: "green" }}>Lesson completed</p>
-      ) : (
-        <button onClick={markCompleted}>Mark as completed</button>
-      )}
-      <p>{lesson.description}</p>
+      <p>{lesson.explanation}</p>
 
       <h4>Videos</h4>
-      {lesson.videos.map((video, index) => (
-        <p key={index}>
-          <a href={video} target="_blank">
-            Watch Video:{index + 1}
+      {lesson.videoLinks.map((v, i) => (
+        <p key={i}>
+          <a href={v} target="_blank">
+            Watch Video
           </a>
         </p>
       ))}
-      <hr />
-      <h3>Suggestions/Doubts</h3>
-      <input
-        type="text"
-        placeholder="Write your suggestions or doubt?"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
+      <button onClick={markCompleted}>Mark Completed</button>
+
+      <h3>Suggestions</h3>
+      <input value={text} onChange={(e) => setText(e.target.value)} />
       <button onClick={addSuggestion}>Add</button>
+
       <ul>
-        {suggestions.map((s, i) => (
-          <li key={i}>{s}</li>
+        {suggestions.map((s) => (
+          <li key={s._id}>{s.text}</li>
         ))}
       </ul>
     </div>

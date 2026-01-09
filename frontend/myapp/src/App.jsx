@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Lesson from "./pages/Lesson";
 import Modules from "./pages/Modules";
+import Lessons from "./pages/Lessons";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/lesson/:id" element={<Lesson />} />
         <Route path="/modules" element={<Modules />} />
+        <Route path="/module/:id" element={<Lessons />} />
       </Routes>
     </>
   );
