@@ -15,3 +15,4 @@ API.interceptors.request.use((req) => {
 });
 
 export default API;
+//the purpose is to automatically add token to every request so you don't forget it and repeat code

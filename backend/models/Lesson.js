@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const lessonSchema = new mongoose.Schema({
-  moduleID: {
+  moduleid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Module",
   }, //this will help us to store lesson with module id so that it will come under it

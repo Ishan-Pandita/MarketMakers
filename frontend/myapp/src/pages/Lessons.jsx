@@ -14,8 +14,8 @@ function Lessons() {
     <div>
       <h2>Lessons</h2>
       {lessons.map((l) => (
-        <p key={l.id}>
-          <Link to={`/lesson/${l.id}`}>{l.title}</Link>
+        <p key={l._id}>
+          <Link to={`/lesson/${l._id}`}>{l.title}</Link>
         </p>
       ))}
     </div>
