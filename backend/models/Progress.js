@@ -1,23 +1,26 @@
 const mongoose = require("mongoose");
 
-const progresSchema = new mongoose.Schema(
+const progressSchema = new mongoose.Schema(
   {
-    userid: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    lessonid: {
+    lessonId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Lesson",
       required: true,
     },
     completed: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Progress", progresSchema);
+// Add index to prevent duplicate progress entries
+progressSchema.index({ userId: 1, lessonId: 1 }, { unique: true });
+
+module.exports = mongoose.model("Progress", progressSchema);

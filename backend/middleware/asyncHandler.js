@@ -5,4 +5,4 @@ const asyncHandler = (fn) => {
 };
 
 module.exports = asyncHandler;
-//catch error isn asyc routes and thenn send them to error middleware autmoatically
+//asynchhandler is a high order function that wraps async express function and get the rejected promises and send them to error middleware using next()

@@ -2,19 +2,22 @@ const mongoose = require("mongoose");
 
 const suggestionSchema = new mongoose.Schema(
   {
-    lessonid: {
-      type: mongoose.Schema.Types.ObjectId, //will store uique id of anoither mongo document
+    lessonId: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Lesson",
-      required: true,
+      required: [true, "Lesson ID is required"],
     },
-    userid: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: [true, "User ID is required"],
     },
     text: {
       type: String,
-      required: true,
+      required: [true, "Suggestion text is required"],
+      trim: true,
+      minlength: [10, "Suggestion must be at least 10 characters"],
+      maxlength: [1000, "Suggestion cannot exceed 1000 characters"],
     },
   },
   { timestamps: true }
