@@ -45,13 +45,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password, role = "learner") => {
+  const register = async (
+    name,
+    email,
+    password,
+    role = "learner",
+    experience,
+    reason
+  ) => {
     try {
       const res = await API.post("/auth/register", {
         name,
         email,
         password,
         role,
+        experience,
+        reason,
       });
       return { success: true, message: res.data.message };
     } catch (error) {

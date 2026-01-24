@@ -22,6 +22,11 @@ const moduleSchema = new mongoose.Schema(
       required: [true, "Module order is required"],
       min: [1, "Order must be at least 1"],
     },
+    contributor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );

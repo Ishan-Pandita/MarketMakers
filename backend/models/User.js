@@ -30,6 +30,15 @@ const userSchema = new mongoose.Schema(
       enum: ["learner", "contributor", "admin"],
       default: "learner",
     },
+    status: {
+      type: String,
+      enum: ["active", "pending", "rejected"],
+      default: "active",
+    },
+    contributorDetails: {
+      experience: String,
+      reason: String,
+    },
   },
   { timestamps: true }
 );

@@ -11,6 +11,8 @@ const suggestionRoutes = require("./routes/suggestionRoutes");
 const progressRoutes = require("./routes/progressRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const examRoutes = require("./routes/examRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -38,6 +40,8 @@ app.use("/api/suggestions", suggestionRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/exams", examRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/users", userRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

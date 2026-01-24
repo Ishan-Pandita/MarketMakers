@@ -10,6 +10,7 @@ function Dashboard() {
   const [progress, setProgress] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [pendingUsers, setPendingUsers] = useState([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -31,10 +32,32 @@ function Dashboard() {
       } catch (err) {
         console.log("Stats endpoint not available");
       }
+
+      // Fetch pending contributors if admin
+      if (user?.role === "admin") {
+        try {
+          const pendingRes = await API.get("/admin/pending-contributors");
+          setPendingUsers(pendingRes.data);
+        } catch (err) {
+          console.error("Error fetching pending users:", err);
+        }
+      }
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (userId, status) => {
+    try {
+      await API.put(`/admin/update-status/${userId}`, { status });
+      // Remove from list
+      setPendingUsers(pendingUsers.filter((u) => u._id !== userId));
+      alert(`User ${status} successfully`);
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update status");
     }
   };
 
@@ -58,6 +81,116 @@ function Dashboard() {
             Track your progress and continue your learning journey
           </p>
         </div>
+
+        {/* Admin Section: Pending Approvals */}
+        {user?.role === "admin" && pendingUsers.length > 0 && (
+          <div className="mb-12 animate-slideIn">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-yellow-100 p-3 rounded-full">
+                <span className="text-2xl">⚠️</span>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Pending Approvals
+                </h2>
+                <p className="text-gray-500">
+                  Action required for {pendingUsers.length} contributor
+                  applications
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {pendingUsers.map((pendingUser) => (
+                <div
+                  key={pendingUser._id}
+                  className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="font-bold text-xl text-gray-900">
+                          {pendingUser.name}
+                        </h3>
+                        <a
+                          href={`mailto:${pendingUser.email}`}
+                          className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center gap-1"
+                        >
+                          ✉️ {pendingUser.email}
+                        </a>
+                      </div>
+                      <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
+                        Pending Review
+                      </span>
+                    </div>
+
+                    <div className="space-y-4 bg-gray-50 rounded-lg p-4 mb-6">
+                      <div>
+                        <p className="text-xs text-gray-500 uppercase font-semibold mb-1">
+                          Role Requested
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">👨‍🏫</span>
+                          <span className="font-medium text-gray-900">
+                            Contributor
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase font-semibold mb-1">
+                            Experience
+                          </p>
+                          <p className="text-gray-900 font-medium">
+                            {pendingUser.contributorDetails?.experience ||
+                              "Not specified"}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 uppercase font-semibold mb-1">
+                            Applied On
+                          </p>
+                          <p className="text-gray-900 font-medium">
+                            {new Date(pendingUser.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="text-xs text-gray-500 uppercase font-semibold mb-1">
+                          Motivation
+                        </p>
+                        <p className="text-gray-700 text-sm leading-relaxed italic">
+                          "{pendingUser.contributorDetails?.reason || "No reason provided"}"
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() =>
+                          handleStatusUpdate(pendingUser._id, "active")
+                        }
+                        className="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-4 rounded-lg shadow transition-colors flex items-center justify-center gap-2"
+                      >
+                        ✅ Approve
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleStatusUpdate(pendingUser._id, "rejected")
+                        }
+                        className="flex-1 bg-white border-2 border-red-500 text-red-600 hover:bg-red-50 font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                      >
+                        ❌ Reject
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

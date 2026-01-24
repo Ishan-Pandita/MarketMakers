@@ -22,7 +22,7 @@ router.post(
   "/register",
   registerValidator,
   asyncHandler(async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, experience, reason } = req.body;
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -37,6 +37,14 @@ router.post(
       email,
       password: hashPassword,
       role: role || "learner",
+      status: role === "contributor" ? "pending" : "active",
+      contributorDetails:
+        role === "contributor"
+          ? {
+            experience,
+            reason,
+          }
+          : undefined,
     });
 
     await user.save();
@@ -46,15 +54,30 @@ router.post(
       console.error("Welcome email error:", err)
     );
 
-    res.status(201).json({
-      message: "User registered successfully",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
+    if (user.role === "contributor") {
+      res.status(201).json({
+        message:
+          "Registration successful! Please wait for admin approval before logging in.",
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          status: user.status,
+        },
+      });
+    } else {
+      res.status(201).json({
+        message: "User registered successfully",
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          status: user.status,
+        },
+      });
+    }
   })
 );
 
@@ -69,6 +92,17 @@ router.post(
     if (!user) {
       res.status(401);
       throw new Error("Invalid credentials");
+    }
+
+    // Check status
+    if (user.status === "pending") {
+      res.status(403);
+      throw new Error("Your account is pending approval by an admin.");
+    }
+
+    if (user.status === "rejected") {
+      res.status(403);
+      throw new Error("Your account application has been rejected.");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);

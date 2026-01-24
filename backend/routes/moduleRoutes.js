@@ -13,7 +13,13 @@ router.post(
   protect,
   checkContributor,
   asyncHandler(async (req, res) => {
-    const module = await Module.create(req.body);
+    // Add contributor from logged in user
+    const moduleData = {
+      ...req.body,
+      contributor: req.user.id,
+    };
+
+    const module = await Module.create(moduleData);
     res.status(201).json(module);
   })
 );
@@ -22,12 +28,17 @@ router.post(
 router.get(
   "/",
   asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, contributor } = req.query;
 
-    const totalModules = await Module.countDocuments();
+    let query = {};
+    if (contributor) {
+      query.contributor = contributor;
+    }
+
+    const totalModules = await Module.countDocuments(query);
     const pagination = getPaginationData(page, limit, totalModules);
 
-    const modules = await Module.find()
+    const modules = await Module.find(query)
       .sort({ order: 1 })
       .skip(pagination.skip)
       .limit(pagination.itemsPerPage);
@@ -67,6 +78,11 @@ router.put(
       throw new Error("Module not found");
     }
 
+    if (module.contributor.toString() !== req.user.id && req.user.role !== 'admin') {
+      res.status(401);
+      throw new Error("Not authorized to update this module");
+    }
+
     const updatedModule = await Module.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -88,6 +104,11 @@ router.delete(
     if (!module) {
       res.status(404);
       throw new Error("Module not found");
+    }
+
+    if (module.contributor.toString() !== req.user.id && req.user.role !== 'admin') {
+      res.status(401);
+      throw new Error("Not authorized to delete this module");
     }
 
     await Module.findByIdAndDelete(req.params.id);

@@ -66,7 +66,9 @@ function Register() {
       formData.name,
       formData.email,
       formData.password,
-      formData.role
+      formData.role,
+      formData.experience,
+      formData.reason
     );
 
     setLoading(false);
@@ -165,34 +167,118 @@ function Register() {
               />
             </div>
 
-            {/* Role Selection */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                I want to
+            {/* Role Selection Cards */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                I want to join as a...
               </label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="input-field"
-                disabled={loading}
-              >
-                <option value="learner">Learn (Start as Learner)</option>
-                <option value="contributor" disabled>
-                  Contribute (Must pass exam first)
-                </option>
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                You can become a contributor after completing all modules and
-                passing the exam
-              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleChange({ target: { name: "role", value: "learner" } })
+                  }
+                  className={`p-4 border-2 rounded-xl text-left transition-all duration-200 ${formData.role === "learner"
+                      ? "border-primary-600 bg-primary-50 ring-2 ring-primary-100"
+                      : "border-gray-200 hover:border-primary-200 hover:bg-gray-50"
+                    }`}
+                >
+                  <div className="text-2xl mb-2">👨‍🎓</div>
+                  <h3
+                    className={`font-bold ${formData.role === "learner"
+                        ? "text-primary-900"
+                        : "text-gray-900"
+                      }`}
+                  >
+                    Learner
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Access courses and take exams
+                  </p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleChange({
+                      target: { name: "role", value: "contributor" },
+                    })
+                  }
+                  className={`p-4 border-2 rounded-xl text-left transition-all duration-200 ${formData.role === "contributor"
+                      ? "border-blue-600 bg-blue-50 ring-2 ring-blue-100"
+                      : "border-gray-200 hover:border-blue-200 hover:bg-gray-50"
+                    }`}
+                >
+                  <div className="text-2xl mb-2">👨‍🏫</div>
+                  <h3
+                    className={`font-bold ${formData.role === "contributor"
+                        ? "text-blue-900"
+                        : "text-gray-900"
+                      }`}
+                  >
+                    Contributor
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Share knowledge & create modules
+                  </p>
+                </button>
+              </div>
+
+              {formData.role === "contributor" && (
+                <div className="mt-3 text-sm bg-blue-50 text-blue-800 p-3 rounded-lg flex items-start gap-2 animate-fadeIn">
+                  <span className="text-lg">ℹ️</span>
+                  <p>
+                    Contributor accounts require <strong>admin approval</strong>.
+                    You will be notified once your application is reviewed.
+                  </p>
+                </div>
+              )}
             </div>
+
+            {/* Contributor Extra Fields */}
+            {formData.role === "contributor" && (
+              <div className="space-y-4 bg-gray-50 p-4 rounded-xl border border-gray-100 animate-slideDown">
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  Contributor Application
+                </h4>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Years of Experience <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="experience"
+                    value={formData.experience || ""}
+                    onChange={handleChange}
+                    className="input-field bg-white"
+                    placeholder="e.g. 5+ years in Forex Trading"
+                    disabled={loading}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Why do you want to contribute?{" "}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    name="reason"
+                    value={formData.reason || ""}
+                    onChange={handleChange}
+                    className="input-field bg-white min-h-[100px]"
+                    placeholder="Tell us about your expertise and what you plan to teach..."
+                    disabled={loading}
+                    required
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary py-3 flex items-center justify-center gap-2"
+              className="w-full btn-primary py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -200,7 +286,10 @@ function Register() {
                   <span>Creating Account...</span>
                 </>
               ) : (
-                "Sign Up"
+                <span>
+                  Sign Up as{" "}
+                  {formData.role === "learner" ? "Learner" : "Contributor"}
+                </span>
               )}
             </button>
           </form>
