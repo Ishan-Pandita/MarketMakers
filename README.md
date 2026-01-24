@@ -123,7 +123,7 @@ MarketMakers/
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/ishan2210291-commits/MarketMakers.git
+    git clone https://github.com/Ishan-Pandita/MarketMakers
     cd MarketMakers
     ```
 
