@@ -123,8 +123,8 @@ MarketMakers/
 
 1.  **Clone the repository**
     ```bash
-    git clone https://github.com/ishanpandita/marketmakers.git
-    cd marketmakers
+    git clone https://github.com/ishan2210291-commits/MarketMakers.git
+    cd MarketMakers
     ```
 
 2.  **Install Backend Dependencies**
@@ -173,9 +173,7 @@ cd backend
 node resetAdmin.js
 ```
 
-**Credentials:**
--   **Email:** `ishanpandita@marketmakers.com`
--   **Password:** `Marketmakers.123`
+This will create/reset the admin account. Please check the `resetAdmin.js` file or console output for login credentials.
 
 ## � API Documentation
 
