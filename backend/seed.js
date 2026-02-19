@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 
 // Import models
 const User = require("./models/User");
+const Course = require("./models/Course");
 const Module = require("./models/Module");
 const Lesson = require("./models/Lesson");
 const Exam = require("./models/Exam");
@@ -27,6 +28,7 @@ const seedDatabase = async () => {
         // Clear existing data
         console.log("🗑️  Clearing existing data...");
         await User.deleteMany({});
+        await Course.deleteMany({});
         await Module.deleteMany({});
         await Lesson.deleteMany({});
         await Exam.deleteMany({});
@@ -58,44 +60,68 @@ const seedDatabase = async () => {
         ]);
         console.log(`✅ Created ${users.length} users\n`);
 
+        // Create courses
+        console.log("🎓 Creating courses...");
+        const courses = await Course.create([
+            {
+                title: "Complete Stock Trading Masterclass",
+                description: "The most comprehensive course on stock market trading, covering everything from basics to advanced strategies.",
+                instructor: users[2]._id, // Admin
+                order: 1,
+            }
+        ]);
+        console.log(`✅ Created ${courses.length} courses\n`);
+
         // Create modules
         console.log("📚 Creating modules...");
         const modules = await Module.create([
             {
+                courseId: courses[0]._id,
                 title: "Introduction to Stock Market",
                 description:
                     "Learn the fundamentals of stock markets, how they work, and why they exist. Perfect for absolute beginners.",
                 order: 1,
+                contributor: users[1]._id,
             },
             {
+                courseId: courses[0]._id,
                 title: "Understanding Market Basics",
                 description:
                     "Dive into essential market concepts including supply and demand, market participants, and trading mechanisms.",
                 order: 2,
+                contributor: users[1]._id,
             },
             {
+                courseId: courses[0]._id,
                 title: "Technical Analysis Fundamentals",
                 description:
                     "Master the art of reading charts, identifying patterns, and using technical indicators to make informed trading decisions.",
                 order: 3,
+                contributor: users[1]._id,
             },
             {
+                courseId: courses[0]._id,
                 title: "Fundamental Analysis",
                 description:
                     "Learn how to evaluate companies using financial statements, ratios, and economic indicators.",
                 order: 4,
+                contributor: users[1]._id,
             },
             {
+                courseId: courses[0]._id,
                 title: "Risk Management & Psychology",
                 description:
                     "Understand position sizing, stop losses, and the psychological aspects of trading that separate winners from losers.",
                 order: 5,
+                contributor: users[1]._id,
             },
             {
+                courseId: courses[0]._id,
                 title: "Trading Strategies",
                 description:
                     "Explore various trading strategies from day trading to swing trading and long-term investing.",
                 order: 6,
+                contributor: users[1]._id,
             },
         ]);
         console.log(`✅ Created ${modules.length} modules\n`);
@@ -565,6 +591,7 @@ const seedDatabase = async () => {
         console.log("🎉 DATABASE SEEDING COMPLETED!\n");
         console.log("📊 Summary:");
         console.log(`   👥 Users: ${users.length}`);
+        console.log(`   🎓 Courses: ${courses.length}`);
         console.log(`   📚 Modules: ${modules.length}`);
         console.log(`   📖 Lessons: ${totalLessons}`);
         console.log(`   📝 Exams: 1`);

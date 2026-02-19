@@ -14,8 +14,18 @@ router.post(
   checkContributor,
   asyncHandler(async (req, res) => {
     // Add contributor from logged in user
+    const { title, description, order, courseId } = req.body;
+
+    if (!courseId) {
+      res.status(400);
+      throw new Error("Course ID is required");
+    }
+
     const moduleData = {
-      ...req.body,
+      title,
+      description,
+      order,
+      courseId,
       contributor: req.user.id,
     };
 
@@ -28,11 +38,14 @@ router.post(
 router.get(
   "/",
   asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, contributor } = req.query;
+    const { page = 1, limit = 10, contributor, courseId } = req.query;
 
     let query = {};
     if (contributor) {
       query.contributor = contributor;
+    }
+    if (courseId) {
+      query.courseId = courseId;
     }
 
     const totalModules = await Module.countDocuments(query);

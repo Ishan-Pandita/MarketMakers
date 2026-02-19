@@ -38,14 +38,16 @@ MarketMakers/
 │   ├── middleware/
 │   │   ├── asyncHandler.js     # Async error wrapper
 │   │   ├── authMiddleware.js   # JWT protection
+│   │   ├── checkAdmin.js       # Administrative check
 │   │   ├── checkContributor.js # Role verification
 │   │   ├── errorMiddleware.js  # Global error handler
 │   │   └── validators.js       # Input validation rules
 │   ├── models/
+│   │   ├── Course.js           # Course schema
 │   │   ├── Exam.js             # Exam schema
 │   │   ├── ExamAttempt.js      # Student attempts
 │   │   ├── Lesson.js           # Module lessons
-│   │   ├── Module.js           # Course modules
+│   │   ├── Module.js           # Scoped Modules
 │   │   ├── PasswordReset.js    # Reset tokens
 │   │   ├── Progress.js         # Student progress
 │   │   ├── Suggestion.js       # User feedback
@@ -53,9 +55,10 @@ MarketMakers/
 │   ├── routes/
 │   │   ├── adminRoutes.js      # Admin management
 │   │   ├── authRoutes.js       # Auth endpoints
+│   │   ├── courseRoutes.js     # Course endpoints
 │   │   ├── examRoutes.js       # Exam Logic
 │   │   ├── lessonRoutes.js     # Lesson CRUD
-│   │   ├── moduleRoutes.js     # Module CRUD
+│   │   ├── moduleRoutes.js     # Scoped Module CRUD
 │   │   ├── progressRoutes.js   # Tracking logic
 │   │   ├── searchRoutes.js     # Global search
 │   │   ├── suggestionRoutes.js # Feedback handling
@@ -82,22 +85,23 @@ MarketMakers/
         ├── context/
         │   └── AuthContext.jsx     # Auth Provider
         ├── pages/
-        │   ├── ContributorProfile.jsx # Public Portfolio
-        │   ├── Contributors.jsx    # Expert Directory
-        │   ├── CreateModule.jsx    # Creator Studio
+        │   ├── ContributorProfile.jsx # AI Profile
+        │   ├── Contributors.jsx    # Mentors
+        │   ├── Courses.jsx         # Course Explorer
+        │   ├── CreateModule.jsx    # Work bench
         │   ├── Dashboard.jsx       # Student Hub
-        │   ├── ExamResult.jsx      # Scorecard
-        │   ├── Exams.jsx           # Exam List
+        │   ├── ExamResult.jsx      # Performance
+        │   ├── Exams.jsx           # Assessment
         │   ├── ForgotPassword.jsx  # Recovery
-        │   ├── Home.jsx            # Landing Page
-        │   ├── Lesson.jsx          # Lesson Player
-        │   ├── Lessons.jsx         # Module Content
-        │   ├── Login.jsx           # Sign In
-        │   ├── Modules.jsx         # Course Catalog
-        │   ├── Profile.jsx         # User Settings
-        │   ├── Register.jsx        # Sign Up
-        │   ├── ResetPassword.jsx   # New Password
-        │   └── TakeExam.jsx        # Exam Interface
+        │   ├── Home.jsx            # Entry Point
+        │   ├── Lesson.jsx          # Media Player
+        │   ├── Lessons.jsx         # Curriculum
+        │   ├── Login.jsx           # Gateway
+        │   ├── Modules.jsx         # Course Content
+        │   ├── Profile.jsx         # Social Identity
+        │   ├── Register.jsx        # Join Us
+        │   ├── ResetPassword.jsx   # Reset Room
+        │   └── TakeExam.jsx        # Exam Hub
         ├── services/
         │   └── api.js              # Axios Config
         ├── App.jsx                 # Main Router
@@ -162,18 +166,26 @@ MarketMakers/
     ```
     Access the app at `http://localhost:5173`.
 
-## 🔐 Administrative Access
+## 🔐 Demo Accounts (Interview Ready)
 
-> **Note:** Public registration for Admins is disabled for security.
+Use These credentials to bypass the seed process if the database is already initialized.
 
-To initialize the **Master Admin** account, run the included seed script:
+| Role | Email | Password | Permissions |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@example.com` | `password123` | Full access, user management, course creation. |
+| **Contributor** | `contributor@example.com` | `password123` | Create courses, modules, and lessons. |
+| **Learner** | `learner@example.com` | `password123` | Track progress, take exams, browse curriculum. |
+
+> **Note:** Run the seed command below to ensure these users exist in your local environment.
+
+## 🚀 Setup & Initialization
+
+To initialize the platform with the full course structure and demo users:
 
 ```bash
 cd backend
-node resetAdmin.js
+node seed.js
 ```
-
-This will create/reset the admin account. Please check the `resetAdmin.js` file or console output for login credentials.
 
 ## � API Documentation
 

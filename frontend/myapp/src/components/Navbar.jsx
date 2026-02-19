@@ -48,7 +48,7 @@ function Navbar() {
 
             {isAuthenticated ? (
               <>
-                <NavLink to="/modules">Learn</NavLink>
+                <NavLink to="/courses">Courses</NavLink>
                 <NavLink to="/dashboard">Dashboard</NavLink>
                 <NavLink to="/profile">Profile</NavLink>
 
@@ -145,98 +145,100 @@ function Navbar() {
       </div>
 
       {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-primary-700 border-t border-primary-600">
-          <div className="px-4 py-3 space-y-3">
-            <Link
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 hover:text-primary-200 transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              to="/community"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 hover:text-primary-200 transition-colors"
-            >
-              Community
-            </Link>
+      {
+        mobileMenuOpen && (
+          <div className="md:hidden bg-primary-700 border-t border-primary-600">
+            <div className="px-4 py-3 space-y-3">
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 hover:text-primary-200 transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                to="/community"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-2 hover:text-primary-200 transition-colors"
+              >
+                Community
+              </Link>
 
-            {isAuthenticated ? (
-              <>
-                <Link
-                  to="/modules"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 hover:text-primary-200 transition-colors"
-                >
-                  Learn
-                </Link>
-                <Link
-                  to="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 hover:text-primary-200 transition-colors"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/exams"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 hover:text-primary-200 transition-colors"
-                >
-                  Exams
-                </Link>
-                <Link
-                  to="/profile"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 hover:text-primary-200 transition-colors"
-                >
-                  Profile
-                </Link>
-                {user?.role === "contributor" && (
+              {isAuthenticated ? (
+                <>
                   <Link
-                    to="/create-module"
+                    to="/courses"
                     onClick={() => setMobileMenuOpen(false)}
                     className="block py-2 hover:text-primary-200 transition-colors"
                   >
-                    Create Module
+                    Courses
                   </Link>
-                )}
-                <div className="pt-3 border-t border-primary-600">
-                  <p className="text-sm mb-2">
-                    Logged in as{" "}
-                    <span className="font-medium">{user?.name}</span>
-                  </p>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full bg-white text-primary-700 px-4 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors"
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 hover:text-primary-200 transition-colors"
                   >
-                    Logout
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 hover:text-primary-200 transition-colors"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block bg-white text-primary-700 px-4 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors text-center"
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-    </nav>
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/exams"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 hover:text-primary-200 transition-colors"
+                  >
+                    Exams
+                  </Link>
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 hover:text-primary-200 transition-colors"
+                  >
+                    Profile
+                  </Link>
+                  {user?.role === "contributor" && (
+                    <Link
+                      to="/create-module"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block py-2 hover:text-primary-200 transition-colors"
+                    >
+                      Create Module
+                    </Link>
+                  )}
+                  <div className="pt-3 border-t border-primary-600">
+                    <p className="text-sm mb-2">
+                      Logged in as{" "}
+                      <span className="font-medium">{user?.name}</span>
+                    </p>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full bg-white text-primary-700 px-4 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 hover:text-primary-200 transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block bg-white text-primary-700 px-4 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors text-center"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
+            </div>
+          </div >
+        )
+      }
+    </nav >
   );
 }
 

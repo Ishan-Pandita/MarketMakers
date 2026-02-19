@@ -24,6 +24,7 @@ import CreateModule from "./pages/CreateModule";
 import Contributors from "./pages/Contributors";
 import ContributorProfile from "./pages/ContributorProfile";
 import StaticPage from "./pages/StaticPage";
+import Courses from "./pages/Courses";
 
 function App() {
   return (
@@ -84,7 +85,23 @@ function App() {
               }
             />
             <Route
+              path="/courses"
+              element={
+                <ProtectedRoute>
+                  <Courses />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/modules"
+              element={
+                <ProtectedRoute>
+                  <Modules />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/course/:courseId/modules"
               element={
                 <ProtectedRoute>
                   <Modules />

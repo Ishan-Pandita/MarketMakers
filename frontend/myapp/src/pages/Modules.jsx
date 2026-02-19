@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useParams } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ProgressBar from "../components/ProgressBar";
 import Pagination from "../components/Pagination";
 
 function Modules() {
+  const { courseId } = useParams();
   const [searchParams] = useSearchParams();
   const page = searchParams.get("page") || 1;
   const [modules, setModules] = useState([]);
+  const [course, setCourse] = useState(null);
   const [pagination, setPagination] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,7 +22,14 @@ function Modules() {
   const fetchModules = async () => {
     try {
       setLoading(true);
-      const res = await API.get(`/modules?page=${page}`);
+      let url = `/modules?page=${page}`;
+      if (courseId) {
+        url += `&courseId=${courseId}`;
+        // Also fetch course details
+        const courseRes = await API.get(`/courses/${courseId}`);
+        setCourse(courseRes.data);
+      }
+      const res = await API.get(url);
       // Handle paginated response
       if (res.data.modules) {
         setModules(res.data.modules);
@@ -58,10 +67,10 @@ function Modules() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Learning Modules
+            {course ? course.title : "All Modules"}
           </h1>
           <p className="text-gray-600">
-            Explore our comprehensive trading education modules
+            {course ? "Course Curriculum" : "Explore our comprehensive trading education modules"}
           </p>
         </div>
 

@@ -2,11 +2,15 @@ const mongoose = require("mongoose");
 
 const moduleSchema = new mongoose.Schema(
   {
+    courseId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+      required: [true, "Course ID is required"],
+    },
     title: {
       type: String,
       required: [true, "Module title is required"],
       trim: true,
-      unique: true,
       minlength: [3, "Title must be at least 3 characters"],
       maxlength: [100, "Title cannot exceed 100 characters"],
     },
@@ -30,5 +34,9 @@ const moduleSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Compound indexes for per-course uniqueness and ordering
+moduleSchema.index({ courseId: 1, title: 1 }, { unique: true });
+moduleSchema.index({ courseId: 1, order: 1 }, { unique: true });
 
 module.exports = mongoose.model("Module", moduleSchema);

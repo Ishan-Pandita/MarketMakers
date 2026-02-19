@@ -13,6 +13,7 @@ const searchRoutes = require("./routes/searchRoutes");
 const examRoutes = require("./routes/examRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
+const courseRoutes = require("./routes/courseRoutes");
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/api/search", searchRoutes);
 app.use("/api/exams", examRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/courses", courseRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
