@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 function Dashboard() {
   const [progress, setProgress] = useState([]);
   const [stats, setStats] = useState(null);
+  const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pendingUsers, setPendingUsers] = useState([]);
   const { user } = useAuth();
@@ -40,6 +41,16 @@ function Dashboard() {
           setPendingUsers(pendingRes.data);
         } catch (err) {
           console.error("Error fetching pending users:", err);
+        }
+      }
+
+      // Fetch instructor's courses
+      if (user?.role === "contributor" || user?.role === "admin") {
+        try {
+          const coursesRes = await API.get(`/courses?instructor=${user.id}`);
+          setCourses(coursesRes.data);
+        } catch (err) {
+          console.error("Error fetching instructor courses:", err);
         }
       }
     } catch (error) {
@@ -320,20 +331,20 @@ function Dashboard() {
           )}
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions and Course Management */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Link
-            to="/modules"
+            to="/courses"
             className="card hover:shadow-xl transition-shadow"
           >
             <div className="flex items-center gap-4">
               <div className="text-5xl">🎓</div>
               <div>
                 <h3 className="text-lg font-bold text-gray-900">
-                  Continue Learning
+                  {user?.role === "contributor" ? "View All Courses" : "Continue Learning"}
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Browse available modules and lessons
+                  {user?.role === "contributor" ? "Browse public content" : "Browse available modules and lessons"}
                 </p>
               </div>
             </div>
@@ -341,23 +352,55 @@ function Dashboard() {
 
           {user?.role === "contributor" && (
             <Link
-              to="/create-module"
-              className="card hover:shadow-xl transition-shadow"
+              to="/create-course"
+              className="card hover:shadow-xl transition-shadow border-2 border-dashed border-primary-200 bg-primary-50/30"
             >
               <div className="flex items-center gap-4">
-                <div className="text-5xl">➕</div>
+                <div className="text-5xl text-primary-600">🏛️</div>
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">
-                    Create Module
+                    Develop Course
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    Share your knowledge with others
+                    Build a new educational foundation
                   </p>
                 </div>
               </div>
             </Link>
           )}
         </div>
+
+        {/* Contributor's Courses */}
+        {user?.role === "contributor" && courses.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <span>📚</span> Your Courses
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {courses.map((course) => (
+                <div key={course._id} className="card group hover:scale-[1.02] transition-transform duration-300">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="font-bold text-lg text-gray-900">{course.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${course.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                      {course.isActive ? 'Active' : 'Draft'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 line-clamp-2 mb-4">
+                    {course.description}
+                  </p>
+                  <div className="flex gap-2">
+                    <Link
+                      to={`/course/${course._id}/modules`}
+                      className="flex-1 btn-primary py-2 text-sm text-center"
+                    >
+                      Manage Modules
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Learner Path to Contributor */}
         {user?.role === "learner" && stats && (

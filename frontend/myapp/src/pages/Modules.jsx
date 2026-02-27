@@ -65,13 +65,23 @@ function Modules() {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {course ? course.title : "All Modules"}
-          </h1>
-          <p className="text-gray-600">
-            {course ? "Course Curriculum" : "Explore our comprehensive trading education modules"}
-          </p>
+        <div className="mb-8 flex justify-between items-end">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {course ? course.title : "All Modules"}
+            </h1>
+            <p className="text-gray-600">
+              {course ? "Course Curriculum" : "Explore our comprehensive trading education modules"}
+            </p>
+          </div>
+          {courseId && (
+            <Link
+              to={`/course/${courseId}/create-module`}
+              className="btn-primary py-2 px-4 text-sm"
+            >
+              + Add Module
+            </Link>
+          )}
         </div>
 
         {/* Search Bar */}
@@ -166,7 +176,7 @@ function Modules() {
 
         {/* Stats Footer */}
         <div className="mt-12 p-6 bg-white rounded-lg shadow-md">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div className="grid grid-cols-2 gap-6 text-center">
             <div>
               <div className="text-3xl font-bold text-primary-600">
                 {Array.isArray(modules) ? modules.length : 0}
@@ -178,14 +188,6 @@ function Modules() {
                 {Array.isArray(modules) ? modules.reduce((sum, m) => sum + (m.lessonCount || 0), 0) : 0}
               </div>
               <div className="text-gray-600 text-sm mt-1">Total Lessons</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary-600">100+</div>
-              <div className="text-gray-600 text-sm mt-1">Hours of Content</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary-600">50+</div>
-              <div className="text-gray-600 text-sm mt-1">Contributors</div>
             </div>
           </div>
         </div>

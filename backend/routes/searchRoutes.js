@@ -20,7 +20,7 @@ router.get(
       $or: [{ title: searchRegex }, { explanation: searchRegex }],
     })
       .limit(10)
-      .populate("moduleID", "title");
+      .populate("moduleId", "title");
 
     const modules = await Module.find({
       $or: [{ title: searchRegex }, { description: searchRegex }],

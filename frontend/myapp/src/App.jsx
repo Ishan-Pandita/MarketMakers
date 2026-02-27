@@ -25,6 +25,7 @@ import Contributors from "./pages/Contributors";
 import ContributorProfile from "./pages/ContributorProfile";
 import StaticPage from "./pages/StaticPage";
 import Courses from "./pages/Courses";
+import CreateCourse from "./pages/CreateCourse";
 
 function App() {
   return (
@@ -151,7 +152,23 @@ function App() {
 
             {/* Contributor-Only Routes */}
             <Route
+              path="/create-course"
+              element={
+                <ProtectedRoute requiredRole="contributor">
+                  <CreateCourse />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/create-module"
+              element={
+                <ProtectedRoute requiredRole="contributor">
+                  <CreateModule />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/course/:courseId/create-module"
               element={
                 <ProtectedRoute requiredRole="contributor">
                   <CreateModule />

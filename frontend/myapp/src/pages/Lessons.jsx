@@ -79,7 +79,7 @@ function Lessons() {
         {/* Breadcrumb */}
         <div className="mb-6">
           <Link
-            to="/modules"
+            to={module?.courseId ? `/course/${module.courseId}/modules` : "/courses"}
             className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2"
           >
             <svg
@@ -95,7 +95,7 @@ function Lessons() {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            Back to Modules
+            Back to Course Curriculum
           </Link>
         </div>
 

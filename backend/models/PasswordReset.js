@@ -24,8 +24,7 @@ const passwordResetSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Index for quick token lookup
-passwordResetSchema.index({ token: 1 });
+
 
 // Index to automatically delete expired tokens
 passwordResetSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
