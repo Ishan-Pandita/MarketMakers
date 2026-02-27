@@ -120,7 +120,7 @@ function Profile() {
                                     onChange={(e) =>
                                         setProfileData({ ...profileData, name: e.target.value })
                                     }
-                                    className="input"
+                                    className="input-field"
                                     required
                                 />
                             </div>
@@ -135,7 +135,7 @@ function Profile() {
                                     onChange={(e) =>
                                         setProfileData({ ...profileData, email: e.target.value })
                                     }
-                                    className="input"
+                                    className="input-field"
                                     required
                                 />
                             </div>
@@ -147,7 +147,7 @@ function Profile() {
                                 <input
                                     type="text"
                                     value={user.role}
-                                    className="input bg-gray-100"
+                                    className="input-field bg-gray-100"
                                     disabled
                                 />
                                 <p className="text-xs text-gray-500 mt-1">
@@ -187,7 +187,7 @@ function Profile() {
                                             currentPassword: e.target.value,
                                         })
                                     }
-                                    className="input"
+                                    className="input-field"
                                     required
                                 />
                             </div>
@@ -205,7 +205,7 @@ function Profile() {
                                             newPassword: e.target.value,
                                         })
                                     }
-                                    className="input"
+                                    className="input-field"
                                     required
                                     minLength={6}
                                 />
@@ -224,7 +224,7 @@ function Profile() {
                                             confirmPassword: e.target.value,
                                         })
                                     }
-                                    className="input"
+                                    className="input-field"
                                     required
                                     minLength={6}
                                 />

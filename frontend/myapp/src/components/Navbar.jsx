@@ -55,7 +55,7 @@ function Navbar() {
                 {/* Contributor-only link */}
                 {user?.role === "contributor" && (
                   <Link
-                    to="/create-module"
+                    to="/create-course"
                     className="bg-primary-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:shadow-primary-600/40 hover:-translate-y-0.5 transition-all text-sm"
                   >
                     + Create
@@ -147,19 +147,19 @@ function Navbar() {
       {/* Mobile menu */}
       {
         mobileMenuOpen && (
-          <div className="md:hidden bg-primary-700 border-t border-primary-600">
+          <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-lg">
             <div className="px-4 py-3 space-y-3">
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 hover:text-primary-200 transition-colors"
+                className="block py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
               >
                 Home
               </Link>
               <Link
                 to="/community"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-2 hover:text-primary-200 transition-colors"
+                className="block py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
               >
                 Community
               </Link>
@@ -169,28 +169,28 @@ function Navbar() {
                   <Link
                     to="/courses"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 hover:text-primary-200 transition-colors"
+                    className="block py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
                   >
                     Courses
                   </Link>
                   <Link
                     to="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 hover:text-primary-200 transition-colors"
+                    className="block py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
                   >
                     Dashboard
                   </Link>
                   <Link
                     to="/exams"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 hover:text-primary-200 transition-colors"
+                    className="block py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
                   >
                     Exams
                   </Link>
                   <Link
                     to="/profile"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 hover:text-primary-200 transition-colors"
+                    className="block py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
                   >
                     Profile
                   </Link>
@@ -198,19 +198,19 @@ function Navbar() {
                     <Link
                       to="/create-module"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block py-2 hover:text-primary-200 transition-colors"
+                      className="block py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
                     >
                       Create Module
                     </Link>
                   )}
-                  <div className="pt-3 border-t border-primary-600">
-                    <p className="text-sm mb-2">
+                  <div className="pt-3 border-t border-gray-200">
+                    <p className="text-sm text-gray-600 mb-2">
                       Logged in as{" "}
-                      <span className="font-medium">{user?.name}</span>
+                      <span className="font-semibold text-gray-900">{user?.name}</span>
                     </p>
                     <button
                       onClick={handleLogout}
-                      className="w-full bg-white text-primary-700 px-4 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors"
+                      className="w-full bg-gray-900 text-white px-4 py-2.5 rounded-xl font-medium hover:bg-black transition-colors"
                     >
                       Logout
                     </button>
@@ -221,14 +221,14 @@ function Navbar() {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 hover:text-primary-200 transition-colors"
+                    className="block py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block bg-white text-primary-700 px-4 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors text-center"
+                    className="block bg-gray-900 text-white px-4 py-2.5 rounded-xl font-medium hover:bg-black transition-colors text-center"
                   >
                     Sign Up
                   </Link>

@@ -1,40 +1,21 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
-import { useAuth } from "../context/AuthContext";
 
-function CreateModule() {
-    const { courseId } = useParams();
+function CreateCourse() {
     const [formData, setFormData] = useState({
         title: "",
         description: "",
-        order: "",
-        courseId: courseId || "",
+        order: "1",
+        thumbnail: "",
     });
-    const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-    const { user } = useAuth();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (courseId) {
-            fetchCourse();
-        }
-    }, [courseId]);
-
-    const fetchCourse = async () => {
-        try {
-            const res = await API.get(`/courses/${courseId}`);
-            setCourse(res.data);
-        } catch (err) {
-            console.error("Error fetching course:", err);
-        }
-    };
 
     const handleChange = (e) => {
         setFormData({
@@ -46,19 +27,19 @@ function CreateModule() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.title || !formData.description || !formData.order) {
-            setError("All fields are required");
+        if (!formData.title || !formData.description) {
+            setError("Title and description are required");
             return;
         }
 
         setLoading(true);
         try {
-            await API.post("/modules", { ...formData, courseId });
-            setSuccess("Module created successfully!");
-            // Redirect to course modules page
-            setTimeout(() => navigate(`/course/${courseId}/modules`), 1500);
+            const res = await API.post("/courses", formData);
+            setSuccess("Course created successfully!");
+            // Redirect to dashboard after a short delay
+            setTimeout(() => navigate("/dashboard"), 1500);
         } catch (err) {
-            setError(err.response?.data?.message || "Failed to create module");
+            setError(err.response?.data?.message || "Failed to create course");
         } finally {
             setLoading(false);
         }
@@ -68,11 +49,9 @@ function CreateModule() {
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-2xl mx-auto">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
-                        {course ? `Add Module to ${course.title}` : "Create New Module"}
-                    </h1>
+                    <h1 className="text-3xl font-bold text-gray-900">Create New Course</h1>
                     <p className="text-gray-600 mt-2">
-                        {course ? "Expanding the curriculum" : "Share your knowledge with the community"}
+                        Build your educational foundation
                     </p>
                 </div>
 
@@ -83,7 +62,7 @@ function CreateModule() {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Module Title
+                                Course Title
                             </label>
                             <input
                                 type="text"
@@ -91,7 +70,7 @@ function CreateModule() {
                                 value={formData.title}
                                 onChange={handleChange}
                                 className="input-field"
-                                placeholder="e.g., Advanced Technical Analysis"
+                                placeholder="e.g., Stock Market Masterclass"
                                 disabled={loading}
                             />
                         </div>
@@ -105,28 +84,40 @@ function CreateModule() {
                                 value={formData.description}
                                 onChange={handleChange}
                                 className="input-field min-h-[120px]"
-                                placeholder="What will learners achieve in this module?"
+                                placeholder="What core concepts will this course cover?"
                                 disabled={loading}
                             />
                         </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Order Sequence
-                            </label>
-                            <input
-                                type="number"
-                                name="order"
-                                value={formData.order}
-                                onChange={handleChange}
-                                className="input-field"
-                                placeholder="e.g., 1"
-                                min="1"
-                                disabled={loading}
-                            />
-                            <p className="text-xs text-gray-500 mt-1">
-                                Position of this module in your curriculum
-                            </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Display Order
+                                </label>
+                                <input
+                                    type="number"
+                                    name="order"
+                                    value={formData.order}
+                                    onChange={handleChange}
+                                    className="input-field"
+                                    min="1"
+                                    disabled={loading}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Thumbnail URL (Optional)
+                                </label>
+                                <input
+                                    type="text"
+                                    name="thumbnail"
+                                    value={formData.thumbnail}
+                                    onChange={handleChange}
+                                    className="input-field"
+                                    placeholder="https://example.com/image.jpg"
+                                    disabled={loading}
+                                />
+                            </div>
                         </div>
 
                         <button
@@ -140,7 +131,7 @@ function CreateModule() {
                                     <span>Creating...</span>
                                 </>
                             ) : (
-                                "Create Module"
+                                "Create Course"
                             )}
                         </button>
                     </form>
@@ -150,4 +141,4 @@ function CreateModule() {
     );
 }
 
-export default CreateModule;
+export default CreateCourse;

@@ -13,20 +13,24 @@ MarketMakers is a comprehensive Learning Management System (LMS) designed specif
 ## ✨ Key Features
 
 -   **Premium UI/UX**:
-    -   Immersive Mesh Gradients and Glassmorphism design system.
-    -   Fully responsive, mobile-first layout.
-    -   Smooth animations and interactive elements.
+    -   Immersive **Light Airy Mesh Gradients** and refined Glassmorphism design system.
+    -   Custom **Inter Typography** for a premium, modern feel.
+    -   Enhanced **Glassmorphism Mobile Navigation** with backdrop blur effects.
+    -   Fully responsive, mobile-first layout with smooth fadeIn animations.
+-   **Structured Education**:
+    -   **3 Professional Courses**: Stock Market Mastery, Forex Trading Essentials, and Crypto Fundamentals.
+    -   **Deep Curriculum**: ~18 modules and ~57 detailed lessons covering technical/fundamental analysis and risk management.
 -   **Contributor Marketplace**:
     -   **Application Workflow**: Users apply -> Admins approve.
     -   **Creator Studio**: Contributors create Modules and Lessons using a rich editor.
     -   **Public Profiles**: Dedicated portfolio pages for every contributor.
 -   **Student Learning Portal**:
     -   Progress tracking for every lesson.
-    -   Certification exams with automatic grading.
+    -   Certification exams with automatic grading and passing criteria.
     -   Dynamic "Featured Curriculum" on the home page.
 -   **Administrative Control**:
     -   Role-based access control (RBAC).
-    -   Admin dashboard for user management.
+    -   Admin dashboard for user management and contributor approval.
 
 ## 📂 Project Structure
 
@@ -63,11 +67,20 @@ MarketMakers/
 │   │   ├── searchRoutes.js     # Global search
 │   │   ├── suggestionRoutes.js # Feedback handling
 │   │   └── userRoutes.js       # Public profiles
+│   ├── scripts/
+│   │   ├── resetAdmin.js       # Admin reset script
+│   │   ├── seed.js             # Database seeder
+│   │   └── seedAdmin.js        # Admin seeder
+│   ├── tests/
+│   │   ├── auth.test.js        # Auth integration tests
+│   │   ├── courses.test.js     # Course integration tests
+│   │   ├── health.test.js      # Health check tests
+│   │   └── setup.js            # Test configuration
 │   ├── utils/
 │   │   ├── emailService.js     # Email sender
 │   │   └── tokenGenerator.js   # Secure tokens
-│   ├── index.js                # Server entry point
-│   └── resetAdmin.js           # Admin seeding script
+│   ├── app.js                  # Express app setup
+│   └── index.js                # Server entry point
 │
 └── frontend/myapp/
     ├── public/
@@ -88,6 +101,7 @@ MarketMakers/
         │   ├── ContributorProfile.jsx # AI Profile
         │   ├── Contributors.jsx    # Mentors
         │   ├── Courses.jsx         # Course Explorer
+        │   ├── CreateCourse.jsx    # Course Creator
         │   ├── CreateModule.jsx    # Work bench
         │   ├── Dashboard.jsx       # Student Hub
         │   ├── ExamResult.jsx      # Performance
@@ -110,7 +124,7 @@ MarketMakers/
 
 ## 🛠️ Tech Stack
 
--   **Frontend**: React.js, Vite, Tailwind CSS, Framer Motion.
+-   **Frontend**: React.js, Vite, Tailwind CSS, Google Fonts (Inter).
 -   **Backend**: Node.js, Express.js.
 -   **Database**: MongoDB, Mongoose.
 -   **Authentication**: JWT, bcryptjs.
@@ -166,15 +180,19 @@ MarketMakers/
     ```
     Access the app at `http://localhost:5173`.
 
-## 🔐 Demo Accounts (Interview Ready)
+## 🔐 Demo Accounts (Deployment Ready)
 
-Use These credentials to bypass the seed process if the database is already initialized.
+The following accounts are created by the `npm run seed` command. All accounts use the password: `password123`.
 
-| Role | Email | Password | Permissions |
+| Role | Name | Email | Permissions |
 | :--- | :--- | :--- | :--- |
-| **Admin** | `admin@example.com` | `password123` | Full access, user management, course creation. |
-| **Contributor** | `contributor@example.com` | `password123` | Create courses, modules, and lessons. |
-| **Learner** | `learner@example.com` | `password123` | Track progress, take exams, browse curriculum. |
+| **Admin** | Ishan Pandita | `admin@marketmakers.com` | Full platform management, user/contributor control. |
+| **Contributor** | Priya Sharma | `priya@marketmakers.com` | Create courses, modules, and lessons. (8+ yrs exp) |
+| **Contributor** | Rajesh Kapoor | `rajesh@marketmakers.com` | Create courses, modules, and lessons. (6+ yrs exp) |
+| **Learner** | Arjun Mehta | `arjun@marketmakers.com` | Access courses, track progress, take certification exams. |
+| **Learner** | Sneha Patel | `sneha@marketmakers.com` | Access courses, track progress, take certification exams. |
+
+> **IMPORTANT:** Always run the seed command below to initialize the database with professional trading content.
 
 > **Note:** Run the seed command below to ensure these users exist in your local environment.
 
@@ -184,7 +202,7 @@ To initialize the platform with the full course structure and demo users:
 
 ```bash
 cd backend
-node seed.js
+npm run seed
 ```
 
 ## � API Documentation
