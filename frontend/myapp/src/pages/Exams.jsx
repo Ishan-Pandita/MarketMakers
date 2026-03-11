@@ -40,93 +40,118 @@ function Exams() {
         return Math.max(...examAttempts.map((a) => a.score));
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#050505]">
+                <div className="relative">
+                    <div className="w-20 h-20 border-2 border-neon-purple/20 border-t-neon-purple rounded-full animate-spin"></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-neon-purple font-black">MM</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
-                        Certification Exams
+        <div className="min-h-screen bg-[#050505] py-20 relative overflow-hidden">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-neon-purple/5 blur-[120px] rounded-full -translate-y-1/2"></div>
+            <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-blue-500/5 blur-[120px] rounded-full translate-y-1/2"></div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="mb-16 animate-slideIn">
+                    <span className="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-background-elevated/40 backdrop-blur-md border border-neon-purple/20 text-neon-purple text-xs font-bold mb-6 tracking-widest uppercase">
+                        <span className="w-2 h-2 rounded-full bg-neon-purple animate-pulse"></span>
+                        Assessment Mode
+                    </span>
+                    <h1 className="text-5xl md:text-6xl font-black text-white mb-6 tracking-tight">
+                        Validate Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-blue-500">Expertise.</span>
                     </h1>
-                    <p className="mt-2 text-gray-600">
-                        Pass the exam with 80% or higher to become a contributor
+                    <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
+                        Complete these specialized certifications to unlock Contributor privileges and validate your market knowledge.
                     </p>
                 </div>
 
                 {error && <ErrorMessage message={error} />}
 
                 {/* Available Exams */}
-                <div className="mb-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                        Available Exams
-                    </h2>
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {exams.map((exam) => {
+                <div className="mb-20">
+                    <div className="flex items-center gap-4 mb-10">
+                        <div className="h-px flex-1 bg-gradient-to-r from-neon-purple/50 to-transparent"></div>
+                        <h2 className="text-sm font-black text-gray-400 uppercase tracking-[0.4em]">Available Clearances</h2>
+                        <div className="h-px flex-1 bg-gradient-to-l from-neon-purple/50 to-transparent"></div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {exams.map((exam, idx) => {
                             const bestScore = getBestScore(exam._id);
                             const examAttempts = getAttemptForExam(exam._id);
                             const passed = examAttempts.some((a) => a.passed);
 
                             return (
-                                <div key={exam._id} className="card">
-                                    <div className="flex items-start justify-between mb-4">
+                                <div
+                                    key={exam._id}
+                                    className="group glass-dark rounded-[32px] border-white/5 p-10 hover:border-neon-purple/40 transition-all duration-500 hover:shadow-[0_0_40px_#8b5cf61a] animate-slideIn relative overflow-hidden"
+                                    style={{ animationDelay: `${idx * 100}ms` }}
+                                >
+                                    <div className="flex items-start justify-between mb-8">
                                         <div>
-                                            <h3 className="text-xl font-bold text-gray-900">
+                                            <h3 className="text-3xl font-black text-white group-hover:text-neon-purple transition-colors tracking-tight">
                                                 {exam.title}
                                             </h3>
-                                            <p className="text-sm text-gray-600 mt-1">
-                                                {exam.questions.length} questions • {exam.duration}{" "}
-                                                minutes
-                                            </p>
+                                            <div className="flex items-center gap-4 mt-3">
+                                                <span className="text-[10px] font-black tracking-widest text-gray-500 uppercase flex items-center gap-1">
+                                                    <span className="text-neon-purple">●</span> {exam.questions.length} Questions
+                                                </span>
+                                                <span className="text-[10px] font-black tracking-widest text-gray-500 uppercase flex items-center gap-1">
+                                                    <span className="text-neon-purple">●</span> {exam.duration} Minutes
+                                                </span>
+                                            </div>
                                         </div>
                                         {passed && (
-                                            <span className="px-3 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
-                                                ✓ Passed
-                                            </span>
+                                            <div className="bg-neon-green/10 text-neon-green border border-neon-green/30 px-4 py-2 rounded-xl text-xs font-black tracking-widest uppercase shadow-[0_0_15px_#00ff6633]">
+                                                ✓ Verified
+                                            </div>
                                         )}
                                     </div>
 
-                                    <p className="text-gray-700 mb-4">{exam.description}</p>
+                                    <p className="text-gray-400 mb-10 leading-relaxed italic border-l-2 border-white/10 pl-4">{exam.description || "Detailed scenario-based assessment for market proficiency."}</p>
 
-                                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4">
-                                        <div>
-                                            <div className="text-sm text-gray-600">
-                                                Passing Score
-                                            </div>
-                                            <div className="text-2xl font-bold text-primary-600">
-                                                {exam.passingScore}%
+                                    <div className="grid grid-cols-2 gap-4 mb-10">
+                                        <div className="bg-black/40 p-6 rounded-2xl border border-white/5">
+                                            <div className="text-gray-500 text-[10px] uppercase font-bold tracking-[0.2em] mb-2">Passing Reqd</div>
+                                            <div className="text-3xl font-black text-white">
+                                                {exam.passingScore}<span className="text-neon-purple text-xl">%</span>
                                             </div>
                                         </div>
                                         {bestScore !== null && (
-                                            <div className="text-right">
-                                                <div className="text-sm text-gray-600">
-                                                    Your Best Score
-                                                </div>
+                                            <div className="bg-black/40 p-6 rounded-2xl border border-white/5 text-right">
+                                                <div className="text-gray-500 text-[10px] uppercase font-bold tracking-[0.2em] mb-2">Max Accuracy</div>
                                                 <div
-                                                    className={`text-2xl font-bold ${bestScore >= exam.passingScore
-                                                            ? "text-green-600"
-                                                            : "text-orange-600"
+                                                    className={`text-3xl font-black ${bestScore >= exam.passingScore
+                                                        ? "text-neon-green"
+                                                        : "text-orange-500"
                                                         }`}
                                                 >
-                                                    {bestScore}%
+                                                    {bestScore}<span className="text-xl">%</span>
                                                 </div>
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="flex gap-3">
+                                    <div className="flex gap-4">
                                         <Link
                                             to={`/exams/${exam._id}/take`}
-                                            className="btn-primary flex-1 text-center"
+                                            className="btn-primary flex-1 py-4 text-sm tracking-[0.2em] uppercase font-black rounded-2xl shadow-[0_0_20px_#00ff664d] hover:shadow-[0_0_30px_#00ff6680]"
                                         >
-                                            {examAttempts.length > 0 ? "Retake Exam" : "Take Exam"}
+                                            {examAttempts.length > 0 ? "Retake Exam" : "Start Exam"}
                                         </Link>
                                         {examAttempts.length > 0 && (
                                             <Link
                                                 to={`/exams/${exam._id}/history`}
-                                                className="btn-secondary"
+                                                className="w-16 h-14 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all"
+                                                title="View History"
                                             >
-                                                View History
+                                                <span className="text-xl">📜</span>
                                             </Link>
                                         )}
                                     </div>
@@ -136,54 +161,46 @@ function Exams() {
                     </div>
                 </div>
 
-                {/* Recent Attempts */}
+                {/* Recent History Table */}
                 {attempts.length > 0 && (
-                    <div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                            Recent Attempts
-                        </h2>
-                        <div className="card overflow-hidden">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Exam
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Score
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Result
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Date
-                                        </th>
+                    <div className="animate-slideIn" style={{ animationDelay: '300ms' }}>
+                        <div className="flex items-center gap-4 mb-10 text-center">
+                            <h2 className="text-sm font-black text-gray-400 uppercase tracking-[0.4em] w-full text-center">Activity Logs</h2>
+                        </div>
+                        <div className="glass-dark rounded-[32px] border-white/5 overflow-hidden">
+                            <table className="min-w-full">
+                                <thead>
+                                    <tr className="border-b border-white/5 bg-white/5">
+                                        <th className="px-8 py-6 text-left text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Exam</th>
+                                        <th className="px-8 py-6 text-left text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Score</th>
+                                        <th className="px-8 py-6 text-left text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Outcome</th>
+                                        <th className="px-8 py-6 text-left text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Timestamp</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="divide-y divide-white/5">
                                     {attempts.slice(0, 10).map((attempt) => (
-                                        <tr key={attempt._id}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-medium text-gray-900">
+                                        <tr key={attempt._id} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-8 py-6 whitespace-nowrap">
+                                                <div className="text-sm font-bold text-white">
                                                     {attempt.examId.title}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-900">
+                                            <td className="px-8 py-6 whitespace-nowrap">
+                                                <div className="text-sm font-mono text-neon-purple font-black">
                                                     {attempt.score}%
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
+                                            <td className="px-8 py-6 whitespace-nowrap">
                                                 <span
-                                                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${attempt.passed
-                                                            ? "bg-green-100 text-green-800"
-                                                            : "bg-red-100 text-red-800"
+                                                    className={`px-4 py-1.5 inline-flex text-[10px] font-black rounded-lg uppercase tracking-widest ${attempt.passed
+                                                        ? "bg-neon-green/10 text-neon-green border border-neon-green/30 shadow-[0_0_10px_#00ff661a]"
+                                                        : "bg-red-500/10 text-red-500 border border-red-500/30 shadow-[0_0_10px_#ef44441a]"
                                                         }`}
                                                 >
                                                     {attempt.passed ? "Passed" : "Failed"}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <td className="px-8 py-6 whitespace-nowrap text-xs text-gray-500 font-mono">
                                                 {new Date(attempt.completedAt).toLocaleDateString()}
                                             </td>
                                         </tr>

@@ -14,6 +14,7 @@ MarketMakers is a comprehensive Learning Management System (LMS) designed specif
 
 -   **Premium UI/UX**:
     -   Immersive **Light Airy Mesh Gradients** and refined Glassmorphism design system.
+    -   **SVG Gradient Brand Identity** — Reusable Logo component with 4 variants (icon, abbreviated, full, stacked) and a custom lightning bolt with blue→purple→green gradient.
     -   Custom **Inter Typography** for a premium, modern feel.
     -   Enhanced **Glassmorphism Mobile Navigation** with backdrop blur effects.
     -   Fully responsive, mobile-first layout with smooth fadeIn animations.
@@ -90,6 +91,7 @@ MarketMakers/
         │   ├── ErrorMessage.jsx    # Alert UI
         │   ├── Footer.jsx          # Premium Footer
         │   ├── LoadingSpinner.jsx  # Loading state
+        │   ├── Logo.jsx            # SVG Gradient Brand Logo
         │   ├── Navbar.jsx          # Glassmorphism Nav
         │   ├── Pagination.jsx      # List navigation
         │   ├── ProgressBar.jsx     # Visual progress
