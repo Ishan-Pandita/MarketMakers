@@ -5,9 +5,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        sans: ["Satoshi", "SF Pro Display", "Inter", "system-ui", "-apple-system", "sans-serif"],
       },
       colors: {
+        background: {
+          dark: '#0A0A0B',
+          card: '#151516',
+          elevated: '#1A1A1A'
+        },
+        neon: {
+          green: '#00FF66',
+          purple: '#8B5CF6'
+        },
         primary: {
           50: "#eff6ff",
           100: "#dbeafe",

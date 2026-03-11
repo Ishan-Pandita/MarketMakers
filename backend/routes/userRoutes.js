@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../models/User");
 const Module = require("../models/Module");
+const Course = require("../models/Course");
 const asyncHandler = require("../middleware/asyncHandler");
 const protect = require("../middleware/authMiddleware");
 
@@ -32,6 +33,11 @@ router.get(
             throw new Error("Contributor not found");
         }
 
+        // Get courses created by this contributor
+        const courses = await Course.find({ instructor: user._id }).sort({
+            order: 1,
+        });
+
         // Get modules created by this contributor
         const modules = await Module.find({ contributor: user._id }).sort({
             createdAt: -1,
@@ -39,9 +45,11 @@ router.get(
 
         res.json({
             profile: user,
+            courses,
             modules,
         });
     })
 );
 
 module.exports = router;
+
