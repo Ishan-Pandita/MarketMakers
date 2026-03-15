@@ -1,35 +1,15 @@
-// src/components/SuccessMessage.jsx
-const SuccessMessage = ({ message, onClose }) => {
+// src/components/SuccessMessage.jsx — Light Theme
+function SuccessMessage({ message }) {
   if (!message) return null;
 
   return (
-    <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center justify-between animate-slideIn">
-      <div className="flex items-center gap-2">
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fillRule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-            clipRule="evenodd"
-          />
-        </svg>
-        <span>{message}</span>
-      </div>
-      {onClose && (
-        <button
-          onClick={onClose}
-          className="text-green-600 hover:text-green-800"
-        >
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-      )}
+    <div className="bg-success-light border border-success/20 text-success-dark px-4 py-3 rounded-xl text-sm font-medium animate-slideIn flex items-center gap-3">
+      <svg className="w-5 h-5 text-success flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{message}</span>
     </div>
   );
-};
+}
 
 export default SuccessMessage;

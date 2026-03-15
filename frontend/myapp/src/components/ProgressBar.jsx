@@ -1,37 +1,16 @@
-// src/components/ProgressBar.jsx
-const ProgressBar = ({ percentage, showLabel = true, size = "medium" }) => {
-  const sizeClasses = {
-    small: "h-2",
-    medium: "h-3",
-    large: "h-4",
-  };
-
-  const getColor = () => {
-    if (percentage >= 75) return "bg-green-500";
-    if (percentage >= 50) return "bg-blue-500";
-    if (percentage >= 25) return "bg-yellow-500";
-    return "bg-red-500";
-  };
+// src/components/ProgressBar.jsx — Light Theme
+function ProgressBar({ progress = 0, size = "md" }) {
+  const heights = { sm: "h-1.5", md: "h-2.5", lg: "h-4" };
+  const h = heights[size] || heights.md;
 
   return (
-    <div className="w-full">
+    <div className={`w-full bg-slate-border/40 rounded-full ${h} overflow-hidden`}>
       <div
-        className={`w-full bg-gray-200 rounded-full overflow-hidden ${sizeClasses[size]}`}
-      >
-        <div
-          className={`${getColor()} transition-all duration-500 ease-out ${
-            sizeClasses[size]
-          } rounded-full`}
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-      </div>
-      {showLabel && (
-        <p className="text-sm text-gray-600 mt-1 text-right">
-          {percentage}% complete
-        </p>
-      )}
+        className={`bg-gradient-to-r from-indigo-500 to-teal-500 ${h} rounded-full transition-all duration-700 ease-out`}
+        style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+      ></div>
     </div>
   );
-};
+}
 
 export default ProgressBar;

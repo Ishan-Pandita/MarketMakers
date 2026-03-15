@@ -1,4 +1,4 @@
-// src/pages/Home.jsx - ULTIMATE VERSION
+// src/pages/Home.jsx — Light Theme Redesign
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -16,7 +16,6 @@ function Home() {
 
   const fetchFeaturedContent = async () => {
     try {
-      // Fetch latest 3 modules
       const res = await API.get("/modules?limit=3");
       setFeaturedModules(res.data);
     } catch (error) {
@@ -26,69 +25,76 @@ function Home() {
     }
   };
 
+  const courseColors = ['from-indigo-500 to-indigo-600', 'from-teal-500 to-teal-600', 'from-violet-500 to-purple-600'];
+
   return (
-    <div className="bg-[#050505] min-h-screen text-white selection:bg-neon-purple selection:text-white">
-      {/* Hero Section - The Portal */}
-      <section className="relative pt-32 pb-40 lg:pt-56 lg:pb-64 overflow-hidden">
-        {/* Deep Field Ambient effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-neon-purple/10 blur-[160px] rounded-full -translate-y-1/2 opacity-40 animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-neon-green/5 blur-[140px] rounded-full translate-y-1/3 opacity-30 animate-pulse delay-700"></div>
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150 brightness-50"></div>
-        </div>
+    <div className="bg-surface min-h-screen text-slate-heading">
+      {/* Hero Section */}
+      <section className="relative pt-24 pb-32 lg:pt-40 lg:pb-48 overflow-hidden">
+        {/* Soft mesh background */}
+        <div className="absolute inset-0 bg-gradient-mesh pointer-events-none"></div>
+        <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-indigo-100/40 blur-[100px] rounded-full pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-100/30 blur-[100px] rounded-full pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="flex flex-col items-center text-center">
-            <div className="inline-flex items-center gap-3 py-2 px-5 rounded-full bg-background-elevated/40 backdrop-blur-xl border border-white/10 text-gray-400 text-[10px] font-black tracking-[0.4em] uppercase mb-12 animate-slideIn group cursor-pointer hover:border-neon-green/30 transition-all">
+            <div className="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-white border border-slate-border/60 text-slate-muted text-xs font-semibold tracking-wide mb-8 animate-slideIn shadow-soft">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-green opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-neon-green"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
               </span>
-              UNFOLD THE <span className="text-neon-green group-hover:text-white transition-colors">ALPHA LAYER</span>
+              Trusted by 1,000+ Learners
             </div>
 
-            <h1 className="text-6xl md:text-9xl font-black tracking-tighter text-white mb-10 leading-[0.9] animate-slideIn" style={{ animationDelay: '100ms' }}>
-              MARKET<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green via-blue-500 to-neon-purple">MAKERS.</span>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-heading mb-8 leading-[0.95] animate-slideIn font-display" style={{ animationDelay: '100ms' }}>
+              Master the<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-indigo-400 to-teal-500">Markets.</span>
             </h1>
 
-            <p className="max-w-3xl text-xl md:text-2xl text-gray-500 font-bold leading-relaxed mb-16 animate-slideIn italic" style={{ animationDelay: '200ms' }}>
-              "The network where institutional logic meets retail execution." <br className="hidden md:block" />
-              <span className="text-gray-400 font-black not-italic mt-4 block uppercase tracking-widest text-xs">Authorize your financial future.</span>
+            <p className="max-w-2xl text-lg md:text-xl text-slate-body leading-relaxed mb-12 animate-slideIn" style={{ animationDelay: '200ms' }}>
+              The premier trading education platform connecting learners with verified experts. 
+              Master stocks, forex, and crypto through structured, expert-curated courses.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-8 animate-slideIn" style={{ animationDelay: '300ms' }}>
+            <div className="flex flex-col sm:flex-row gap-4 animate-slideIn" style={{ animationDelay: '300ms' }}>
               {isAuthenticated ? (
                 <Link
-                  to="/modules"
-                  className="px-12 py-6 bg-neon-green text-black text-xs font-black uppercase tracking-[0.5em] rounded-full shadow-[0_0_40px_rgba(0,255,102,0.3)] hover:shadow-[0_0_60px_rgba(0,255,102,0.5)] hover:-translate-y-1.5 active:translate-y-0 transition-all duration-300"
+                  to="/courses"
+                  className="btn-primary px-10 py-4 text-base"
                 >
-                  Enter Terminal
+                  Continue Learning →
                 </Link>
               ) : (
                 <>
                   <Link
                     to="/register"
-                    className="px-12 py-6 bg-neon-purple text-white text-xs font-black uppercase tracking-[0.5em] rounded-full shadow-[0_0_40px_rgba(139,92,246,0.3)] hover:shadow-[0_0_60px_rgba(139,92,246,0.5)] hover:-translate-y-1.5 active:translate-y-0 transition-all duration-300"
+                    className="btn-primary px-10 py-4 text-base"
                   >
-                    Sign Up
+                    Start Learning Free
                   </Link>
                   <Link
-                    to="/login"
-                    className="px-12 py-6 bg-white/5 border border-white/10 text-white text-xs font-black uppercase tracking-[0.5em] rounded-full backdrop-blur-md hover:bg-white/10 hover:-translate-y-1.5 active:translate-y-0 transition-all duration-300"
+                    to="/community"
+                    className="btn-secondary px-10 py-4 text-base"
                   >
-                    Login
+                    Explore Courses
                   </Link>
                 </>
               )}
             </div>
 
-            {/* Social Proof Nodes */}
-            <div className="mt-32 w-full animate-slideIn" style={{ animationDelay: '400ms' }}>
-              <p className="text-[10px] font-black text-gray-600 uppercase tracking-[0.4em] mb-12">Authorized Node Entities</p>
-              <div className="flex flex-wrap justify-center gap-x-16 gap-y-10 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-                {['BINANCE', 'COINBASE', 'KRAKEN', 'BYBIT', 'OKX'].map(node => (
-                  <span key={node} className="text-2xl font-black tracking-tighter hover:text-white transition-colors cursor-default">{node}</span>
+            {/* Social Proof */}
+            <div className="mt-20 w-full animate-slideIn" style={{ animationDelay: '400ms' }}>
+              <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+                {[
+                  { value: '1,000+', label: 'Active Learners' },
+                  { value: '50+', label: 'Expert Modules' },
+                  { value: '94%', label: 'Completion Rate' },
+                  { value: '24/7', label: 'Platform Access' },
+                ].map(stat => (
+                  <div key={stat.label} className="text-center">
+                    <div className="text-2xl md:text-3xl font-extrabold text-slate-heading tracking-tight">{stat.value}</div>
+                    <div className="text-xs text-slate-muted font-semibold mt-1">{stat.label}</div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -96,65 +102,57 @@ function Home() {
         </div>
       </section>
 
-      {/* Featured Grid - The Library */}
-      <section className="py-32 border-t border-white/5 relative bg-[#080808]">
+      {/* Featured Courses Section */}
+      <section className="py-24 bg-white border-t border-slate-border/40">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-            <div className="max-w-2xl">
-              <span className="text-neon-purple font-mono font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Latest_Modules</span>
-              <h2 className="text-5xl font-black text-white tracking-tighter mb-6 leading-none">High-Frequency <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-green">Intelligence.</span></h2>
-              <p className="text-gray-500 font-bold leading-relaxed px-6 border-l-2 border-neon-purple/30 italic">Explore the latest institutional-grade modules synthesized by our elite architects.</p>
+          <div className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
+            <div className="max-w-xl">
+              <span className="text-indigo-500 font-bold text-xs tracking-widest uppercase mb-3 block">Featured</span>
+              <h2 className="section-heading mb-4">Latest <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-teal-500">Curriculum</span></h2>
+              <p className="section-subheading">Explore the latest modules crafted by our verified trading experts.</p>
             </div>
-            <Link to="/modules" className="text-[10px] font-black uppercase tracking-[0.2em] text-white underline decoration-neon-purple underline-offset-8 hover:text-neon-purple transition-all mb-2">View All Modules</Link>
+            <Link to="/courses" className="text-sm font-bold text-indigo-500 hover:text-indigo-700 transition-colors flex items-center gap-2">
+              View All Courses <span>→</span>
+            </Link>
           </div>
 
           {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="relative">
-                <div className="w-16 h-16 border-2 border-neon-purple/20 border-t-neon-purple rounded-full animate-spin"></div>
-                <div className="absolute inset-0 flex items-center justify-center text-[8px] font-black text-neon-purple">SYNC</div>
-              </div>
-            </div>
+            <LoadingSpinner />
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredModules.length > 0 ? (
                 featuredModules.map((module, idx) => (
                   <Link key={module._id} to={`/modules/${module._id}`} className="group block h-full">
-                    <div className="glass-dark rounded-[40px] border-white/5 h-full p-10 relative overflow-hidden flex flex-col transition-all duration-500 hover:border-white/10 hover:shadow-[0_40px_80px_rgba(0,0,0,0.8)] hover:-translate-y-2">
-                      {/* Subtle Index Number */}
-                      <div className="absolute top-8 right-8 text-8xl font-black text-white/[0.02] leading-none select-none group-hover:text-neon-purple transition-all">0{idx + 1}</div>
-
-                      <div className="mb-10 w-20 h-20 bg-neon-purple/10 border border-neon-purple/20 rounded-3xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-500 relative z-10">
-                        <span className="drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">⚡</span>
-                      </div>
-
-                      <div className="relative z-10 flex-1">
-                        <div className="flex items-center gap-4 mb-6">
-                          <span className="text-[8px] font-black tracking-[0.3em] uppercase px-3 py-1.5 rounded-lg bg-neon-purple/10 border border-neon-purple/20 text-neon-purple group-hover:bg-neon-purple group-hover:text-black transition-all">Phase One</span>
-                          <div className="h-px flex-1 bg-white/5 group-hover:bg-white/10 transition-all"></div>
+                    <div className="card h-full flex flex-col overflow-hidden p-0">
+                      {/* Color bar */}
+                      <div className={`h-1.5 bg-gradient-to-r ${courseColors[idx % 3]}`}></div>
+                      <div className="p-7 flex flex-col flex-1">
+                        <div className="flex items-center gap-3 mb-5">
+                          <span className="badge badge-info text-[10px]">Module</span>
+                          <div className="h-px flex-1 bg-slate-border/40"></div>
                         </div>
 
-                        <h3 className="text-2xl font-black text-white mb-4 line-clamp-2 leading-tight tracking-tight group-hover:text-neon-green transition-colors">{module.title}</h3>
-                        <p className="text-gray-500 text-sm font-bold leading-relaxed mb-10 line-clamp-3 italic opacity-80 group-hover:opacity-100 transition-opacity">"{module.description}"</p>
-                      </div>
+                        <h3 className="text-xl font-bold text-slate-heading mb-3 line-clamp-2 leading-snug group-hover:text-indigo-500 transition-colors">{module.title}</h3>
+                        <p className="text-slate-body text-sm leading-relaxed mb-6 line-clamp-3 flex-1">{module.description}</p>
 
-                      <div className="pt-8 border-t border-white/5 flex items-center justify-between relative z-10">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-neon-purple to-blue-500 flex items-center justify-center text-[10px] font-black shadow-[0_5px_15px_rgba(139,92,246,0.3)]">
-                            {module.contributor?.name?.[0] || "M"}
+                        <div className="pt-5 border-t border-slate-border/40 flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-500 flex items-center justify-center text-white text-xs font-bold shadow-soft">
+                              {module.contributor?.name?.[0] || "M"}
+                            </div>
+                            <div className="text-xs font-semibold text-slate-muted">{module.contributor?.name || "Expert"}</div>
                           </div>
-                          <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">{module.contributor?.name || "Architect"}</div>
+                          <span className="text-xs font-bold text-indigo-500 group-hover:translate-x-1 transition-transform">View →</span>
                         </div>
-                        <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Deploy →</span>
                       </div>
                     </div>
                   </Link>
                 ))
               ) : (
-                <div className="col-span-full py-20 bg-white/5 border border-dashed border-white/10 rounded-[40px] flex flex-col items-center justify-center text-center">
-                  <div className="text-4xl mb-6 opacity-30">📂</div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-gray-600">No Modules Found</p>
-                  <p className="text-gray-500 font-bold mt-2">Create new modules to populate the marketplace.</p>
+                <div className="col-span-full py-16 bg-surface-subtle border border-dashed border-slate-border rounded-2xl flex flex-col items-center justify-center text-center">
+                  <div className="text-4xl mb-4 opacity-40">📚</div>
+                  <p className="text-sm font-bold text-slate-muted">No modules available yet</p>
+                  <p className="text-slate-body text-sm mt-1">Check back soon for new courses.</p>
                 </div>
               )}
             </div>
@@ -162,72 +160,68 @@ function Home() {
         </div>
       </section>
 
-      {/* Stats Bento Grid - The Ecosystem */}
-      <section className="py-40 bg-[#050505] relative overflow-hidden">
+      {/* Stats Bento Grid */}
+      <section className="py-24 bg-surface relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-24">
-            <span className="text-neon-green font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Ecosystem_Metrics</span>
-            <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none mb-4">Unrivaled <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-blue-500">Scale.</span></h2>
+          <div className="text-center mb-16">
+            <span className="text-teal-500 font-bold text-xs tracking-widest uppercase mb-3 block">Why MarketMakers</span>
+            <h2 className="section-heading">Everything You Need to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-teal-500">Succeed</span></h2>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-6">
             {/* Large Feature Card */}
-            <div className="md:col-span-2 md:row-span-2 glass-dark rounded-[48px] border-white/5 p-16 relative overflow-hidden flex flex-col justify-end group">
-              <div className="absolute top-0 right-0 w-80 h-80 bg-neon-green/5 blur-[100px] -translate-x-1/4 translate-y-1/4 animate-pulse"></div>
+            <div className="md:col-span-2 md:row-span-2 card p-10 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-50 blur-[60px] rounded-full pointer-events-none"></div>
               <div className="relative z-10">
-                <div className="text-7xl mb-10 group-hover:scale-110 transition-transform duration-700 origin-left">👨‍🎓</div>
-                <div className="text-6xl font-black text-white mb-4 tracking-tighter">1,000+</div>
-                <div className="text-xs font-black text-neon-green uppercase tracking-[0.4em] mb-6">Active Operators</div>
-                <p className="text-gray-400 font-bold leading-relaxed italic text-lg opacity-60">Synchronizing market intelligence across 40+ global execution zones 24/7/365.</p>
+                <div className="text-5xl mb-6">🎓</div>
+                <div className="text-5xl font-extrabold text-slate-heading mb-2 tracking-tight">1,000+</div>
+                <div className="text-sm font-bold text-indigo-500 uppercase tracking-wider mb-4">Active Learners</div>
+                <p className="text-slate-body leading-relaxed">Connecting learners across the globe with institutional-grade trading education available 24/7.</p>
               </div>
             </div>
 
-            {/* Small Bento - Success Rate */}
-            <div className="glass-dark rounded-[40px] border-white/5 p-10 relative overflow-hidden flex flex-col justify-center text-center group">
-              <div className="text-5xl font-black text-white mb-2 tracking-tighter group-hover:text-neon-purple transition-colors">94%</div>
-              <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Protocol Fidelity</div>
+            <div className="card p-8 text-center group">
+              <div className="text-4xl font-extrabold text-slate-heading mb-1 tracking-tight group-hover:text-indigo-500 transition-colors">94%</div>
+              <div className="text-xs font-semibold text-slate-muted uppercase tracking-wider">Completion Rate</div>
             </div>
 
-            {/* Small Bento - Modules */}
-            <div className="glass-dark rounded-[40px] border-white/5 p-10 relative overflow-hidden flex flex-col justify-center text-center group">
-              <div className="text-5xl font-black text-white mb-2 tracking-tighter group-hover:text-neon-green transition-colors">50+</div>
-              <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Intelligence Nodes</div>
+            <div className="card p-8 text-center group">
+              <div className="text-4xl font-extrabold text-slate-heading mb-1 tracking-tight group-hover:text-teal-500 transition-colors">50+</div>
+              <div className="text-xs font-semibold text-slate-muted uppercase tracking-wider">Expert Modules</div>
             </div>
 
-            {/* Medium Bento - Mobile Link */}
-            <div className="md:col-span-2 glass-dark rounded-[40px] border-white/5 p-12 relative overflow-hidden flex items-center justify-between group">
-              <div className="relative z-10">
-                <div className="text-3xl font-black text-white mb-2 tracking-tight">Institutional Latency</div>
-                <div className="text-xs font-black text-gray-500 uppercase tracking-widest">Millisecond precision execution</div>
+            <div className="md:col-span-2 card p-8 flex items-center justify-between group">
+              <div>
+                <div className="text-2xl font-bold text-slate-heading mb-1">Structured Learning</div>
+                <div className="text-sm text-slate-muted font-medium">Courses, modules, lessons & certifications</div>
               </div>
-              <div className="text-6xl font-black text-white/[0.05] absolute right-8 bottom-4 select-none group-hover:text-neon-purple transition-all duration-700">LATENCY</div>
-              <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-3xl flex items-center justify-center text-2xl group-hover:bg-neon-purple group-hover:text-black transition-all">🚀</div>
+              <div className="w-14 h-14 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-indigo-500 group-hover:text-white transition-all">📊</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA - The Final Sync */}
-      <section className="py-40 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-[#0a0a0b] to-black opacity-100"></div>
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <h2 className="text-6xl md:text-8xl font-black text-white tracking-tighter mb-10 leading-[0.9]">READY TO <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green via-blue-500 to-neon-purple">SYNCHRONIZE?</span></h2>
-          <p className="text-xl text-gray-500 font-bold mb-16 leading-relaxed italic max-w-2xl mx-auto">"Opportunities in the alpha layer are fleeting. Your execution begins now."</p>
+      {/* CTA Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-teal-500"></div>
+        <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
+          <h2 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-6 leading-tight font-display">
+            Ready to Start Your<br />Trading Journey?
+          </h2>
+          <p className="text-lg text-white/80 mb-10 leading-relaxed max-w-xl mx-auto">
+            Join thousands of learners mastering the markets with expert guidance and structured education.
+          </p>
 
           <Link
             to="/register"
-            className="group relative inline-flex items-center justify-center transition-transform hover:scale-105"
+            className="inline-flex items-center gap-3 px-10 py-4 bg-white text-indigo-600 font-bold rounded-xl shadow-elevated hover:shadow-lg hover:-translate-y-1 transition-all text-base"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-neon-green to-neon-purple blur-2xl opacity-30 group-hover:opacity-60 transition-opacity"></div>
-            <div className="relative px-12 py-6 bg-white text-black text-[10px] font-black uppercase tracking-[0.5em] rounded-full flex items-center gap-6">
-              <span>Sign Up Now</span>
-              <span className="text-xl">→</span>
-            </div>
+            <span>Get Started Free</span>
+            <span>→</span>
           </Link>
         </div>
       </section>
     </div>
-
   );
 }
 
