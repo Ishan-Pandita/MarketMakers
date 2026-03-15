@@ -1,25 +1,40 @@
-/* src/index.css */
+/* src/index.css — MarketMakers Light Theme */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base Styles */
+body {
+  background-color: #FAFAF8;
+  color: #1A1A2E;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #F5F5F0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+  background: #D1D1C7;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #B8B8C8;
 }
 
 /* Custom animations */
@@ -28,7 +43,6 @@
     opacity: 0;
     transform: translateY(-10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -39,60 +53,89 @@
   animation: slideIn 0.3s ease-out;
 }
 
-/* Custom component styles */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px;
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+/* Component styles */
 @layer components {
   .btn-primary {
-    @apply bg-neon-green text-black font-extrabold py-3 px-6 rounded-full shadow-[0_0_15px_#00ff6666] hover:shadow-[0_0_25px_#00ff6699] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none;
+    @apply bg-indigo-500 text-white font-bold py-3 px-6 rounded-xl shadow-soft hover:bg-indigo-600 hover:shadow-glow-indigo hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none;
   }
 
   .btn-secondary {
-    @apply bg-transparent text-neon-purple font-extrabold py-3 px-6 rounded-full border-2 border-neon-purple shadow-[0_0_10px_#8b5cf64d] hover:shadow-[0_0_20px_#8b5cf680] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200;
+    @apply bg-white text-indigo-500 font-bold py-3 px-6 rounded-xl border border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200;
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-slate-heading font-bold py-3 px-6 rounded-xl border border-slate-border hover:bg-surface-subtle hover:border-slate-light active:translate-y-0 transition-all duration-200;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 bg-background-elevated border border-gray-800 text-white rounded-xl focus:bg-[#222222] focus:ring-1 focus:ring-neon-green focus:border-neon-green outline-none transition-all duration-200 placeholder-gray-500;
+    @apply w-full px-4 py-3 bg-white border border-slate-border text-slate-heading rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all duration-200 placeholder-slate-muted;
   }
 
   .card {
-    @apply bg-background-card rounded-2xl border border-gray-800/60 p-6 hover:shadow-[0_0_25px_#00ff6608] hover:border-neon-green/20 transition-all duration-300;
+    @apply bg-white rounded-2xl border border-slate-border/60 p-6 shadow-card hover:shadow-elevated hover:border-indigo-200/60 transition-all duration-300;
   }
 
-  /* Glassmorphism Utilities */
+  /* Glass Utilities */
   .glass {
-    @apply bg-background-card/40 backdrop-blur-xl border border-white/5 shadow-2xl;
+    @apply bg-white/70 backdrop-blur-xl border border-white/80 shadow-nav;
   }
 
-  .glass-dark {
-    @apply bg-background-dark/60 backdrop-blur-xl border border-neon-purple/20 shadow-[0_0_30px_#8b5cf61a];
+  .glass-subtle {
+    @apply bg-white/50 backdrop-blur-lg border border-slate-border/30 shadow-soft;
   }
 
   .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider;
   }
 
   .badge-success {
-    @apply bg-neon-green/10 text-neon-green border border-neon-green/20;
+    @apply bg-success-light text-success-dark border border-success/20;
   }
 
   .badge-warning {
-    @apply bg-yellow-500/10 text-yellow-400 border border-yellow-500/20;
+    @apply bg-warning-light text-warning-dark border border-warning/20;
   }
 
   .badge-info {
-    @apply bg-neon-purple/10 text-neon-purple border border-neon-purple/20;
+    @apply bg-indigo-50 text-indigo-700 border border-indigo-200;
+  }
+
+  .badge-role {
+    @apply bg-teal-50 text-teal-700 border border-teal-200;
+  }
+
+  /* Section helpers */
+  .section-heading {
+    @apply text-3xl md:text-4xl font-extrabold text-slate-heading tracking-tight;
+  }
+
+  .section-subheading {
+    @apply text-slate-body font-medium leading-relaxed;
   }
 }
 
-/* Custom Gradients */
-body {
-  background-color: #0A0A0B;
-  color: #FFFFFF;
-}
-
+/* Background mesh gradient */
 .bg-gradient-mesh {
-  background-color: #0A0A0B;
+  background-color: #FAFAF8;
   background-image:
-    radial-gradient(at 0% 0%, rgba(0, 255, 102, 0.05) 0, transparent 40%),
-    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.08) 0, transparent 40%),
-    radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.05) 0, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(80, 72, 229, 0.06) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(20, 184, 166, 0.06) 0, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(80, 72, 229, 0.03) 0, transparent 50%);
 }

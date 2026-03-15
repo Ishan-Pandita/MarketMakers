@@ -1,19 +1,12 @@
-// src/components/LoadingSpinner.jsx
-const LoadingSpinner = ({ size = "medium", text = "" }) => {
-  const sizeClasses = {
-    small: "w-4 h-4 border-2",
-    medium: "w-8 h-8 border-3",
-    large: "w-12 h-12 border-4",
-  };
-
+// src/components/LoadingSpinner.jsx — Light Theme
+function LoadingSpinner() {
   return (
-    <div className="flex flex-col items-center justify-center gap-3">
-      <div
-        className={`${sizeClasses[size]} border-primary-600 border-t-transparent rounded-full animate-spin`}
-      />
-      {text && <p className="text-gray-600 text-sm">{text}</p>}
+    <div className="flex justify-center items-center py-20">
+      <div className="relative">
+        <div className="w-12 h-12 border-3 border-indigo-100 border-t-indigo-500 rounded-full animate-spin"></div>
+      </div>
     </div>
   );
-};
+}
 
 export default LoadingSpinner;
