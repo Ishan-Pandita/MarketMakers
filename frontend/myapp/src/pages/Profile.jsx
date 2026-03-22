@@ -1,12 +1,15 @@
 // src/pages/Profile.jsx — Light Theme
+import usePageTitle from "../hooks/usePageTitle";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { User, Lock } from "lucide-react";
 import API from "../services/api";
 import SuccessMessage from "../components/SuccessMessage";
 import ErrorMessage from "../components/ErrorMessage";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 function Profile() {
+  usePageTitle("Profile");
   const { user, login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -67,7 +70,7 @@ function Profile() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             <div className="card p-8">
-              <div className="flex items-center gap-3 mb-6"><div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center text-lg">👤</div><h2 className="text-xl font-bold text-slate-heading">Personal Information</h2></div>
+              <div className="flex items-center gap-3 mb-6"><div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600"><User className="w-5 h-5" /></div><h2 className="text-xl font-bold text-slate-heading">Personal Information</h2></div>
               <form onSubmit={handleProfileUpdate} className="space-y-5">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-1.5"><label className="block text-xs font-semibold text-slate-body ml-0.5">Full Name</label><input type="text" value={profileData.name} onChange={(e) => setProfileData({ ...profileData, name: e.target.value })} className="input-field" required /></div>
@@ -78,7 +81,7 @@ function Profile() {
             </div>
 
             <div className="card p-8">
-              <div className="flex items-center gap-3 mb-6"><div className="w-9 h-9 bg-teal-50 rounded-xl flex items-center justify-center text-lg">🔐</div><h2 className="text-xl font-bold text-slate-heading">Change Password</h2></div>
+              <div className="flex items-center gap-3 mb-6"><div className="w-9 h-9 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600"><Lock className="w-5 h-5" /></div><h2 className="text-xl font-bold text-slate-heading">Change Password</h2></div>
               <form onSubmit={handlePasswordChange} className="space-y-5">
                 <div className="space-y-1.5 max-w-md"><label className="block text-xs font-semibold text-slate-body ml-0.5">Current Password</label><input type="password" placeholder="Current password" value={passwordData.currentPassword} onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })} className="input-field" required /></div>
                 <div className="grid md:grid-cols-2 gap-4">

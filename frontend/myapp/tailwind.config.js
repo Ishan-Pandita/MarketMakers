@@ -1,13 +1,15 @@
-// tailwind.config.js — MarketMakers Light Theme
+// tailwind.config.js — MarketMakers Dual Theme (Light + Dark)
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
         sans: ["'Plus Jakarta Sans'", "'DM Sans'", "system-ui", "-apple-system", "sans-serif"],
         display: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"],
         body: ["'DM Sans'", "system-ui", "sans-serif"],
+        headline: ["'Manrope'", "system-ui", "sans-serif"],
       },
       colors: {
         surface: {
@@ -17,12 +19,45 @@ export default {
           muted: '#EDEDEA',
           elevated: '#FFFFFF',
         },
+        // Dark theme surfaces
+        dark: {
+          bg: '#0A0E1A',
+          surface: '#0F131F',
+          card: '#1B1F2C',
+          elevated: '#262A37',
+          highest: '#313442',
+          border: '#3C494C',
+        },
         slate: {
           heading: '#1A1A2E',
           body: '#4A4A68',
           muted: '#8E8EA0',
           light: '#B8B8C8',
           border: '#E5E5E0',
+        },
+        cyan: {
+          50: '#ECFEFF',
+          100: '#CFFAFE',
+          200: '#A5F3FC',
+          300: '#67E8F9',
+          400: '#22D3EE',
+          500: '#06B6D4',
+          600: '#0891B2',
+          700: '#0E7490',
+          800: '#155E75',
+          900: '#164E63',
+        },
+        violet: {
+          50: '#F5F3FF',
+          100: '#EDE9FE',
+          200: '#DDD6FE',
+          300: '#C4B5FD',
+          400: '#A78BFA',
+          500: '#8B5CF6',
+          600: '#7C3AED',
+          700: '#6D28D9',
+          800: '#5B21B6',
+          900: '#4C1D95',
         },
         indigo: {
           50: '#EEF2FF',
@@ -47,6 +82,18 @@ export default {
           700: '#0F766E',
           800: '#115E59',
           900: '#134E4A',
+        },
+        emerald: {
+          50: '#ECFDF5',
+          100: '#D1FAE5',
+          200: '#A7F3D0',
+          300: '#6EE7B7',
+          400: '#34D399',
+          500: '#10B981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065F46',
+          900: '#064E3B',
         },
         success: {
           light: '#ECFDF5',
@@ -76,7 +123,13 @@ export default {
         'elevated': '0 8px 30px rgba(0,0,0,0.08)',
         'glow-indigo': '0 0 20px rgba(80,72,229,0.15)',
         'glow-teal': '0 0 20px rgba(20,184,166,0.15)',
+        'glow-cyan': '0 0 20px rgba(34,211,238,0.2)',
+        'glow-violet': '0 0 20px rgba(167,139,250,0.2)',
         'nav': '0 8px 32px rgba(0,0,0,0.08)',
+        'dark-card': '0 4px 20px rgba(0,0,0,0.3)',
+        'dark-elevated': '0 12px 40px rgba(0,0,0,0.4)',
+        'dark-nav': '0 8px 32px rgba(0,0,0,0.3)',
+        'dark-glow': '0 0 30px rgba(34,211,238,0.08)',
       },
       keyframes: {
         fadeIn: {
@@ -109,8 +162,11 @@ export default {
       },
       backgroundImage: {
         'gradient-mesh': 'radial-gradient(at 0% 0%, rgba(80,72,229,0.06) 0, transparent 50%), radial-gradient(at 100% 0%, rgba(20,184,166,0.06) 0, transparent 50%), radial-gradient(at 50% 100%, rgba(80,72,229,0.03) 0, transparent 50%)',
+        'gradient-mesh-dark': 'radial-gradient(at 0% 0%, rgba(34,211,238,0.08) 0, transparent 50%), radial-gradient(at 100% 0%, rgba(167,139,250,0.06) 0, transparent 50%), radial-gradient(at 50% 100%, rgba(34,211,238,0.04) 0, transparent 50%)',
         'gradient-hero': 'linear-gradient(135deg, rgba(80,72,229,0.05) 0%, rgba(20,184,166,0.05) 100%)',
+        'gradient-hero-dark': 'linear-gradient(135deg, rgba(34,211,238,0.06) 0%, rgba(167,139,250,0.06) 100%)',
         'gradient-cta': 'linear-gradient(135deg, #5048E5 0%, #14B8A6 100%)',
+        'gradient-cta-dark': 'linear-gradient(135deg, #22D3EE 0%, #A78BFA 100%)',
       },
     },
   },

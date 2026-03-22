@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const examSchema = new mongoose.Schema(
     {
+        courseId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
+            default: null,
+        },
         title: {
             type: String,
             required: [true, "Exam title is required"],

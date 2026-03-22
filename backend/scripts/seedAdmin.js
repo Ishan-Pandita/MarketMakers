@@ -1,7 +1,13 @@
+/**
+ * ⚠️  DEVELOPMENT ONLY — DO NOT RUN IN PRODUCTION
+ * Seeds a single admin user into the database.
+ *
+ * Usage: npm run seed:admin
+ */
+
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
-const User = require("./models/User");
+const User = require("../models/User");
 
 dotenv.config();
 
@@ -18,14 +24,11 @@ const seedAdmin = async () => {
             process.exit();
         }
 
-        // Create admin user
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash("admin123", salt);
-
+        // Create admin user (pre-save hook handles password hashing)
         const adminUser = new User({
             name: "Ishan Pandita",
             email: "admin@marketmakers.com",
-            password: hashedPassword,
+            password: "admin123",
             role: "admin",
             status: "active",
         });

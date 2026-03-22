@@ -1,176 +1,229 @@
-# MarketMakers 📈
+# ⚡ MarketMakers — Financial Intelligence & Learning Platform
 
-**Master the Markets Like a Pro.**
-A premium trading education platform connecting learners with verified experts.
-**Owned & Operated by Ishan Pandita**.
+A full-stack financial platform that combines **AI-powered investment tools** with a structured **learning management system**. Built with React, Node.js, FastAPI, and multi-provider AI (Gemini 2.5 Flash + Groq Llama 3.3 70B).
 
-## 🚀 Overview
+---
 
-MarketMakers is a full-stack Learning Management System (LMS) for financial education. Verified contributors create structured courses, and learners progress through curriculum with progress tracking and certification exams.
+## ✨ Features
 
-## ✨ Key Features
+### 🎨 Premium UI & Theming
+- **Dual-Theme Architecture** — Seamless, persistent Light and Dark modes.
+- **Micro-Interactions** — Smooth CSS transitions, tactile button feedback (`active:scale`), and slide-in animations.
+- **Professional Iconography** — Fully integrated with scalable `lucide-react` SVG icons.
+- **Glassmorphism** — Modern, blurred backdrop panels for cards and navigation.
 
-- **Premium Light Theme UI** — Clean editorial design with indigo/teal accents, Plus Jakarta Sans & DM Sans typography, soft shadows, and micro-animations.
-- **Structured Courses** — Courses → Modules → Lessons hierarchy with video support and progress tracking.
-- **Contributor Marketplace** — Contributors apply, admins approve, then creators build courses with a clean editor.
-- **Certification Exams** — Timed assessments with automatic grading, score tracking, and pass/fail results.
-- **Role-Based Access** — Learner, Contributor, and Admin roles with protected routes.
-- **Responsive Design** — Mobile-first layout, frosted glass navbar, smooth transitions.
+### 📚 Learning Management System
+- **Courses & Modules** — Structured financial education content
+- **Lessons** — Rich text content with embedded video support
+- **Exams & Certifications** — MCQ-based assessments with scoring
+- **Progress Tracking** — Per-lesson completion tracking
+- **Contributor System** — Approved contributors can create courses
 
-## 📂 Project Structure
+### 💼 Portfolio Management
+- **Smart Asset Search** — TradingView-style autocomplete with 100+ pre-loaded assets (US stocks, Indian stocks, crypto, ETFs, bonds, commodities)
+- **Asset CRUD** — Add, edit, and remove investments with auto-fill from search
+- **Portfolio Dashboard** — Interactive charts (Pie chart allocation, Area chart growth history)
+- **Portfolio Health Score** — Weighted 0-100 score based on diversification, concentration, asset count, and balance
+- **AI Portfolio Analyzer** — Gemini-powered diversification analysis, risk scoring, and actionable suggestions
+- **History Tracking** — Automatic portfolio value snapshots (capped at 365 entries)
+
+### 🤖 AI-Powered Tools
+- **AI Financial Chatbot** — Ultra-fast conversational AI powered by Groq Llama 3.3 70B (<500ms), with Gemini 2.5 Flash fallback. Includes integrated **News Simplifier** — paste any financial article directly in the chat to get simple explanations, key terms, and market impact
+- **Investment Simulator** — Compound interest calculator with interactive charts, preset strategies, and AI-generated insights
+- **Quick Actions** — One-click cards for Portfolio Advice, Market Analysis, News Simplification, and Learning
+
+### 🛡️ Admin Dashboard
+- **Platform Analytics** — Total users, learners, contributors, courses, exams, lesson completions
+- **Contributor Management** — Approve or reject contributor applications
+- **Recent Users** — View latest signups with role badges
+
+### 🔐 Security & Authentication
+- JWT authentication with strong 64-char secret
+- Role-based access control with hierarchy (Admin > Contributor > Learner)
+- Admin role injection protection (can't self-assign admin via registration)
+- Password hashing with bcryptjs (salt factor 12)
+- Rate limiting (100 req/15min global, 10 req/15min for auth)
+- Input validation on all endpoints (portfolio, AI, auth, courses)
+- Response compression (gzip)
+- Helmet security headers
+- Toast notifications for all API error states
+
+---
+
+## 🏗️ Architecture
+
+```
+┌────────────────┐    ┌─────────────────┐    ┌──────────────────┐
+│   Frontend     │◄──►│   Backend API   │◄──►│  AI Microservice │
+│  React + Vite  │    │  Express + Mongo│    │  FastAPI         │
+│  :5173         │    │  :5001          │    │  :8000           │
+└────────────────┘    └─────────────────┘    └──────────────────┘
+                                                    │
+                                              ┌─────┴──────┐
+                                              │ Gemini 2.5  │
+                                              │ Flash       │
+                                              ├─────────────┤
+                                              │ Groq Llama  │
+                                              │ 3.3 70B     │
+                                              └─────────────┘
+```
 
 ```
 MarketMakers/
-├── backend/
-│   ├── config/
-│   │   └── db.js                # MongoDB connection
-│   ├── middleware/
-│   │   ├── asyncHandler.js      # Async error wrapper
-│   │   ├── authMiddleware.js    # JWT authentication
-│   │   ├── checkAdmin.js        # Admin role check
-│   │   ├── checkContributor.js  # Contributor role check
-│   │   ├── errorMiddleware.js   # Global error handler
-│   │   └── validators.js        # Input validation
+├── backend/                    # Node.js + Express API
+│   ├── controllers/
+│   │   ├── authController.js         ← Auth + role protection
+│   │   ├── adminController.js        ← Admin stats + approvals
+│   │   ├── courseController.js        ← Course CRUD
+│   │   ├── portfolioController.js    ← Portfolio CRUD + summary
+│   │   ├── aiController.js           ← AI feature proxy
+│   │   └── ...
 │   ├── models/
-│   │   ├── Course.js            # Course schema
-│   │   ├── Exam.js              # Exam schema
-│   │   ├── ExamAttempt.js       # Exam attempts
-│   │   ├── Lesson.js            # Lesson schema
-│   │   ├── Module.js            # Module schema
-│   │   ├── PasswordReset.js     # Password reset tokens
-│   │   ├── Progress.js          # Lesson progress
-│   │   ├── Suggestion.js        # User comments
-│   │   └── User.js              # User accounts
+│   │   ├── User.js                   ← Roles, hashing, validation
+│   │   ├── Portfolio.js              ← Assets + capped history
+│   │   ├── ChatHistory.js            ← Chat session persistence
+│   │   └── Course.js, Module.js, Lesson.js, Exam.js ...
 │   ├── routes/
-│   │   ├── adminRoutes.js       # Admin management
-│   │   ├── authRoutes.js        # Auth (register, login, reset)
-│   │   ├── courseRoutes.js      # Course CRUD
-│   │   ├── examRoutes.js        # Exam & attempts
-│   │   ├── lessonRoutes.js      # Lesson CRUD
-│   │   ├── moduleRoutes.js      # Module CRUD
-│   │   ├── progressRoutes.js    # Progress tracking
-│   │   ├── searchRoutes.js      # Global search
-│   │   ├── suggestionRoutes.js  # Comments/feedback
-│   │   └── userRoutes.js        # Public profiles
+│   │   ├── adminRoutes.js            ← /api/v1/admin/*
+│   │   ├── portfolioRoutes.js        ← /api/v1/portfolio/*
+│   │   ├── aiRoutes.js               ← /api/v1/ai/*
+│   │   └── ...
+│   ├── middleware/
+│   │   ├── validators.js             ← Portfolio, AI, auth validators
+│   │   ├── errorMiddleware.js        ← Error handling (no URL leak)
+│   │   └── authMiddleware.js, checkAdmin.js, asyncHandler.js
 │   ├── scripts/
-│   │   ├── resetAdmin.js        # Admin reset utility
-│   │   ├── seed.js              # Full database seeder
-│   │   └── seedAdmin.js         # Admin-only seeder
-│   ├── utils/
-│   │   ├── emailService.js      # Email sender
-│   │   ├── pagination.js        # Pagination helper
-│   │   └── tokenGenerator.js    # Secure token generator
-│   ├── .env.example             # Environment template
-│   ├── app.js                   # Express app setup
-│   └── index.js                 # Server entry point
+│   │   ├── seed.js                   ← Full database seeder
+│   │   ├── seedAdmin.js
+│   │   └── resetAdmin.js
+│   └── config/
 │
-└── frontend/myapp/
-    ├── public/
-    │   ├── logo.svg             # Brand logo
-    │   └── vite.svg             # Vite favicon
-    └── src/
-        ├── components/
-        │   ├── ErrorBoundary.jsx   # React error boundary
-        │   ├── ErrorMessage.jsx    # Error alert
-        │   ├── Footer.jsx          # Site footer
-        │   ├── LoadingSpinner.jsx  # Loading state
-        │   ├── Logo.jsx            # Brand logo component
-        │   ├── Navbar.jsx          # Navigation bar
-        │   ├── Pagination.jsx      # Page navigation
-        │   ├── ProgressBar.jsx     # Progress indicator
-        │   ├── ProtectedRoute.jsx  # Auth route guard
-        │   └── SuccessMessage.jsx  # Success alert
-        ├── context/
-        │   └── AuthContext.jsx     # Auth state provider
-        ├── pages/
-        │   ├── ContributorProfile.jsx  # Public contributor page
-        │   ├── Contributors.jsx        # Contributors list
-        │   ├── Courses.jsx             # Course browser
-        │   ├── CreateCourse.jsx        # Course creation form
-        │   ├── CreateModule.jsx        # Module creation form
-        │   ├── Dashboard.jsx           # User dashboard
-        │   ├── ExamResult.jsx          # Exam results page
-        │   ├── Exams.jsx               # Exams list
-        │   ├── ForgotPassword.jsx      # Password recovery
-        │   ├── Home.jsx                # Landing page
-        │   ├── Lesson.jsx              # Single lesson view
-        │   ├── Lessons.jsx             # Module lessons list
-        │   ├── Login.jsx               # Login page
-        │   ├── Modules.jsx             # Course modules list
-        │   ├── Profile.jsx             # Account settings
-        │   ├── Register.jsx            # Registration page
-        │   ├── ResetPassword.jsx       # Password reset form
-        │   ├── StaticPage.jsx          # Generic static page
-        │   └── TakeExam.jsx            # Exam interface
-        ├── services/
-        │   └── api.js              # Axios HTTP client
-        ├── App.jsx                 # Root component & routes
-        ├── main.jsx                # React entry point
-        └── index.css               # Global styles & Tailwind
+├── ai-service/                 # Python FastAPI + Multi-Provider AI
+│   ├── main.py                       ← FastAPI app with request logging
+│   ├── requirements.txt
+│   └── services/
+│       ├── portfolio_analyzer.py     ← Gemini 2.5 Flash
+│       ├── health_score.py           ← Algorithmic (no AI)
+│       ├── news_simplifier.py        ← Gemini 2.5 Flash
+│       ├── chatbot.py                ← Groq Llama 3.3 70B + fallback
+│       └── simulator.py              ← Gemini 2.5 Flash
+│
+└── frontend/myapp/             # React + Vite + TailwindCSS
+    ├── src/
+    │   ├── pages/
+    │   │   ├── AdminDashboard.jsx    ← Platform analytics
+    │   │   ├── Portfolio.jsx         ← Smart asset search + CRUD
+    │   │   ├── PortfolioDashboard.jsx ← Charts + health score + AI
+    │   │   ├── Chatbot.jsx           ← Chat + integrated news simplifier
+    │   │   ├── Simulator.jsx         ← Investment growth simulator
+    │   │   ├── Dashboard.jsx, Home.jsx, Courses.jsx ...
+    │   │   └── ...
+    │   ├── components/
+    │   │   ├── AssetSearch.jsx       ← TradingView-style autocomplete
+    │   │   ├── ProtectedRoute.jsx    ← Role hierarchy protection
+    │   │   ├── Navbar.jsx            ← Dynamic nav with admin link
+    │   │   └── ...
+    │   ├── hooks/
+    │   │   └── usePageTitle.js       ← Per-page browser tab titles
+    │   ├── context/
+    │   │   └── AuthContext.jsx       ← Auth state + user profile
+    │   └── services/
+    │       └── api.js                ← Axios + toast error handling
+    └── .env.example
 ```
 
 ## 🛠️ Tech Stack
 
 | Layer | Technologies |
-|-------|-------------|
-| **Frontend** | React 18, Vite, Tailwind CSS, Plus Jakarta Sans & DM Sans (Google Fonts) |
-| **Backend** | Node.js, Express.js |
-| **Database** | MongoDB, Mongoose |
-| **Auth** | JWT, bcryptjs |
+|:------|:-------------|
+| **Frontend** | React 18, Vite, TailwindCSS, Recharts, react-hot-toast |
+| **Backend** | Node.js, Express.js, Mongoose, Helmet, compression |
+| **AI Service** | Python, FastAPI, Gemini 2.5 Flash, Groq Llama 3.3 70B |
+| **Database** | MongoDB (Atlas or local) |
+| **Auth** | JWT (64-char secret), bcryptjs |
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v14+)
-- MongoDB (local instance or Atlas URI)
+- **Node.js** v14+
+- **Python** 3.9+
+- **MongoDB** (local or [MongoDB Atlas](https://www.mongodb.com/atlas))
+- **Gemini API Key** (free) — [Get one here](https://aistudio.google.com/apikey)
+- **Groq API Key** (free, optional) — [Get one here](https://console.groq.com/keys)
 
 ### Installation
 
 1. **Clone the repository**
-    ```bash
-    git clone https://github.com/Ishan-Pandita/MarketMakers
-    cd MarketMakers
-    ```
+   ```bash
+   git clone https://github.com/Ishan-Pandita/MarketMakers
+   cd MarketMakers
+   ```
 
-2. **Install dependencies**
-    ```bash
-    cd backend && npm install
-    cd ../frontend/myapp && npm install
-    ```
+2. **Backend setup**
+   ```bash
+   cd backend
+   npm install
+   cp .env.example .env
+   # Edit .env with your MongoDB URI and settings
+   ```
 
-3. **Environment setup**
-    Copy the example env file and configure:
-    ```bash
-    cp backend/.env.example backend/.env
-    ```
-    Edit `backend/.env` with your values:
-    ```env
-    PORT=5000
-    MONGO_URI=mongodb://localhost:27017/marketmakers
-    JWT_SECRET=your_secret_key
-    FRONTEND_URL=http://localhost:5173
-    ```
+3. **Frontend setup**
+   ```bash
+   cd frontend/myapp
+   npm install
+   cp .env.example .env
+   # Default: VITE_API_URL=http://localhost:5001/api/v1
+   ```
 
-4. **Seed the database**
-    ```bash
-    cd backend
-    npm run seed
-    ```
+4. **AI Service setup**
+   ```bash
+   cd ai-service
+   python -m venv venv
+
+   # Windows
+   .\venv\Scripts\activate
+
+   # macOS/Linux
+   source venv/bin/activate
+
+   pip install -r requirements.txt
+
+   # Create .env with your API keys:
+   # GEMINI_API_KEY=your_gemini_key
+   # GROQ_API_KEY=your_groq_key (optional — enables ultra-fast chatbot)
+   ```
+
+5. **Seed the database**
+   ```bash
+   cd backend
+   npm run seed
+   ```
 
 ### Running the Application
 
-```bash
-# Terminal 1 — Backend
-cd backend
-npm start
+Start all three services in separate terminals:
 
-# Terminal 2 — Frontend
+```bash
+# Terminal 1 — AI Service (port 8000)
+cd ai-service
+.\venv\Scripts\activate    # or: source venv/bin/activate
+python main.py
+
+# Terminal 2 — Backend API (port 5001)
+cd backend
+npm run dev
+
+# Terminal 3 — Frontend (port 5173)
 cd frontend/myapp
 npm run dev
 ```
 
 Access the app at **http://localhost:5173**
+
+---
 
 ## 🔐 Demo Accounts
 
@@ -184,39 +237,79 @@ Created by `npm run seed`. All passwords: `password123`
 | **Learner** | Arjun Mehta | `arjun@marketmakers.com` |
 | **Learner** | Sneha Patel | `sneha@marketmakers.com` |
 
+---
+
 ## 📡 API Endpoints
 
-| Endpoint | Method | Description | Access |
-|:---------|:-------|:------------|:-------|
-| `/api/auth/register` | POST | Register user | Public |
-| `/api/auth/login` | POST | Login | Public |
-| `/api/auth/forgot-password` | POST | Send reset email | Public |
-| `/api/auth/reset-password/:token` | POST | Reset password | Public |
-| `/api/courses` | GET / POST | List / Create courses | Public / Contributor |
-| `/api/modules` | GET / POST | List / Create modules | Public / Contributor |
-| `/api/modules/:id` | GET | Module details | Protected |
-| `/api/lessons/module/:id` | GET | Module lessons | Protected |
-| `/api/lessons/:id` | GET | Lesson details | Protected |
-| `/api/exams` | GET | List exams | Protected |
-| `/api/exams/:id/attempt` | POST | Submit exam | Protected |
-| `/api/progress` | POST | Mark lesson complete | Protected |
-| `/api/users/contributors` | GET | List contributors | Public |
-| `/api/users/contributors/:id` | GET | Contributor profile | Public |
-| `/api/admin/pending-contributors` | GET | Pending applications | Admin |
-| `/api/admin/update-status/:id` | PUT | Approve/reject user | Admin |
+### Authentication
+| Endpoint | Method | Description |
+|:---------|:-------|:------------|
+| `/api/v1/auth/register` | POST | Register (learner/contributor only) |
+| `/api/v1/auth/login` | POST | Login |
+| `/api/v1/auth/me` | GET | Get current user profile |
+| `/api/v1/auth/forgot-password` | POST | Send reset email |
+| `/api/v1/auth/reset-password/:token` | POST | Reset password |
 
-## 🤝 Contributing
+### Admin (Admin only)
+| Endpoint | Method | Description |
+|:---------|:-------|:------------|
+| `/api/v1/admin/stats` | GET | Platform analytics |
+| `/api/v1/admin/pending-contributors` | GET | List pending approvals |
+| `/api/v1/admin/update-status/:id` | PUT | Approve/reject user |
 
-1. Fork the project
-2. Create your branch (`git checkout -b feature/NewFeature`)
-3. Commit changes (`git commit -m 'Add NewFeature'`)
-4. Push (`git push origin feature/NewFeature`)
-5. Open a Pull Request
+### Portfolio Management (Protected)
+| Endpoint | Method | Description |
+|:---------|:-------|:------------|
+| `/api/v1/portfolio` | GET | Get user's portfolio |
+| `/api/v1/portfolio/summary` | GET | Portfolio stats & allocation |
+| `/api/v1/portfolio/assets` | POST | Add asset (validated) |
+| `/api/v1/portfolio/assets/:id` | PUT | Update asset (validated) |
+| `/api/v1/portfolio/assets/:id` | DELETE | Remove asset |
 
-## 👨‍💻 Owner
+### AI Features (Protected)
+| Endpoint | Method | Description |
+|:---------|:-------|:------------|
+| `/api/v1/ai/analyze` | POST | AI portfolio analysis |
+| `/api/v1/ai/health-score` | GET | Portfolio health score |
+| `/api/v1/ai/simplify-news` | POST | Simplify financial news (validated) |
+| `/api/v1/ai/chat` | POST | AI chatbot (validated) |
+| `/api/v1/ai/chat/sessions` | GET | List chat sessions |
+| `/api/v1/ai/simulate` | POST | Investment simulation |
 
-**Ishan Pandita** — Full Stack Developer & Platform Owner
+### LMS Content
+| Endpoint | Method | Description |
+|:---------|:-------|:------------|
+| `/api/v1/courses` | GET/POST | List / Create courses |
+| `/api/v1/modules` | GET/POST | List / Create modules |
+| `/api/v1/lessons` | GET/POST | List / Create lessons |
+| `/api/v1/exams` | GET/POST | List / Create exams |
+| `/api/v1/progress` | GET/POST | Track progress |
+
+### AI Service (FastAPI — port 8000)
+| Endpoint | Method | Description |
+|:---------|:-------|:------------|
+| `/health` | GET | Service health check |
+| `/analyze` | POST | Portfolio analysis (Gemini) |
+| `/health-score` | POST | Health score (algorithmic) |
+| `/simplify-news` | POST | News simplification (Gemini) |
+| `/chat` | POST | Chatbot (Groq → Gemini fallback) |
+| `/simulate` | POST | Simulation explanation (Gemini) |
+| `/docs` | GET | Swagger API documentation |
 
 ---
 
-© 2026 MarketMakers. All Rights Reserved.
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is for educational purposes.
+
+**Built by [Ishan Pandita](https://github.com/Ishan-Pandita)**

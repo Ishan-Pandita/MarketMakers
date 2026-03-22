@@ -52,8 +52,53 @@ function ExamResult() {
           {/* Context */}
           {passed ? (
             <div className="bg-success-light border border-success/20 rounded-xl p-5 mb-8 text-left">
-              <h3 className="font-bold text-success-dark mb-1 text-sm">🎉 Contributor Status Unlocked</h3>
-              <p className="text-sm text-slate-body">You can now create and publish courses on MarketMakers.</p>
+              <h3 className="font-bold text-success-dark mb-1 text-sm">🎉 Certificate Earned</h3>
+              <p className="text-sm text-slate-body">You can now download your official completion certificate.</p>
+              <button 
+                onClick={async () => {
+                  try {
+                    let id = result.attemptId;
+                    
+                    // Fallback for older exam attempts that might not have attemptId in state
+                    if (!id) {
+                       const attemptsRes = await API.get('/exams/attempts/me');
+                       const myAttempts = attemptsRes.data.filter(a => a.passed && a.score === result.score);
+                       if (myAttempts.length > 0) {
+                         id = myAttempts[0]._id;
+                       } else {
+                         throw new Error("Could not locate your exam attempt ID.");
+                       }
+                    }
+
+                    const res = await API.get(`/exams/attempt/${id}/certificate`, { responseType: 'blob' });
+                    const url = window.URL.createObjectURL(new Blob([res.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `Certificate_${id.slice(-8).toUpperCase()}.pdf`);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.parentNode.removeChild(link);
+                  } catch (err) {
+                    console.error("Certificate download error:", err);
+                    
+                    // Decode blob error message if backend sent a JSON error as a blob
+                    if (err.response && err.response.data instanceof Blob) {
+                      const text = await err.response.data.text();
+                      try {
+                        const json = JSON.parse(text);
+                        alert(`Download failed: ${json.message}`);
+                      } catch (e) {
+                        alert("Failed to download certificate. Server error.");
+                      }
+                    } else {
+                      alert(`Download failed: ${err.message || 'Please try again.'}`);
+                    }
+                  }
+                }}
+                className="mt-3 inline-flex items-center gap-2 btn-primary py-2 px-4 shadow-sm"
+              >
+                <span>Download PDF</span>
+              </button>
             </div>
           ) : (
             <div className="bg-surface-subtle border border-slate-border/40 rounded-xl p-5 mb-8 text-left">
@@ -69,7 +114,7 @@ function ExamResult() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Link to="/exams" className="btn-outline flex-1 py-3">Back to Exams</Link>
-            <Link to={passed ? "/dashboard" : "/courses"} className="btn-primary flex-1 py-3">{passed ? "Go to Dashboard" : "Review Courses"}</Link>
+            <Link to={passed ? "/dashboard" : "/courses"} className="btn-secondary flex-1 py-3">{passed ? "Go to Dashboard" : "Review Courses"}</Link>
           </div>
         </div>
       </div>

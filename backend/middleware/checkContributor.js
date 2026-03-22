@@ -1,11 +1,11 @@
 const checkContributor = (req, res, next) => {
   if (!req.user) {
-    return res.status(401).json({ message: "Not Authenticated" });
+    res.status(401);
+    throw new Error("Not authenticated");
   }
-  if (req.user.role !== "contributor") {
-    return res
-      .status(403)
-      .json({ message: "Only contributor can create content" });
+  if (req.user.role !== "contributor" && req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("Only contributors can create content");
   }
   next();
 };

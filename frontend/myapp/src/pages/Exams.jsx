@@ -1,11 +1,14 @@
 // src/pages/Exams.jsx — Light Theme
+import usePageTitle from "../hooks/usePageTitle";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { History } from "lucide-react";
 import API from "../services/api";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 
 function Exams() {
+  usePageTitle("Exams");
   const [exams, setExams] = useState([]);
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +25,27 @@ function Exams() {
   };
 
   const getAttemptForExam = (examId) => attempts.filter((a) => a.examId._id === examId);
-  const getBestScore = (examId) => { const ea = getAttemptForExam(examId); if (ea.length === 0) return null; return Math.max(...ea.map((a) => a.score)); };
+  const getBestAttempt = (examId) => {
+    const ea = getAttemptForExam(examId);
+    if (ea.length === 0) return null;
+    return ea.reduce((prev, current) => (prev.score > current.score) ? prev : current);
+  };
+  const getBestScore = (examId) => getBestAttempt(examId)?.score ?? null;
+
+  const downloadCertificate = async (attemptId) => {
+    try {
+      const res = await API.get(`/exams/attempt/${attemptId}/certificate`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Certificate_${attemptId.slice(-8).toUpperCase()}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (err) {
+      alert("Failed to download certificate. Please try again.");
+    }
+  };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-surface"><LoadingSpinner /></div>;
 
@@ -56,7 +79,19 @@ function Exams() {
                       <span className="text-xs font-semibold text-slate-muted flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>{exam.duration} Minutes</span>
                     </div>
                   </div>
-                  {passed && <span className="badge badge-success">✓ Passed</span>}
+                  {passed && (
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="badge badge-success">✓ Passed</span>
+                      <button 
+                        onClick={() => downloadCertificate(getBestAttempt(exam._id)._id)}
+                        className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"
+                        title="Download Certificate"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        Certificate
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 <p className="text-slate-body text-sm mb-6 leading-relaxed border-l-2 border-indigo-200 pl-4">{exam.description || "Comprehensive assessment to validate your proficiency."}</p>
@@ -79,7 +114,13 @@ function Exams() {
                     {examAttempts.length > 0 ? "Retake Exam" : "Start Exam"}
                   </Link>
                   {examAttempts.length > 0 && (
-                    <Link to={`/exams/${exam._id}/history`} className="w-12 h-12 flex items-center justify-center bg-surface-subtle hover:bg-indigo-50 border border-slate-border rounded-xl transition-all" title="View History">📜</Link>
+                    <button 
+                      onClick={() => document.getElementById('history')?.scrollIntoView({ behavior: 'smooth' })} 
+                      className="w-12 h-12 flex items-center justify-center bg-surface-subtle hover:bg-indigo-50 border border-slate-border rounded-xl transition-all" 
+                      title="View History"
+                    >
+                      <History size={20} className="text-indigo-500" />
+                    </button>
                   )}
                 </div>
               </div>
@@ -89,7 +130,7 @@ function Exams() {
 
         {/* History Table */}
         {attempts.length > 0 && (
-          <div className="animate-slideIn">
+          <div id="history" className="animate-slideIn pt-8">
             <h2 className="text-lg font-bold text-slate-heading mb-4">Exam History</h2>
             <div className="card overflow-hidden p-0">
               <table className="min-w-full">
@@ -106,7 +147,16 @@ function Exams() {
                     <tr key={attempt._id} className="hover:bg-surface-subtle/50 transition-colors">
                       <td className="px-6 py-4"><div className="text-sm font-semibold text-slate-heading">{attempt.examId.title}</div></td>
                       <td className="px-6 py-4"><div className="text-sm font-bold text-indigo-500">{attempt.score}%</div></td>
-                      <td className="px-6 py-4"><span className={`badge text-[10px] ${attempt.passed ? 'badge-success' : 'bg-danger-light text-danger-dark border border-danger/20'}`}>{attempt.passed ? "Passed" : "Failed"}</span></td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <span className={`badge text-[10px] ${attempt.passed ? 'badge-success' : 'bg-danger-light text-danger-dark border border-danger/20'}`}>{attempt.passed ? "Passed" : "Failed"}</span>
+                          {attempt.passed && (
+                            <button onClick={() => downloadCertificate(attempt._id)} className="text-indigo-500 hover:text-indigo-700 hover:bg-indigo-50 p-1.5 rounded-lg transition-colors" title="Download Certificate">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            </button>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-6 py-4 text-sm text-slate-muted">{new Date(attempt.completedAt).toLocaleDateString()}</td>
                     </tr>
                   ))}

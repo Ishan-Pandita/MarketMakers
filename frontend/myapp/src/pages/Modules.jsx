@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { Link, useSearchParams, useParams } from "react-router-dom";
+import { Search } from "lucide-react";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ProgressBar from "../components/ProgressBar";
 import Pagination from "../components/Pagination";
@@ -68,7 +69,7 @@ function Modules() {
         {/* Modules Grid */}
         {filteredModules.length === 0 ? (
           <div className="text-center py-20 card">
-            <div className="text-4xl mb-4 opacity-40">🔍</div>
+            <Search className="w-16 h-16 mx-auto mb-4 text-slate-border" />
             <h3 className="text-xl font-bold text-slate-heading mb-2">No Modules Found</h3>
             <p className="text-slate-muted">No modules match your search criteria.</p>
           </div>

@@ -1,55 +1,13 @@
 const express = require("express");
-const User = require("../models/User");
-const Module = require("../models/Module");
-const Course = require("../models/Course");
 const asyncHandler = require("../middleware/asyncHandler");
-const protect = require("../middleware/authMiddleware");
+const {
+  getContributors,
+  getContributorProfile,
+} = require("../controllers/userController");
 
 const router = express.Router();
 
-// Get list of all contributors
-router.get(
-    "/contributors",
-    asyncHandler(async (req, res) => {
-        const contributors = await User.find({
-            role: "contributor",
-            status: "active",
-        }).select("name email contributorDetails createdAt");
-
-        res.json(contributors);
-    })
-);
-
-// Get specific contributor profile
-router.get(
-    "/contributors/:id",
-    asyncHandler(async (req, res) => {
-        const user = await User.findById(req.params.id).select(
-            "name email contributorDetails createdAt role"
-        );
-
-        if (!user) {
-            res.status(404);
-            throw new Error("Contributor not found");
-        }
-
-        // Get courses created by this contributor
-        const courses = await Course.find({ instructor: user._id }).sort({
-            order: 1,
-        });
-
-        // Get modules created by this contributor
-        const modules = await Module.find({ contributor: user._id }).sort({
-            createdAt: -1,
-        });
-
-        res.json({
-            profile: user,
-            courses,
-            modules,
-        });
-    })
-);
+router.get("/contributors", asyncHandler(getContributors));
+router.get("/contributors/:id", asyncHandler(getContributorProfile));
 
 module.exports = router;
-

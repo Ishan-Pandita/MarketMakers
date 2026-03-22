@@ -1,20 +1,23 @@
 const jwt = require("jsonwebtoken");
 
+/**
+ * Authentication middleware — verifies JWT Bearer token
+ * Sets req.user = { id, role } from decoded token payload
+ */
 const protect = (req, res, next) => {
-  let token = req.headers.authorization; //http  header when user logged in frontend sends token
+  let token = req.headers.authorization;
 
   if (token && token.startsWith("Bearer")) {
-    // this is to tell it is jwt login token
     try {
-      token = token.split(" ")[1]; //will remove bearer and give token
+      token = token.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;
-      next(); //user has got access you can go to next route
+      next();
     } catch (error) {
       return res.status(401).json({ message: "Not authorized" });
     }
   } else {
-    return res.status(401).json({ message: "No token" });
+    return res.status(401).json({ message: "No token provided" });
   }
 };
 

@@ -6,6 +6,20 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import SuccessMessage from "../components/SuccessMessage";
 import ErrorMessage from "../components/ErrorMessage";
 
+// Extract YouTube video ID from various URL formats
+const getYouTubeId = (url) => {
+  if (!url) return null;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+  ];
+  for (const p of patterns) {
+    const match = url.match(p);
+    if (match) return match[1];
+  }
+  return null;
+};
+
 function Lesson() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -17,8 +31,10 @@ function Lesson() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
   useEffect(() => { fetchLessonData(); }, [id]);
+  useEffect(() => { setActiveVideoIndex(0); }, [lesson]);
 
   const fetchLessonData = async () => {
     try {
@@ -45,6 +61,9 @@ function Lesson() {
       <div className="text-center"><h2 className="text-2xl font-bold text-slate-heading mb-3">Lesson Not Found</h2><p className="text-slate-muted mb-6">The lesson you're looking for doesn't exist.</p><button onClick={() => navigate(-1)} className="btn-primary">Go Back</button></div>
     </div>
   );
+
+  const activeVideoUrl = lesson.videoLinks?.[activeVideoIndex];
+  const activeVideoId = getYouTubeId(activeVideoUrl);
 
   return (
     <div className="min-h-screen bg-surface py-8">
@@ -74,23 +93,53 @@ function Lesson() {
         {/* Video Player */}
         {lesson.videoLinks?.length > 0 && (
           <div className="mb-8 card overflow-hidden p-0">
-            <div className="bg-slate-heading aspect-video flex items-center justify-center relative">
-              <div className="text-center">
-                <a href={lesson.videoLinks[0]} target="_blank" rel="noopener noreferrer" className="w-20 h-20 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-4 backdrop-blur-sm hover:bg-white/20 transition-all">
-                  <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1.5"></div>
-                </a>
-                <p className="text-white/80 font-semibold text-sm">Watch Video Lesson</p>
+            {activeVideoId ? (
+              <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  key={activeVideoId}
+                  className="absolute top-0 left-0 w-full h-full"
+                  src={`https://www.youtube.com/embed/${activeVideoId}?rel=0&modestbranding=1`}
+                  title={`Video ${activeVideoIndex + 1} — ${lesson.title}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
               </div>
-            </div>
+            ) : (
+              <div className="aspect-video bg-gradient-to-br from-indigo-50 to-teal-50 flex items-center justify-center">
+                <a href={activeVideoUrl} target="_blank" rel="noopener noreferrer" className="text-center group">
+                  <div className="w-20 h-20 rounded-full bg-indigo-500/10 border border-indigo-200 flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-500/20 transition-all">
+                    <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-indigo-500 border-b-[10px] border-b-transparent ml-1.5" />
+                  </div>
+                  <p className="text-[#6B7280] font-semibold text-sm">Open Video</p>
+                </a>
+              </div>
+            )}
+
+            {/* Video selector for multiple videos */}
             {lesson.videoLinks.length > 1 && (
               <div className="bg-surface-subtle p-4 border-t border-slate-border/40">
-                <h3 className="text-xs font-semibold text-slate-muted mb-3 uppercase tracking-wider">Additional Videos</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {lesson.videoLinks.slice(1).map((video, i) => (
-                    <a key={i} href={video} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 rounded-lg bg-white hover:bg-indigo-50 border border-slate-border/40 transition-colors group">
-                      <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-500 transition-colors"><span className="w-0 h-0 border-t-[5px] border-t-transparent border-l-[8px] border-l-indigo-500 group-hover:border-l-white border-b-[5px] border-b-transparent ml-0.5 transition-colors"></span></div>
-                      <span className="text-sm font-medium text-slate-body">Video {i + 2}</span>
-                    </a>
+                <h3 className="text-xs font-semibold text-slate-muted mb-3 uppercase tracking-wider">
+                  {lesson.videoLinks.length} Videos — Playing {activeVideoIndex + 1} of {lesson.videoLinks.length}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {lesson.videoLinks.map((video, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveVideoIndex(i)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        i === activeVideoIndex
+                          ? "bg-indigo-500 text-white shadow-md shadow-indigo-500/20"
+                          : "bg-white hover:bg-indigo-50 text-slate-body border border-slate-border/40"
+                      }`}
+                    >
+                      <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] ${
+                        i === activeVideoIndex ? "bg-white/20" : "bg-indigo-50 text-indigo-500"
+                      }`}>
+                        {i === activeVideoIndex ? "▶" : i + 1}
+                      </span>
+                      Video {i + 1}
+                    </button>
                   ))}
                 </div>
               </div>

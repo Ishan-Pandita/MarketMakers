@@ -1,6 +1,13 @@
+/**
+ * ⚠️  DEVELOPMENT ONLY — DO NOT RUN IN PRODUCTION
+ * This script seeds the database with sample data for development/testing.
+ * It will DESTROY all existing data before seeding.
+ *
+ * Usage: npm run seed
+ */
+
 require("dotenv").config();
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
 // Import models
 const User = require("../models/User");
@@ -41,20 +48,21 @@ const seedDatabase = async () => {
         console.log("✅ All existing data cleared\n");
 
         // ─── USERS ───
+        // NOTE: Using plain passwords — the User model pre-save hook
+        // will automatically hash them before storing in the database.
         console.log("👥 Creating users...");
-        const hashedPassword = await bcrypt.hash("password123", 10);
 
         const users = await User.create([
             {
                 name: "Ishan Pandita",
                 email: "admin@marketmakers.com",
-                password: hashedPassword,
+                password: "password123",
                 role: "admin",
             },
             {
                 name: "Priya Sharma",
                 email: "priya@marketmakers.com",
-                password: hashedPassword,
+                password: "password123",
                 role: "contributor",
                 contributorDetails: {
                     experience: "8+ years in Equity & Derivatives Trading",
@@ -64,7 +72,7 @@ const seedDatabase = async () => {
             {
                 name: "Rajesh Kapoor",
                 email: "rajesh@marketmakers.com",
-                password: hashedPassword,
+                password: "password123",
                 role: "contributor",
                 contributorDetails: {
                     experience: "6+ years in Forex & Commodity Markets",
@@ -74,13 +82,13 @@ const seedDatabase = async () => {
             {
                 name: "Arjun Mehta",
                 email: "arjun@marketmakers.com",
-                password: hashedPassword,
+                password: "password123",
                 role: "learner",
             },
             {
                 name: "Sneha Patel",
                 email: "sneha@marketmakers.com",
-                password: hashedPassword,
+                password: "password123",
                 role: "learner",
             },
         ]);
@@ -90,7 +98,7 @@ const seedDatabase = async () => {
         const priya = users[1];
         const rajesh = users[2];
 
-        // ─── COURSE 1: STOCK MARKET MASTERY ───
+        // ─── COURSES ───
         console.log("🎓 Creating courses...");
         const course1 = await Course.create({
             title: "Stock Market Mastery",
@@ -114,7 +122,7 @@ const seedDatabase = async () => {
         });
         console.log("✅ Created 3 courses\n");
 
-        // ─── MODULES FOR COURSE 1 ───
+        // ─── MODULES ───
         console.log("📚 Creating modules...");
         const c1Modules = await Module.create([
             { courseId: course1._id, title: "Introduction to Stock Markets", description: "Learn the fundamentals of stock markets — how they work, why they exist, and their role in the global economy.", order: 1, contributor: priya._id },
@@ -148,12 +156,9 @@ const seedDatabase = async () => {
 
         // ─── LESSONS ───
         console.log("📖 Creating lessons...");
-
-        // Helper to create lessons for a module
         const createLessons = (moduleId, lessonsData) =>
             Lesson.create(lessonsData.map((l, i) => ({ moduleId, ...l, order: i + 1 })));
 
-        // — Course 1 Lessons —
         const c1m1 = await createLessons(c1Modules[0]._id, [
             { title: "What is the Stock Market?", explanation: "The stock market is a platform where shares of publicly traded companies are bought and sold. It serves as a marketplace connecting investors with companies seeking capital. Understanding the stock market is crucial for anyone looking to build wealth through investing. In this lesson, we explore how stock markets originated, their purpose in the economy, and how they facilitate capital formation.", videoLinks: ["https://www.youtube.com/watch?v=p7HKvqRI_Bo"] },
             { title: "How Stock Exchanges Work", explanation: "Stock exchanges like NYSE, NASDAQ, and BSE are organized marketplaces where securities are traded. They provide transparency, liquidity, and fair pricing through regulated trading mechanisms. Learn about market makers, order types, and how trades are executed in milliseconds through electronic trading systems.", videoLinks: ["https://www.youtube.com/watch?v=F3QpgXBtDeo"] },
@@ -196,7 +201,6 @@ const seedDatabase = async () => {
             { title: "Options Trading Introduction", explanation: "Options provide leverage and flexibility. Learn the basics of calls and puts, option Greeks, and simple strategies like covered calls and protective puts. Understand when options are appropriate and their risk characteristics.", videoLinks: ["https://www.youtube.com/watch?v=LihCkxUDIwE"] },
         ]);
 
-        // — Course 2 Lessons (Forex) —
         const c2m1 = await createLessons(c2Modules[0]._id, [
             { title: "What is Forex Trading?", explanation: "The foreign exchange market is the largest and most liquid financial market globally, with over $6 trillion traded daily. Learn how currencies are traded in pairs, the role of central banks, and why forex attracts millions of traders worldwide.", videoLinks: ["https://www.youtube.com/watch?v=F3QpgXBtDeo"] },
             { title: "Major, Minor & Exotic Pairs", explanation: "Currency pairs are categorized into majors (EUR/USD, GBP/USD), minors (EUR/GBP, AUD/NZD), and exotics (USD/TRY, EUR/ZAR). Each category has different liquidity, spreads, and volatility profiles that affect your trading approach.", videoLinks: ["https://www.youtube.com/watch?v=p7HKvqRI_Bo"] },
@@ -233,7 +237,6 @@ const seedDatabase = async () => {
             { title: "Geopolitical Events & Forex", explanation: "Elections, trade wars, pandemics, and geopolitical tensions create significant forex volatility. Learn to assess geopolitical risk, understand safe-haven flows, and develop strategies for navigating uncertain times in currency markets.", videoLinks: ["https://www.youtube.com/watch?v=WEDIj9JBTC8"] },
         ]);
 
-        // — Course 3 Lessons (Crypto) —
         const c3m1 = await createLessons(c3Modules[0]._id, [
             { title: "What is Blockchain?", explanation: "Blockchain is a distributed ledger technology that records transactions across a network of computers. Learn how blocks are created, verified, and chained together using cryptographic hashes, making the record immutable and transparent.", videoLinks: ["https://www.youtube.com/watch?v=hGXyXbvG31Y"] },
             { title: "How Cryptocurrencies Work", explanation: "Cryptocurrencies use blockchain technology to enable peer-to-peer digital transactions without intermediaries. Learn about mining, consensus mechanisms (Proof of Work vs Proof of Stake), and how value is determined in crypto markets.", videoLinks: ["https://www.youtube.com/watch?v=Ov_7eYNOU7M"] },
@@ -278,7 +281,8 @@ const seedDatabase = async () => {
         console.log("📝 Creating exams...");
         const exam1 = await Exam.create({
             title: "Stock Market Fundamentals Certification",
-            description: "Test your knowledge of stock market fundamentals, technical analysis, and risk management. Score 80% or higher to earn your certification and unlock contributor access.",
+            description: "Test your knowledge of stock market fundamentals, technical analysis, and risk management. Score 80% or higher to earn your certification.",
+            courseId: course1._id,
             passingScore: 80,
             duration: 45,
             isActive: true,
@@ -299,6 +303,7 @@ const seedDatabase = async () => {
         const exam2 = await Exam.create({
             title: "Forex Trading Basics Certification",
             description: "Validate your understanding of forex markets, currency pairs, and forex trading strategies. Pass with 80% or above to demonstrate your forex knowledge.",
+            courseId: course2._id,
             passingScore: 80,
             duration: 30,
             isActive: true,

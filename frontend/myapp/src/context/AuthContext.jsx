@@ -12,13 +12,33 @@ export const AuthProvider = ({ children }) => {
   // Load user from token on mount
   useEffect(() => {
     if (token) {
-      // Decode JWT to get user info (simple decode, not verification)
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
+
+        // Check if token has expired
+        if (payload.exp && payload.exp * 1000 < Date.now()) {
+          console.warn("Token expired, logging out");
+          logout();
+          setLoading(false);
+          return;
+        }
+
+        // Set basic user from token, then fetch full profile
         setUser({
           id: payload.id,
           role: payload.role,
         });
+
+        // Fetch full user profile to get name/email
+        API.get("/auth/me")
+          .then((res) => {
+            setUser(res.data);
+          })
+          .catch(() => {
+            // Token might be invalid, keep basic info
+          })
+          .finally(() => setLoading(false));
+        return;
       } catch (error) {
         console.error("Invalid token:", error);
         logout();

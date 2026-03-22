@@ -1,19 +1,23 @@
-// src/pages/Register.jsx — Light Theme
+// src/pages/Register.jsx — Dual Theme
+import usePageTitle from "../hooks/usePageTitle";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
+import { GraduationCap, Users } from "lucide-react";
 
 function Register() {
+  usePageTitle("Register");
   const [formData, setFormData] = useState({
     name: "", email: "", password: "", confirmPassword: "", role: "learner",
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
   const { register } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -47,9 +51,11 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex relative overflow-hidden">
+    <div className={`min-h-screen flex relative overflow-hidden ${isDark ? 'bg-dark-bg' : 'bg-surface'}`}>
       {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-[50%] bg-gradient-to-br from-indigo-600 via-indigo-500 to-teal-500 relative items-center justify-center p-16">
+      <div className={`hidden lg:flex lg:w-[50%] bg-gradient-to-br relative items-center justify-center p-16 ${
+        isDark ? 'from-cyan-600 via-cyan-700 to-violet-700' : 'from-indigo-600 via-indigo-500 to-teal-500'
+      }`}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-16 right-16 w-40 h-40 border border-white/30 rounded-full"></div>
           <div className="absolute bottom-24 left-16 w-32 h-32 border border-white/20 rounded-full"></div>
@@ -79,65 +85,71 @@ function Register() {
       <div className="flex-1 flex items-center justify-center px-6 py-24 overflow-y-auto">
         <div className="max-w-lg w-full animate-slideIn">
           <div className="mb-8">
-            <h2 className="text-3xl font-extrabold text-slate-heading tracking-tight mb-2 font-display">Create Account</h2>
-            <p className="text-slate-muted text-sm">Fill in your details to get started</p>
+            <h2 className={`text-3xl font-extrabold tracking-tight mb-2 font-display ${isDark ? 'text-gray-100' : 'text-slate-heading'}`}>Create Account</h2>
+            <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-slate-muted'}`}>Fill in your details to get started</p>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl border border-slate-border/60 shadow-card">
+          <div className={`p-8 rounded-2xl border shadow-card ${isDark ? 'bg-dark-card border-dark-border/30 shadow-dark-card' : 'bg-white border-slate-border/60'}`}>
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && <ErrorMessage message={error} />}
               {success && <SuccessMessage message={success} />}
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-body ml-0.5">Full Name</label>
+                  <label className={`block text-xs font-semibold ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Full Name</label>
                   <input type="text" name="name" value={formData.name} onChange={handleChange} className="input-field" placeholder="John Doe" disabled={loading} />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-body ml-0.5">Email Address</label>
+                  <label className={`block text-xs font-semibold ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Email Address</label>
                   <input type="email" name="email" value={formData.email} onChange={handleChange} className="input-field" placeholder="you@example.com" disabled={loading} />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-body ml-0.5">Password</label>
+                  <label className={`block text-xs font-semibold ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Password</label>
                   <input type="password" name="password" value={formData.password} onChange={handleChange} className="input-field" placeholder="••••••••" disabled={loading} />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-semibold text-slate-body ml-0.5">Confirm Password</label>
+                  <label className={`block text-xs font-semibold ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Confirm Password</label>
                   <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="input-field" placeholder="••••••••" disabled={loading} />
                 </div>
               </div>
 
               {/* Role Selection */}
-              <div className="pt-4 border-t border-slate-border/40">
-                <label className="block text-xs font-semibold text-slate-body mb-4 ml-0.5">Account Type</label>
+              <div className={`pt-4 border-t ${isDark ? 'border-dark-border/30' : 'border-slate-border/40'}`}>
+                <label className={`block text-xs font-semibold mb-4 ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Account Type</label>
                 <div className="grid grid-cols-2 gap-4">
-                  <button
-                    type="button"
+                  <button type="button"
                     onClick={() => handleChange({ target: { name: "role", value: "learner" } })}
-                    className={`p-5 rounded-xl border-2 text-left transition-all ${formData.role === "learner" ? "border-indigo-500 bg-indigo-50 shadow-glow-indigo" : "border-slate-border bg-white hover:border-slate-light"}`}
+                    className={`p-5 rounded-xl border-2 text-left transition-all ${
+                      formData.role === "learner"
+                        ? isDark ? "border-cyan-400 bg-cyan-400/10 shadow-glow-cyan" : "border-indigo-500 bg-indigo-50 shadow-glow-indigo"
+                        : isDark ? "border-dark-border bg-dark-elevated hover:border-gray-500" : "border-slate-border bg-white hover:border-slate-light"
+                    }`}
                   >
-                    <div className="text-2xl mb-3">🎓</div>
-                    <h3 className={`text-sm font-bold mb-1 ${formData.role === "learner" ? "text-indigo-600" : "text-slate-heading"}`}>Learner</h3>
-                    <p className="text-xs text-slate-muted leading-relaxed">Access courses, track progress, and earn certifications.</p>
+                    <GraduationCap className={`w-6 h-6 mb-3 ${formData.role === "learner" ? (isDark ? 'text-cyan-400' : 'text-indigo-500') : (isDark ? 'text-gray-500' : 'text-slate-muted')}`} />
+                    <h3 className={`text-sm font-bold mb-1 ${formData.role === "learner" ? (isDark ? "text-cyan-400" : "text-indigo-600") : (isDark ? "text-gray-200" : "text-slate-heading")}`}>Learner</h3>
+                    <p className={`text-xs leading-relaxed ${isDark ? 'text-gray-500' : 'text-slate-muted'}`}>Access courses, track progress, and earn certifications.</p>
                   </button>
-                  <button
-                    type="button"
+                  <button type="button"
                     onClick={() => handleChange({ target: { name: "role", value: "contributor" } })}
-                    className={`p-5 rounded-xl border-2 text-left transition-all ${formData.role === "contributor" ? "border-teal-500 bg-teal-50 shadow-glow-teal" : "border-slate-border bg-white hover:border-slate-light"}`}
+                    className={`p-5 rounded-xl border-2 text-left transition-all ${
+                      formData.role === "contributor"
+                        ? isDark ? "border-violet-400 bg-violet-400/10 shadow-glow-violet" : "border-teal-500 bg-teal-50 shadow-glow-teal"
+                        : isDark ? "border-dark-border bg-dark-elevated hover:border-gray-500" : "border-slate-border bg-white hover:border-slate-light"
+                    }`}
                   >
-                    <div className="text-2xl mb-3">👨‍🏫</div>
-                    <h3 className={`text-sm font-bold mb-1 ${formData.role === "contributor" ? "text-teal-600" : "text-slate-heading"}`}>Contributor</h3>
-                    <p className="text-xs text-slate-muted leading-relaxed">Create courses, publish modules, and guide learners.</p>
+                    <Users className={`w-6 h-6 mb-3 ${formData.role === "contributor" ? (isDark ? 'text-violet-400' : 'text-teal-500') : (isDark ? 'text-gray-500' : 'text-slate-muted')}`} />
+                    <h3 className={`text-sm font-bold mb-1 ${formData.role === "contributor" ? (isDark ? "text-violet-400" : "text-teal-600") : (isDark ? "text-gray-200" : "text-slate-heading")}`}>Contributor</h3>
+                    <p className={`text-xs leading-relaxed ${isDark ? 'text-gray-500' : 'text-slate-muted'}`}>Create courses, publish modules, and guide learners.</p>
                   </button>
                 </div>
 
                 {formData.role === "contributor" && (
-                  <div className="mt-4 bg-indigo-50 border border-indigo-100 p-4 rounded-xl animate-slideIn">
-                    <p className="text-xs font-semibold text-indigo-600 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                  <div className={`mt-4 p-4 rounded-xl animate-slideIn ${isDark ? 'bg-violet-400/10 border border-violet-400/20' : 'bg-indigo-50 border border-indigo-100'}`}>
+                    <p className={`text-xs font-semibold flex items-center gap-2 ${isDark ? 'text-violet-400' : 'text-indigo-600'}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${isDark ? 'bg-violet-400' : 'bg-indigo-500'}`}></span>
                       Contributor accounts require admin approval
                     </p>
                   </div>
@@ -146,13 +158,13 @@ function Register() {
 
               {/* Contributor Extra Fields */}
               {formData.role === "contributor" && (
-                <div className="space-y-4 bg-surface-subtle p-5 rounded-xl border border-slate-border/40 animate-slideIn">
+                <div className={`space-y-4 p-5 rounded-xl border animate-slideIn ${isDark ? 'bg-dark-elevated border-dark-border/30' : 'bg-surface-subtle border-slate-border/40'}`}>
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-slate-body ml-0.5">Trading Experience <span className="text-indigo-500">*</span></label>
+                    <label className={`block text-xs font-semibold ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Trading Experience <span className={isDark ? 'text-cyan-400' : 'text-indigo-500'}>*</span></label>
                     <input type="text" name="experience" value={formData.experience || ""} onChange={handleChange} className="input-field" placeholder="e.g. 5+ years trading stocks and crypto" disabled={loading} required />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-slate-body ml-0.5">Teaching Background <span className="text-indigo-500">*</span></label>
+                    <label className={`block text-xs font-semibold ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Teaching Background <span className={isDark ? 'text-cyan-400' : 'text-indigo-500'}>*</span></label>
                     <textarea name="reason" value={formData.reason || ""} onChange={handleChange} className="input-field min-h-[100px] resize-none" placeholder="Describe your experience creating educational content..." disabled={loading} required />
                   </div>
                 </div>
@@ -170,10 +182,10 @@ function Register() {
               </button>
             </form>
 
-            <div className="mt-6 text-center border-t border-slate-border/40 pt-6">
-              <p className="text-sm text-slate-muted">
+            <div className={`mt-6 text-center border-t pt-6 ${isDark ? 'border-dark-border/30' : 'border-slate-border/40'}`}>
+              <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-slate-muted'}`}>
                 Already have an account?{" "}
-                <Link to="/login" className="text-indigo-500 font-bold hover:text-indigo-700 transition-colors">
+                <Link to="/login" className={`font-bold transition-colors ${isDark ? 'text-cyan-400 hover:text-cyan-300' : 'text-indigo-500 hover:text-indigo-700'}`}>
                   Sign In
                 </Link>
               </p>

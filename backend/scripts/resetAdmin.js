@@ -1,7 +1,13 @@
+/**
+ * ⚠️  DEVELOPMENT ONLY — DO NOT RUN IN PRODUCTION
+ * Deletes all admin users and creates a fresh admin account.
+ *
+ * Usage: npm run reset:admin
+ */
+
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
-const User = require("./models/User");
+const User = require("../models/User");
 
 dotenv.config();
 
@@ -14,14 +20,11 @@ const resetAdmin = async () => {
         const deleteResult = await User.deleteMany({ role: "admin" });
         console.log(`Deleted ${deleteResult.deletedCount} existing admin(s).`);
 
-        // Create new admin user
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash("Marketmakers.123", salt);
-
+        // Create new admin user (pre-save hook handles password hashing)
         const adminUser = new User({
             name: "Ishan Pandita",
             email: "ishanpandita@marketmakers.com",
-            password: hashedPassword,
+            password: "Marketmakers.123",
             role: "admin",
             status: "active",
             contributorDetails: {

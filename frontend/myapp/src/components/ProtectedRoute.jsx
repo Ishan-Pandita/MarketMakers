@@ -18,21 +18,10 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // Check role if required
-  if (requiredRole && user?.role !== requiredRole) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Access Denied
-          </h2>
-          <p className="text-gray-600">
-            You don't have permission to access this page.
-          </p>
-          <Navigate to="/dashboard" replace />
-        </div>
-      </div>
-    );
+  // Role hierarchy: admin can access everything, contributor can access learner routes
+  const roleHierarchy = { admin: 3, contributor: 2, learner: 1 };
+  if (requiredRole && (roleHierarchy[user?.role] || 0) < (roleHierarchy[requiredRole] || 0)) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
