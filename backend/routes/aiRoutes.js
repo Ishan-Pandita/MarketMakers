@@ -1,35 +1,30 @@
 const express = require("express");
-const router = express.Router();
+
+const asyncHandler = require("../middleware/asyncHandler");
 const protect = require("../middleware/authMiddleware");
-const { aiTextValidator, aiChatValidator } = require("../middleware/validators");
+const { aiChatValidator } = require("../middleware/validators");
 const {
   analyzePortfolio,
   getHealthScore,
-  simplifyNews,
+  searchAssets,
   chat,
+  chatStream,
   getChatSessions,
   getChatSession,
   simulate,
 } = require("../controllers/aiController");
 
-// All AI routes are protected
+const router = express.Router();
+
 router.use(protect);
 
-// Feature 4: AI Portfolio Analyzer
-router.post("/analyze", analyzePortfolio);
-
-// Feature 5: Portfolio Health Score
-router.get("/health-score", getHealthScore);
-
-// Feature 6: Financial News Simplifier
-router.post("/simplify-news", aiTextValidator, simplifyNews);
-
-// Feature 7: AI Financial Chatbot
-router.post("/chat", aiChatValidator, chat);
-router.get("/chat/sessions", getChatSessions);
-router.get("/chat/sessions/:sessionId", getChatSession);
-
-// Feature 8: Financial Scenario Simulator
-router.post("/simulate", simulate);
+router.post("/analyze", asyncHandler(analyzePortfolio));
+router.get("/health-score", asyncHandler(getHealthScore));
+router.get("/asset-search", asyncHandler(searchAssets));
+router.post("/chat", aiChatValidator, asyncHandler(chat));
+router.post("/chat/stream", aiChatValidator, asyncHandler(chatStream));
+router.get("/chat/sessions", asyncHandler(getChatSessions));
+router.get("/chat/sessions/:sessionId", asyncHandler(getChatSession));
+router.post("/simulate", asyncHandler(simulate));
 
 module.exports = router;

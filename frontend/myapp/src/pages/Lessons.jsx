@@ -16,17 +16,42 @@ function Lessons() {
   const [completedLessons, setCompletedLessons] = useState(new Set());
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { fetchData(); }, [id, page]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const lessonsRes = await API.get(`/lessons/module/${id}?page=${page}`);
+        if (lessonsRes.data.lessons) {
+          setLessons(lessonsRes.data.lessons);
+          setPagination(lessonsRes.data.pagination);
+        } else {
+          setLessons(Array.isArray(lessonsRes.data) ? lessonsRes.data : []);
+        }
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const lessonsRes = await API.get(`/lessons/module/${id}?page=${page}`);
-      if (lessonsRes.data.lessons) { setLessons(lessonsRes.data.lessons); setPagination(lessonsRes.data.pagination); } else { setLessons(Array.isArray(lessonsRes.data) ? lessonsRes.data : []); }
-      try { const moduleRes = await API.get(`/modules/${id}`); setModule(moduleRes.data); } catch (err) {}
-      try { const progressRes = await API.get("/progress/me"); setCompletedLessons(new Set(progressRes.data.map((p) => (p.lessonId?._id || p.lessonId)))); } catch (err) {}
-    } catch (error) { console.error("Error fetching lessons:", error); } finally { setLoading(false); }
-  };
+        try {
+          const moduleRes = await API.get(`/modules/${id}`);
+          setModule(moduleRes.data);
+        } catch {
+          setModule(null);
+        }
+
+        try {
+          const progressRes = await API.get("/progress/me");
+          setCompletedLessons(
+            new Set(progressRes.data.map((p) => p.lessonId?._id || p.lessonId))
+          );
+        } catch {
+          setCompletedLessons(new Set());
+        }
+      } catch (error) {
+        console.error("Error fetching lessons:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id, page]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-surface"><LoadingSpinner /></div>;
 

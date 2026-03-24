@@ -11,12 +11,12 @@ const generateToken = (length = 32) => {
 
 /**
  * Generate a password reset token with expiration
- * @param {number} expirationHours - Hours until token expires (default: 1)
+ * @param {number} expirationMinutes - Minutes until token expires (default: 10)
  * @returns {object} Token and expiration date
  */
-const generatePasswordResetToken = (expirationHours = 1) => {
+const generatePasswordResetToken = (expirationMinutes = 10) => {
     const token = generateToken();
-    const expiresAt = new Date(Date.now() + expirationHours * 60 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + expirationMinutes * 60 * 1000);
 
     return { token, expiresAt };
 };

@@ -11,7 +11,25 @@ const assetSchema = new mongoose.Schema({
     type: String,
     trim: true,
     uppercase: true,
-    maxlength: [10, "Ticker cannot exceed 10 characters"],
+    maxlength: [20, "Ticker cannot exceed 20 characters"],
+  },
+  quoteSymbol: {
+    type: String,
+    trim: true,
+    uppercase: true,
+    maxlength: [40, "Quote symbol cannot exceed 40 characters"],
+  },
+  exchange: {
+    type: String,
+    trim: true,
+    uppercase: true,
+    maxlength: [40, "Exchange cannot exceed 40 characters"],
+  },
+  currency: {
+    type: String,
+    trim: true,
+    uppercase: true,
+    maxlength: [10, "Currency cannot exceed 10 characters"],
   },
   amount: {
     type: Number,
@@ -56,17 +74,10 @@ const portfolioSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Recalculate total value before saving and cap history
+// Recalculate total value before saving
 portfolioSchema.pre("save", function (next) {
   this.totalValue = this.assets.reduce((sum, asset) => sum + asset.amount, 0);
-  // Keep only the last 365 history entries to prevent unbounded growth
-  if (this.history.length > 365) {
-    this.history = this.history.slice(-365);
-  }
   next();
 });
-
-// Index for fast user lookup
-portfolioSchema.index({ userId: 1 });
 
 module.exports = mongoose.model("Portfolio", portfolioSchema);

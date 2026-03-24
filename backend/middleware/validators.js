@@ -31,6 +31,33 @@ const loginValidator = [
   validate,
 ];
 
+const onboardingValidator = [
+  body("riskProfile")
+    .isIn(["beginner", "intermediate", "advanced"])
+    .withMessage("A valid risk profile is required"),
+  body("literacyScore")
+    .isFloat({ min: 0, max: 100 })
+    .withMessage("Literacy score must be between 0 and 100"),
+  body("firstAsset.name").optional().trim().isLength({ min: 2 }).withMessage("Asset name must be at least 2 characters"),
+  body("firstAsset.ticker").optional().trim().isLength({ max: 15 }).withMessage("Ticker cannot exceed 15 characters"),
+  body("firstAsset.quoteSymbol").optional().trim().isLength({ max: 40 }).withMessage("Quote symbol cannot exceed 40 characters"),
+  body("firstAsset.exchange").optional().trim().isLength({ max: 40 }).withMessage("Exchange cannot exceed 40 characters"),
+  body("firstAsset.currency").optional().trim().isLength({ max: 10 }).withMessage("Currency cannot exceed 10 characters"),
+  body("firstAsset.assetType")
+    .optional()
+    .isIn(["stock", "crypto", "etf", "bond", "mutual_fund", "commodity", "other"])
+    .withMessage("Invalid asset type"),
+  body("firstAsset.amount")
+    .optional()
+    .isFloat({ min: 0.01 })
+    .withMessage("Asset amount must be a positive number"),
+  body("firstAsset.purchasePrice")
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage("Purchase price cannot be negative"),
+  validate,
+];
+
 const moduleValidator = [
   body("title").trim().notEmpty().withMessage("Title is required"),
   body("courseId").isMongoId().withMessage("Valid course ID is required"),
@@ -136,12 +163,67 @@ const portfolioAssetValidator = [
   body("ticker")
     .optional()
     .trim()
+    .isLength({ max: 20 })
+    .withMessage("Ticker cannot exceed 20 characters"),
+  body("quoteSymbol")
+    .optional()
+    .trim()
+    .isLength({ max: 40 })
+    .withMessage("Quote symbol cannot exceed 40 characters"),
+  body("exchange")
+    .optional()
+    .trim()
+    .isLength({ max: 40 })
+    .withMessage("Exchange cannot exceed 40 characters"),
+  body("currency")
+    .optional()
+    .trim()
     .isLength({ max: 10 })
-    .withMessage("Ticker cannot exceed 10 characters"),
+    .withMessage("Currency cannot exceed 10 characters"),
   body("purchasePrice")
     .optional()
     .isFloat({ min: 0 })
     .withMessage("Purchase price cannot be negative"),
+  validate,
+];
+
+const watchlistItemValidator = [
+  body("symbol")
+    .trim()
+    .notEmpty()
+    .withMessage("Symbol is required")
+    .isLength({ max: 20 })
+    .withMessage("Symbol cannot exceed 20 characters"),
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("Name is required")
+    .isLength({ max: 100 })
+    .withMessage("Name cannot exceed 100 characters"),
+  body("quoteSymbol")
+    .optional()
+    .trim()
+    .isLength({ max: 40 })
+    .withMessage("Quote symbol cannot exceed 40 characters"),
+  body("exchange")
+    .optional()
+    .trim()
+    .isLength({ max: 40 })
+    .withMessage("Exchange cannot exceed 40 characters"),
+  body("currency")
+    .optional()
+    .trim()
+    .isLength({ max: 10 })
+    .withMessage("Currency cannot exceed 10 characters"),
+  body("assetType")
+    .optional()
+    .isIn(["stock", "crypto", "etf", "bond", "mutual_fund", "commodity", "other"])
+    .withMessage("Invalid asset type"),
+  body("notes")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Notes cannot exceed 500 characters"),
   validate,
 ];
 
@@ -160,14 +242,28 @@ const aiChatValidator = [
     .trim()
     .notEmpty()
     .withMessage("Message is required")
-    .isLength({ max: 2000 })
-    .withMessage("Message cannot exceed 2000 characters"),
+    .isLength({ max: 5000 })
+    .withMessage("Message cannot exceed 5000 characters"),
+  body("modeHint")
+    .optional()
+    .isIn(["auto", "chat", "news", "portfolio", "learning"])
+    .withMessage("Invalid chat mode"),
+  body("sessionId")
+    .optional({ values: "falsy" })
+    .isMongoId()
+    .withMessage("Invalid session ID"),
+  body("displayMessage")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Display message cannot exceed 500 characters"),
   validate,
 ];
 
 module.exports = {
   registerValidator,
   loginValidator,
+  onboardingValidator,
   moduleValidator,
   lessonValidator,
   progressValidator,
@@ -175,6 +271,7 @@ module.exports = {
   courseValidator,
   examValidator,
   portfolioAssetValidator,
+  watchlistItemValidator,
   aiTextValidator,
   aiChatValidator,
 };

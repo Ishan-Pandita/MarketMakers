@@ -1,79 +1,200 @@
-// src/pages/Courses.jsx — Dual Theme
-import usePageTitle from "../hooks/usePageTitle";
 import { useEffect, useState } from "react";
-import API from "../services/api";
-import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { TrendingUp, DollarSign, Bitcoin } from "lucide-react";
+import { BarChart3, Bitcoin, Sparkles, TrendingUp } from "lucide-react";
 
-const CourseIcon = ({ idx, isDark }) => {
-  const icons = [TrendingUp, DollarSign, Bitcoin];
-  const Icon = icons[idx % 3];
-  return <Icon className="w-12 h-12 opacity-80 text-white" />;
-};
+import LoadingSpinner from "../components/LoadingSpinner";
+import usePageTitle from "../hooks/usePageTitle";
+import { useTheme } from "../context/ThemeContext";
+import API from "../services/api";
+
+const COURSE_ICONS = [TrendingUp, BarChart3, Bitcoin];
 
 function Courses() {
   usePageTitle("Courses");
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { isDark } = useTheme();
+  const [courses, setCourses] = useState([]);
+  const [recommendedCourses, setRecommendedCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const courseAccents = isDark
-    ? ['from-cyan-500 to-cyan-600', 'from-violet-500 to-violet-600', 'from-emerald-500 to-emerald-600']
-    : ['from-indigo-500 to-indigo-600', 'from-teal-500 to-teal-600', 'from-violet-500 to-purple-600'];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setLoading(true);
 
-  useEffect(() => { fetchCourses(); }, []);
+      try {
+        const [allCoursesRes, recommendedRes] = await Promise.allSettled([
+          API.get("/courses"),
+          API.get("/courses/recommended"),
+        ]);
 
-  const fetchCourses = async () => {
-    try { setLoading(true); const res = await API.get("/courses"); setCourses(res.data); }
-    catch (error) { console.error("Error fetching courses:", error); }
-    finally { setLoading(false); }
-  };
+        setCourses(allCoursesRes.status === "fulfilled" ? allCoursesRes.value.data : []);
+        setRecommendedCourses(
+          recommendedRes.status === "fulfilled"
+            ? recommendedRes.value.data?.courses || []
+            : []
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (loading) return <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-dark-bg' : 'bg-surface'}`}><LoadingSpinner /></div>;
+    fetchCourses();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className={`flex min-h-screen items-center justify-center ${isDark ? "bg-dark-bg" : "bg-surface"}`}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
-    <div className={`min-h-screen py-16 ${isDark ? 'bg-dark-bg' : 'bg-surface'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 animate-slideIn">
-          <span className="badge badge-info mb-4">Courses</span>
-          <h1 className={`text-4xl md:text-5xl font-extrabold mb-4 tracking-tight font-display ${isDark ? 'text-gray-100' : 'text-slate-heading'}`}>
-            Choose Your <span className={`text-transparent bg-clip-text bg-gradient-to-r ${isDark ? 'from-cyan-400 to-violet-400' : 'from-indigo-500 to-teal-500'}`}>Path</span>
+    <div className={`min-h-screen py-16 ${isDark ? "bg-dark-bg" : "bg-surface"}`}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 overflow-hidden rounded-[2rem] border p-6 shadow-elevated sm:p-8">
+          <span className="badge badge-info mb-4">Learning engine</span>
+          <h1 className="text-4xl font-extrabold tracking-tight font-display sm:text-5xl">
+            Learn with
+            <span
+              className={`bg-gradient-to-r bg-clip-text text-transparent ${
+                isDark ? "from-cyan-300 to-violet-300" : "from-indigo-600 to-teal-500"
+              }`}
+            >
+              {" "}
+              portfolio-aware guidance
+            </span>
+            .
           </h1>
-          <p className={`text-lg max-w-2xl leading-relaxed ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>
-            Access our expert-curated curriculum of professional trading education. Choose a course to begin your journey.
+          <p className={`mt-4 max-w-3xl text-base leading-relaxed ${isDark ? "text-gray-400" : "text-slate-body"}`}>
+            Your assistant, dashboard, and course catalog now share context, so the catalog can
+            surface the material that best matches what you own and how you learn.
           </p>
         </div>
 
-        {courses.length === 0 ? (
-          <div className="text-center py-24 card">
-            <h3 className={`text-xl font-bold mb-2 ${isDark ? 'text-gray-100' : 'text-slate-heading'}`}>No Courses Available</h3>
-            <p className={isDark ? 'text-gray-500' : 'text-slate-muted'}>Check back soon for new courses.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses.map((course, idx) => (
-              <div key={course._id} className="group card overflow-hidden p-0 animate-slideIn" style={{ animationDelay: `${idx * 100}ms` }}>
-                <div className={`h-44 bg-gradient-to-br ${courseAccents[idx % 3]} relative overflow-hidden flex items-center justify-center`}>
-                  {course.thumbnail ? (
-                    <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  ) : (
-                    <CourseIcon idx={idx} isDark={isDark} />
-                  )}
-                </div>
-                <div className="p-7">
-                  <h3 className={`text-xl font-bold mb-3 transition-colors ${isDark ? 'text-gray-100 group-hover:text-cyan-400' : 'text-slate-heading group-hover:text-indigo-500'}`}>{course.title}</h3>
-                  <p className={`text-sm mb-6 line-clamp-3 leading-relaxed ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>{course.description}</p>
-                  <Link to={`/course/${course._id}/modules`} className="btn-primary w-full py-3 flex items-center justify-center gap-2 text-sm">
-                    <span>Start Course</span>
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </Link>
-                </div>
+        {recommendedCourses.length > 0 && (
+          <section className="mb-12">
+            <div className="mb-4 flex items-center gap-3">
+              <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${isDark ? "bg-cyan-400/10 text-cyan-300" : "bg-indigo-50 text-indigo-600"}`}>
+                <Sparkles className="h-5 w-5" />
               </div>
-            ))}
-          </div>
+              <div>
+                <h2 className="text-2xl font-bold">Recommended for you</h2>
+                <p className={`text-sm ${isDark ? "text-gray-500" : "text-slate-muted"}`}>
+                  Based on your portfolio mix and recent learning activity.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-5 lg:grid-cols-3">
+              {recommendedCourses.map((course, index) => {
+                const Icon = COURSE_ICONS[index % COURSE_ICONS.length];
+
+                return (
+                  <Link
+                    key={course._id}
+                    to={`/course/${course._id}/modules`}
+                    className={`group overflow-hidden rounded-[1.75rem] border p-0 shadow-card transition-all ${
+                      isDark
+                        ? "border-dark-border/30 bg-dark-card hover:border-cyan-400/20 hover:shadow-dark-elevated"
+                        : "border-slate-border/60 bg-white hover:border-indigo-200 hover:shadow-elevated"
+                    }`}
+                  >
+                    <div
+                      className={`flex h-36 items-center justify-between px-6 ${
+                        isDark
+                          ? "bg-[linear-gradient(135deg,rgba(34,211,238,0.18),rgba(167,139,250,0.16))]"
+                          : "bg-[linear-gradient(135deg,rgba(99,102,241,0.12),rgba(20,184,166,0.12))]"
+                      }`}
+                    >
+                      <div>
+                        <p className={`text-xs font-bold uppercase tracking-[0.2em] ${isDark ? "text-cyan-300" : "text-indigo-700"}`}>
+                          Recommended
+                        </p>
+                        <p className="mt-2 text-xl font-extrabold">{course.title}</p>
+                      </div>
+                      <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${isDark ? "bg-dark-surface/80 text-cyan-300" : "bg-white text-indigo-600"}`}>
+                        <Icon className="h-6 w-6" />
+                      </div>
+                    </div>
+
+                    <div className="p-6">
+                      <p className={`text-sm leading-relaxed ${isDark ? "text-gray-400" : "text-slate-body"}`}>
+                        {course.description}
+                      </p>
+                      {course.tags?.length > 0 && (
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {course.tags.slice(0, 4).map((tag) => (
+                            <span
+                              key={tag}
+                              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                                isDark ? "bg-cyan-400/10 text-cyan-300" : "bg-indigo-50 text-indigo-700"
+                              }`}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
         )}
+
+        <section>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold">All courses</h2>
+            <p className={`text-sm ${isDark ? "text-gray-500" : "text-slate-muted"}`}>
+              Explore the full curriculum across markets, asset classes, and trading foundations.
+            </p>
+          </div>
+
+          {courses.length === 0 ? (
+            <div className="card text-center">
+              <p className={`text-sm ${isDark ? "text-gray-400" : "text-slate-body"}`}>
+                No courses are available yet.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {courses.map((course, index) => {
+                const Icon = COURSE_ICONS[index % COURSE_ICONS.length];
+
+                return (
+                  <Link
+                    key={course._id}
+                    to={`/course/${course._id}/modules`}
+                    className={`card group overflow-hidden p-0 ${
+                      isDark ? "hover:border-cyan-400/20" : "hover:border-indigo-200"
+                    }`}
+                  >
+                    <div
+                      className={`flex h-40 items-center justify-center ${
+                        isDark
+                          ? "bg-[linear-gradient(135deg,rgba(34,211,238,0.15),rgba(109,40,217,0.2))]"
+                          : "bg-[linear-gradient(135deg,rgba(99,102,241,0.12),rgba(20,184,166,0.14))]"
+                      }`}
+                    >
+                      <Icon className="h-12 w-12 text-white/90" />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold">{course.title}</h3>
+                      <p className={`mt-3 text-sm leading-relaxed ${isDark ? "text-gray-400" : "text-slate-body"}`}>
+                        {course.description}
+                      </p>
+                      <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 dark:text-cyan-300">
+                        Start course
+                        <span className="transition-transform group-hover:translate-x-1">→</span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 function Profile() {
   usePageTitle("Profile");
-  const { user, login } = useAuth();
+  const { user, updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -21,7 +21,7 @@ function Profile() {
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault(); setError(""); setSuccess(""); setLoading(true);
-    try { const { data } = await API.put("/auth/profile", profileData); const token = localStorage.getItem("token"); login(token, data); setSuccess("Profile updated!"); } catch (err) { setError(err.response?.data?.message || "Failed to update profile"); } finally { setLoading(false); }
+    try { const { data } = await API.put("/auth/profile", profileData); updateUser(data); setSuccess("Profile updated!"); } catch (err) { setError(err.response?.data?.message || "Failed to update profile"); } finally { setLoading(false); }
   };
 
   const handlePasswordChange = async (e) => {

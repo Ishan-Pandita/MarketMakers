@@ -33,17 +33,30 @@ function Lesson() {
   const [error, setError] = useState("");
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
-  useEffect(() => { fetchLessonData(); }, [id]);
-  useEffect(() => { setActiveVideoIndex(0); }, [lesson]);
+  useEffect(() => {
+    const fetchLessonData = async () => {
+      try {
+        setLoading(true);
+        const lessonRes = await API.get(`/lessons/${id}`);
+        setLesson(lessonRes.data);
+        const suggestionsRes = await API.get(`/suggestions/lesson/${id}`);
+        setSuggestions(suggestionsRes.data);
+        try {
+          const progressRes = await API.get(`/progress/check/${id}`);
+          setIsCompleted(progressRes.data.completed);
+        } catch {
+          setIsCompleted(false);
+        }
+      } catch {
+        setError("Failed to load lesson");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchLessonData = async () => {
-    try {
-      setLoading(true);
-      const lessonRes = await API.get(`/lessons/${id}`); setLesson(lessonRes.data);
-      const suggestionsRes = await API.get(`/suggestions/lesson/${id}`); setSuggestions(suggestionsRes.data);
-      try { const progressRes = await API.get(`/progress/check/${id}`); setIsCompleted(progressRes.data.completed); } catch (err) {}
-    } catch (error) { setError("Failed to load lesson"); } finally { setLoading(false); }
-  };
+    fetchLessonData();
+  }, [id]);
+  useEffect(() => { setActiveVideoIndex(0); }, [lesson]);
 
   const addSuggestion = async () => {
     if (!text.trim()) { setError("Please enter a suggestion"); return; }

@@ -18,20 +18,33 @@ const getPendingContributors = async (req, res) => {
 // Approve or Reject a user
 const updateStatus = async (req, res) => {
   const { status } = req.body;
-  const user = await User.findById(req.params.id);
+
+  if (!["active", "rejected"].includes(status)) {
+    res.status(400);
+    throw new Error("Invalid status");
+  }
+
+  const user = await User.findById(req.params.id).select("name role status");
 
   if (!user) {
     res.status(404);
     throw new Error("User not found");
   }
 
-  if (!["active", "rejected", "pending"].includes(status)) {
-    res.status(400);
-    throw new Error("Invalid status");
-  }
+  const updatedUser = await User.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      role: "contributor",
+      status: "pending",
+    },
+    { $set: { status } },
+    { new: true }
+  );
 
-  user.status = status;
-  const updatedUser = await user.save();
+  if (!updatedUser) {
+    res.status(409);
+    throw new Error("Contributor request was already processed");
+  }
 
   res.json({
     message: `User status updated to ${status}`,
@@ -90,4 +103,3 @@ module.exports = {
   updateStatus,
   getAdminStats,
 };
-

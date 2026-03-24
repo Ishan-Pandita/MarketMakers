@@ -18,6 +18,7 @@ const Exam = require("../models/Exam");
 const ExamAttempt = require("../models/ExamAttempt");
 const Progress = require("../models/Progress");
 const Suggestion = require("../models/Suggestion");
+const Watchlist = require("../models/Watchlist");
 
 const connectDB = async () => {
     try {
@@ -44,6 +45,7 @@ const seedDatabase = async () => {
             ExamAttempt.deleteMany({}),
             Progress.deleteMany({}),
             Suggestion.deleteMany({}),
+            Watchlist.deleteMany({}),
         ]);
         console.log("✅ All existing data cleared\n");
 
@@ -58,12 +60,18 @@ const seedDatabase = async () => {
                 email: "admin@marketmakers.com",
                 password: "password123",
                 role: "admin",
+                onboardingComplete: true,
+                riskProfile: "advanced",
+                literacyScore: 95,
             },
             {
                 name: "Priya Sharma",
                 email: "priya@marketmakers.com",
                 password: "password123",
                 role: "contributor",
+                onboardingComplete: true,
+                riskProfile: "advanced",
+                literacyScore: 88,
                 contributorDetails: {
                     experience: "8+ years in Equity & Derivatives Trading",
                     reason: "Passionate about teaching technical analysis and helping new traders avoid common mistakes.",
@@ -74,6 +82,9 @@ const seedDatabase = async () => {
                 email: "rajesh@marketmakers.com",
                 password: "password123",
                 role: "contributor",
+                onboardingComplete: true,
+                riskProfile: "advanced",
+                literacyScore: 85,
                 contributorDetails: {
                     experience: "6+ years in Forex & Commodity Markets",
                     reason: "Want to share practical forex strategies that work in real market conditions.",
@@ -84,12 +95,18 @@ const seedDatabase = async () => {
                 email: "arjun@marketmakers.com",
                 password: "password123",
                 role: "learner",
+                onboardingComplete: true,
+                riskProfile: "beginner",
+                literacyScore: 42,
             },
             {
                 name: "Sneha Patel",
                 email: "sneha@marketmakers.com",
                 password: "password123",
                 role: "learner",
+                onboardingComplete: true,
+                riskProfile: "intermediate",
+                literacyScore: 67,
             },
         ]);
         console.log(`✅ Created ${users.length} users\n`);
@@ -105,6 +122,7 @@ const seedDatabase = async () => {
             description: "A comprehensive course covering everything from stock market basics to advanced trading strategies. Perfect for beginners who want to build a solid foundation in equity markets.",
             instructor: priya._id,
             order: 1,
+            tags: ["stocks", "equity", "technical-analysis", "fundamentals", "beginner"],
         });
 
         const course2 = await Course.create({
@@ -112,6 +130,7 @@ const seedDatabase = async () => {
             description: "Master the world's largest financial market. Learn currency pairs, pip calculations, leverage management, and proven forex trading strategies used by professionals.",
             instructor: rajesh._id,
             order: 2,
+            tags: ["forex", "currencies", "macro", "risk-management", "intermediate"],
         });
 
         const course3 = await Course.create({
@@ -119,6 +138,7 @@ const seedDatabase = async () => {
             description: "Navigate the exciting world of cryptocurrency trading. Understand blockchain technology, evaluate crypto projects, and develop strategies for this volatile market.",
             instructor: priya._id,
             order: 3,
+            tags: ["crypto", "blockchain", "digital-assets", "beginner", "volatility"],
         });
         console.log("✅ Created 3 courses\n");
 

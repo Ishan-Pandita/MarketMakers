@@ -1,6 +1,6 @@
 # ⚡ MarketMakers — Financial Intelligence & Learning Platform
 
-A full-stack financial platform that combines **AI-powered investment tools** with a structured **learning management system**. Built with React, Node.js, FastAPI, and multi-provider AI (Gemini 2.5 Flash + Groq Llama 3.3 70B).
+A full-stack financial platform that combines **AI-powered investment tools** with a structured **learning management system**. Built with React, Node.js, FastAPI, and a unified free-tier AI assistant powered by Gemini 2.5 Flash with optional Groq fallback.
 
 ---
 
@@ -22,15 +22,16 @@ A full-stack financial platform that combines **AI-powered investment tools** wi
 ### 💼 Portfolio Management
 - **Smart Asset Search** — TradingView-style autocomplete with 100+ pre-loaded assets (US stocks, Indian stocks, crypto, ETFs, bonds, commodities)
 - **Asset CRUD** — Add, edit, and remove investments with auto-fill from search
-- **Portfolio Dashboard** — Interactive charts (Pie chart allocation, Area chart growth history)
+- **Unified Portfolio Workspace** — Holdings, allocation charts, health score, and simulator tools in one place
 - **Portfolio Health Score** — Weighted 0-100 score based on diversification, concentration, asset count, and balance
 - **AI Portfolio Analyzer** — Gemini-powered diversification analysis, risk scoring, and actionable suggestions
+- **Watchlist** — Track assets before buying with live price lookups
 - **History Tracking** — Automatic portfolio value snapshots (capped at 365 entries)
 
 ### 🤖 AI-Powered Tools
-- **AI Financial Chatbot** — Ultra-fast conversational AI powered by Groq Llama 3.3 70B (<500ms), with Gemini 2.5 Flash fallback. Includes integrated **News Simplifier** — paste any financial article directly in the chat to get simple explanations, key terms, and market impact
+- **Unified AI Financial Assistant** — One assistant for chat, portfolio-aware guidance, learning help, and financial news simplification using Gemini 2.5 Flash with optional Groq fallback
 - **Investment Simulator** — Compound interest calculator with interactive charts, preset strategies, and AI-generated insights
-- **Quick Actions** — One-click cards for Portfolio Advice, Market Analysis, News Simplification, and Learning
+- **Quick Actions** — One-click cards for portfolio advice, market analysis, article simplification, and learning prompts
 
 ### 🛡️ Admin Dashboard
 - **Platform Analytics** — Total users, learners, contributors, courses, exams, lesson completions
@@ -42,7 +43,7 @@ A full-stack financial platform that combines **AI-powered investment tools** wi
 - Role-based access control with hierarchy (Admin > Contributor > Learner)
 - Admin role injection protection (can't self-assign admin via registration)
 - Password hashing with bcryptjs (salt factor 12)
-- Rate limiting (100 req/15min global, 10 req/15min for auth)
+- Global rate limiting with stricter throttling on sensitive auth routes
 - Input validation on all endpoints (portfolio, AI, auth, courses)
 - Response compression (gzip)
 - Helmet security headers
@@ -104,18 +105,16 @@ MarketMakers/
 │   └── services/
 │       ├── portfolio_analyzer.py     ← Gemini 2.5 Flash
 │       ├── health_score.py           ← Algorithmic (no AI)
-│       ├── news_simplifier.py        ← Gemini 2.5 Flash
-│       ├── chatbot.py                ← Groq Llama 3.3 70B + fallback
+│       ├── assistant.py              ← Unified chat + news simplification
 │       └── simulator.py              ← Gemini 2.5 Flash
 │
 └── frontend/myapp/             # React + Vite + TailwindCSS
     ├── src/
     │   ├── pages/
     │   │   ├── AdminDashboard.jsx    ← Platform analytics
-    │   │   ├── Portfolio.jsx         ← Smart asset search + CRUD
-    │   │   ├── PortfolioDashboard.jsx ← Charts + health score + AI
-    │   │   ├── Chatbot.jsx           ← Chat + integrated news simplifier
-    │   │   ├── Simulator.jsx         ← Investment growth simulator
+    │   │   ├── Portfolio.jsx         ← Unified portfolio workspace
+    │   │   ├── Watchlist.jsx         ← Save assets before buying
+    │   │   ├── Chatbot.jsx           ← Streaming AI assistant + news simplifier
     │   │   ├── Dashboard.jsx, Home.jsx, Courses.jsx ...
     │   │   └── ...
     │   ├── components/
@@ -129,7 +128,7 @@ MarketMakers/
     │   │   └── AuthContext.jsx       ← Auth state + user profile
     │   └── services/
     │       └── api.js                ← Axios + toast error handling
-    └── .env.example
+    └── .env
 ```
 
 ## 🛠️ Tech Stack
@@ -138,7 +137,7 @@ MarketMakers/
 |:------|:-------------|
 | **Frontend** | React 18, Vite, TailwindCSS, Recharts, react-hot-toast |
 | **Backend** | Node.js, Express.js, Mongoose, Helmet, compression |
-| **AI Service** | Python, FastAPI, Gemini 2.5 Flash, Groq Llama 3.3 70B |
+| **AI Service** | Python, FastAPI, Gemini 2.5 Flash, optional Groq fallback |
 | **Database** | MongoDB (Atlas or local) |
 | **Auth** | JWT (64-char secret), bcryptjs |
 
@@ -148,7 +147,7 @@ MarketMakers/
 
 ### Prerequisites
 
-- **Node.js** v14+
+- **Node.js** v18+
 - **Python** 3.9+
 - **MongoDB** (local or [MongoDB Atlas](https://www.mongodb.com/atlas))
 - **Gemini API Key** (free) — [Get one here](https://aistudio.google.com/apikey)
@@ -166,16 +165,38 @@ MarketMakers/
    ```bash
    cd backend
    npm install
-   cp .env.example .env
-   # Edit .env with your MongoDB URI and settings
+   # Edit the existing .env with your MongoDB URI and settings
    ```
+   Required backend `.env` values:
+   ```bash
+    MONGO_URI=your_mongodb_connection_string
+    JWT_SECRET=your_long_random_secret
+    INTERNAL_TOKEN=shared_secret_used_by_backend_and_ai_service
+    PORT=5001
+    AI_SERVICE_URL=http://localhost:8000
+    FRONTEND_URL=http://localhost:5173
+    CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+    JWT_EXPIRE=7d
+    ```
+   Optional backend email values:
+   ```bash
+   EMAIL_FROM=noreply@marketmakers.com
+   EMAIL_SERVICE=gmail
+   EMAIL_USER=your_email_username
+   EMAIL_PASSWORD=your_email_password
+   # Or use generic SMTP instead of Gmail:
+   SMTP_HOST=smtp.example.com
+   SMTP_PORT=587
+   SMTP_SECURE=false
+   ```
+   Note: in development, password reset falls back to logging the reset URL if email delivery is not configured. In production, configure SMTP or Gmail if you want reset emails to work.
 
 3. **Frontend setup**
    ```bash
    cd frontend/myapp
    npm install
-   cp .env.example .env
-   # Default: VITE_API_URL=http://localhost:5001/api/v1
+   # Confirm frontend/myapp/.env contains:
+   # VITE_API_URL=http://localhost:5001/api/v1
    ```
 
 4. **AI Service setup**
@@ -191,10 +212,13 @@ MarketMakers/
 
    pip install -r requirements.txt
 
-   # Create .env with your API keys:
-   # GEMINI_API_KEY=your_gemini_key
-   # GROQ_API_KEY=your_groq_key (optional — enables ultra-fast chatbot)
-   ```
+    # Edit ai-service/.env with your API keys:
+    # GEMINI_API_KEY=your_gemini_key
+    # GROQ_API_KEY=your_groq_key (optional — enables Groq fallback)
+    # TWELVE_DATA_API_KEY=your_twelve_data_key (optional — enables live prices)
+    # INTERNAL_TOKEN=shared_secret_used_by_backend_and_ai_service
+    # PORT=8000
+    ```
 
 5. **Seed the database**
    ```bash
@@ -222,6 +246,27 @@ npm run dev
 ```
 
 Access the app at **http://localhost:5173**
+
+This project is currently documented for local development only. Docker files and compose setup have been removed for now.
+
+### Deployment Checklist
+
+Before deploying, make sure you:
+
+```bash
+# Frontend
+cd frontend/myapp
+npm run lint
+npm run build
+```
+
+- Set `NODE_ENV=production` for backend and AI service.
+- Set `FRONTEND_URL` to your deployed frontend URL.
+- Set `CORS_ORIGINS` to a comma-separated allowlist of browser origins that should reach the backend.
+- Keep `INTERNAL_TOKEN` identical in `backend/.env` and `ai-service/.env`.
+- Provide `EMAIL_*` or `SMTP_*` values if production password-reset emails must be delivered.
+- Provide `TWELVE_DATA_API_KEY` if you want live watchlist and portfolio prices.
+- Verify `/api/v1/health` on the backend and `/health` on the AI service after deploy.
 
 ---
 
@@ -271,8 +316,7 @@ Created by `npm run seed`. All passwords: `password123`
 |:---------|:-------|:------------|
 | `/api/v1/ai/analyze` | POST | AI portfolio analysis |
 | `/api/v1/ai/health-score` | GET | Portfolio health score |
-| `/api/v1/ai/simplify-news` | POST | Simplify financial news (validated) |
-| `/api/v1/ai/chat` | POST | AI chatbot (validated) |
+| `/api/v1/ai/chat` | POST | Unified AI assistant (chat + news simplification) |
 | `/api/v1/ai/chat/sessions` | GET | List chat sessions |
 | `/api/v1/ai/simulate` | POST | Investment simulation |
 
@@ -291,8 +335,7 @@ Created by `npm run seed`. All passwords: `password123`
 | `/health` | GET | Service health check |
 | `/analyze` | POST | Portfolio analysis (Gemini) |
 | `/health-score` | POST | Health score (algorithmic) |
-| `/simplify-news` | POST | News simplification (Gemini) |
-| `/chat` | POST | Chatbot (Groq → Gemini fallback) |
+| `/chat` | POST | Unified assistant (Gemini primary, Groq fallback) |
 | `/simulate` | POST | Simulation explanation (Gemini) |
 | `/docs` | GET | Swagger API documentation |
 

@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const connectDB = require("./config/db");
@@ -22,8 +23,25 @@ const userRoutes = require("./routes/userRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const portfolioRoutes = require("./routes/portfolioRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const watchlistRoutes = require("./routes/watchlistRoutes");
 
 const app = express();
+
+const DEFAULT_DEV_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"];
+
+const parseConfiguredOrigins = () =>
+  [process.env.FRONTEND_URL, process.env.CORS_ORIGINS]
+    .filter(Boolean)
+    .flatMap((value) => value.split(","))
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+const allowedOrigins = [
+  ...new Set([
+    ...(process.env.NODE_ENV === "production" ? [] : DEFAULT_DEV_ORIGINS),
+    ...parseConfiguredOrigins(),
+  ]),
+];
 
 // Connect to database
 connectDB();
@@ -32,10 +50,24 @@ connectDB();
 app.use(helmet());
 app.use(compression());
 
-// CORS - restricted to frontend origin
+if (process.env.NODE_ENV === "production" && allowedOrigins.length === 0) {
+  logger.warn(
+    "No FRONTEND_URL or CORS_ORIGINS configured in production; browser requests will be blocked by CORS"
+  );
+}
+
+// CORS - allow configured browser origins and common local dev origins
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      logger.warn(`Blocked CORS origin: ${origin}`);
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
@@ -48,8 +80,8 @@ app.use(
 );
 
 // Body parsing with size limits
-app.use(express.json({ limit: "10kb" }));
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(express.json({ limit: "50kb" }));
+app.use(express.urlencoded({ extended: true, limit: "50kb" }));
 
 // Global rate limiter
 const globalLimiter = rateLimit({
@@ -61,17 +93,8 @@ const globalLimiter = rateLimit({
 });
 app.use("/api/", globalLimiter);
 
-// Strict rate limiter for auth endpoints
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 50, // Increased from 10 to 50 auth attempts per 15 minutes
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { message: "Too many authentication attempts, please try again later" },
-});
-
 // Routes (versioned under /api/v1)
-app.use("/api/v1/auth", authLimiter, authRoutes);
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/modules", moduleRoutes);
 app.use("/api/v1/lessons", lessonRoutes);
 app.use("/api/v1/suggestions", suggestionRoutes);
@@ -82,7 +105,18 @@ app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/courses", courseRoutes);
 app.use("/api/v1/portfolio", portfolioRoutes);
+app.use("/api/v1/watchlist", watchlistRoutes);
 app.use("/api/v1/ai", aiRoutes);
+
+app.get("/api/v1/health", (req, res) => {
+  res.json({
+    status: "ok",
+    service: "marketmakers-backend",
+    timestamp: new Date().toISOString(),
+    mongo:
+      mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+  });
+});
 
 // Health check
 app.get("/api/health", (req, res) => {

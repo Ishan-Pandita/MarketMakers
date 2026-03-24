@@ -1,6 +1,7 @@
 // src/pages/ExamResult.jsx — Light Theme
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useEffect } from "react";
+import API from "../services/api";
 
 function ExamResult() {
   const location = useLocation();
@@ -87,7 +88,7 @@ function ExamResult() {
                       try {
                         const json = JSON.parse(text);
                         alert(`Download failed: ${json.message}`);
-                      } catch (e) {
+                      } catch {
                         alert("Failed to download certificate. Server error.");
                       }
                     } else {

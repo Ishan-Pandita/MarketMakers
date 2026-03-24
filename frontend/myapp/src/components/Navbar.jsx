@@ -1,37 +1,54 @@
-// src/components/Navbar.jsx — Dual Theme with Theme Toggle
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Bot, BookOpen, Bookmark, LogOut, Menu, Moon, Shield, Sun, Wallet, X } from "lucide-react";
+
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import { useState, useRef, useEffect } from "react";
-import { Sun, Moon, Briefcase, BarChart3, Bot, Rocket, Shield, LogOut, Menu, X, ChevronDown } from "lucide-react";
 import Logo from "./Logo";
 
-function NavLink({ to, children }) {
+function NavLink({ to, children, activePath }) {
+  const isActive = activePath === to;
+
   return (
     <Link
       to={to}
-      className="text-slate-body dark:text-gray-400 hover:text-indigo-500 dark:hover:text-cyan-400 font-semibold transition-colors relative group text-[15px]"
+      className={`relative text-[15px] font-semibold transition-colors ${
+        isActive
+          ? "text-indigo-600 dark:text-cyan-400"
+          : "text-slate-body hover:text-indigo-500 dark:text-gray-400 dark:hover:text-cyan-400"
+      }`}
     >
       {children}
-      <span className="absolute -bottom-1 left-1/2 w-0 h-[2px] bg-indigo-500 dark:bg-cyan-400 transition-all duration-300 group-hover:w-full group-hover:left-0 rounded-full"></span>
+      <span
+        className={`absolute -bottom-1 left-0 h-[2px] rounded-full transition-all ${
+          isActive
+            ? "w-full bg-indigo-500 dark:bg-cyan-400"
+            : "w-0 bg-indigo-500 group-hover:w-full dark:bg-cyan-400"
+        }`}
+      />
     </Link>
   );
 }
 
 function Navbar() {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { appContext, isAuthenticated, user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [finDropdownOpen, setFinDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const menuRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setFinDropdownOpen(false);
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMobileMenuOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -39,243 +56,214 @@ function Navbar() {
   const handleLogout = () => {
     logout();
     navigate("/");
-    setMobileMenuOpen(false);
   };
 
-  const toolItems = [
-    { icon: Briefcase, name: "My Portfolio", path: "/portfolio" },
-    { icon: BarChart3, name: "Dashboard", path: "/portfolio/dashboard" },
-    { icon: Bot, name: "AI Chatbot", path: "/chatbot" },
-    { icon: Rocket, name: "Simulator", path: "/simulator" },
-    ...(user?.role === "admin" ? [{ icon: Shield, name: "Admin Panel", path: "/admin" }] : []),
+  const authLinks = [
+    { to: "/courses", label: "Courses", icon: BookOpen },
+    { to: "/portfolio", label: "Portfolio", icon: Wallet },
+    { to: "/watchlist", label: "Watchlist", icon: Bookmark },
+    { to: "/chatbot", label: "Chatbot", icon: Bot },
+    ...(user?.role === "admin"
+      ? [{ to: "/admin", label: "Admin", icon: Shield }]
+      : []),
   ];
 
+  const watchlistCount = appContext?.watchlist?.count || 0;
+
   return (
-    <div className="px-4 sm:px-6 lg:px-8 pt-4 fixed top-0 left-0 w-full z-50">
-      <nav className={`mx-auto max-w-7xl rounded-2xl backdrop-blur-xl border shadow-nav transition-all duration-500 hover:shadow-elevated ${
-        isDark
-          ? 'bg-dark-surface/70 border-dark-border/30 shadow-dark-nav hover:shadow-dark-elevated'
-          : 'bg-white/70 border-slate-border/50'
-      }`}>
-        <div className="px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <Link to="/" className="flex items-center group">
-              <Logo variant="abbreviated" size="sm" />
-            </Link>
+    <div className="fixed left-0 top-0 z-50 w-full px-4 pt-4 sm:px-6 lg:px-8">
+      <nav
+        ref={menuRef}
+        className={`mx-auto max-w-7xl rounded-2xl border backdrop-blur-xl transition-all duration-300 ${
+          isDark
+            ? "border-dark-border/30 bg-dark-surface/75 shadow-dark-nav"
+            : "border-slate-border/50 bg-white/75 shadow-nav"
+        }`}
+      >
+        <div className="flex h-16 items-center justify-between px-5 sm:px-6 lg:px-8">
+          <Link to="/" className="flex items-center">
+            <Logo variant="abbreviated" size="sm" />
+          </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <NavLink to="/">Home</NavLink>
-              <NavLink to="/community">Community</NavLink>
+          <div className="hidden items-center gap-8 md:flex">
+            <NavLink to="/" activePath={location.pathname}>
+              Home
+            </NavLink>
+            <NavLink to="/community" activePath={location.pathname}>
+              Community
+            </NavLink>
 
-              {isAuthenticated ? (
-                <>
-                  <NavLink to="/courses">Courses</NavLink>
-                  <NavLink to="/exams">Exams</NavLink>
-
-                  {/* Financial Tools Dropdown */}
-                  <div className="relative" ref={dropdownRef}>
-                    <button
-                      onClick={() => setFinDropdownOpen(!finDropdownOpen)}
-                      className="text-slate-body dark:text-gray-400 hover:text-indigo-500 dark:hover:text-cyan-400 font-semibold transition-colors relative group text-[15px] flex items-center gap-1"
-                    >
-                      AI Tools
-                      <ChevronDown className={`w-3.5 h-3.5 transition-transform ${finDropdownOpen ? 'rotate-180' : ''}`} />
-                      <span className="absolute -bottom-1 left-1/2 w-0 h-[2px] bg-indigo-500 dark:bg-cyan-400 transition-all duration-300 group-hover:w-full group-hover:left-0 rounded-full"></span>
-                    </button>
-                    {finDropdownOpen && (
-                      <div className={`absolute top-full mt-3 -left-4 w-56 backdrop-blur-xl rounded-xl border overflow-hidden animate-slideDown z-50 ${
+            {isAuthenticated &&
+              authLinks.map((link) => (
+                <div key={link.to} className="relative">
+                  <NavLink to={link.to} activePath={location.pathname}>
+                    {link.label}
+                  </NavLink>
+                  {link.to === "/watchlist" && watchlistCount > 0 && (
+                    <span
+                      className={`absolute -right-4 -top-2 rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
                         isDark
-                          ? 'bg-dark-card/95 border-dark-border/40 shadow-dark-elevated'
-                          : 'bg-white/95 border-slate-border/50 shadow-elevated'
-                      }`}>
-                        {toolItems.map((item) => (
-                          <Link
-                            key={item.path}
-                            to={item.path}
-                            onClick={() => setFinDropdownOpen(false)}
-                            className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-all ${
-                              isDark
-                                ? 'text-gray-300 hover:bg-dark-elevated hover:text-cyan-400'
-                                : 'text-slate-body hover:bg-indigo-50 hover:text-indigo-600'
-                            }`}
-                          >
-                            <item.icon className="w-4 h-4" />
-                            {item.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  <NavLink to="/profile">Profile</NavLink>
-
-                  <div className={`flex items-center gap-3 ml-4 pl-6 border-l ${isDark ? 'border-dark-border' : 'border-slate-border'}`}>
-                    {/* Theme Toggle */}
-                    <button
-                      onClick={toggleTheme}
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                        isDark
-                          ? 'bg-dark-elevated border border-dark-border text-cyan-400 hover:bg-dark-highest hover:text-cyan-300'
-                          : 'bg-surface-subtle border border-slate-border text-slate-muted hover:bg-indigo-50 hover:text-indigo-500'
+                          ? "bg-cyan-400/15 text-cyan-300"
+                          : "bg-indigo-50 text-indigo-700"
                       }`}
-                      title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
                     >
-                      {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                    </button>
-
-                    <Link to="/profile" className="group flex flex-col items-end">
-                      <div className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 transition-colors ${
-                        isDark ? 'text-gray-500 group-hover:text-cyan-400' : 'text-slate-muted group-hover:text-indigo-500'
-                      }`}>
-                        {user?.role}
-                      </div>
-                      <div className={`text-sm font-bold transition-colors ${
-                        isDark ? 'text-gray-200 group-hover:text-cyan-400' : 'text-slate-heading group-hover:text-indigo-500'
-                      }`}>
-                        {user?.name}
-                      </div>
-                    </Link>
-
-                    <button
-                      onClick={handleLogout}
-                      className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-all duration-300 ${
-                        isDark
-                          ? 'bg-dark-elevated border-dark-border text-gray-400 hover:bg-red-900/30 hover:border-red-500/30 hover:text-red-400'
-                          : 'bg-surface-subtle border-slate-border text-slate-muted hover:bg-danger-light hover:border-danger/30 hover:text-danger'
-                      }`}
-                      title="Sign Out"
-                    >
-                      <LogOut className="w-[18px] h-[18px]" />
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="flex items-center gap-4">
-                  {/* Theme Toggle for unauthenticated */}
-                  <button
-                    onClick={toggleTheme}
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                      isDark
-                        ? 'bg-dark-elevated border border-dark-border text-cyan-400 hover:bg-dark-highest hover:text-cyan-300'
-                        : 'bg-surface-subtle border border-slate-border text-slate-muted hover:bg-indigo-50 hover:text-indigo-500'
-                    }`}
-                    title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                  >
-                    {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                  </button>
-
-                  <Link
-                    to="/login"
-                    className={`text-sm font-bold transition-all ${
-                      isDark ? 'text-gray-300 hover:text-cyan-400' : 'text-slate-body hover:text-indigo-500'
-                    }`}
-                  >
-                    Log In
-                  </Link>
-                  <Link
-                    to="/register"
-                    className={`px-6 py-2.5 rounded-xl text-sm font-bold hover:-translate-y-0.5 transition-all ${
-                      isDark
-                        ? 'bg-cyan-400 text-dark-bg hover:bg-cyan-300 shadow-glow-cyan'
-                        : 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-soft hover:shadow-glow-indigo'
-                    }`}
-                  >
-                    Get Started
-                  </Link>
+                      {watchlistCount}
+                    </span>
+                  )}
                 </div>
-              )}
-            </div>
+              ))}
+          </div>
 
-            {/* Mobile menu button */}
-            <div className="md:hidden flex items-center gap-2">
-              <button
-                onClick={toggleTheme}
-                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
-                  isDark
-                    ? 'bg-dark-elevated border border-dark-border text-cyan-400'
-                    : 'bg-surface-subtle border border-slate-border text-slate-muted'
-                }`}
-              >
-                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-all ${
-                  isDark
-                    ? 'bg-dark-elevated border-dark-border text-gray-300 hover:text-cyan-400'
-                    : 'bg-surface-subtle border-slate-border text-slate-body hover:text-indigo-500'
-                }`}
-              >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
+          <div className="hidden items-center gap-3 md:flex">
+            <button
+              onClick={toggleTheme}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all ${
+                isDark
+                  ? "border-dark-border bg-dark-elevated text-cyan-400 hover:bg-dark-highest"
+                  : "border-slate-border bg-surface-subtle text-slate-muted hover:bg-indigo-50 hover:text-indigo-500"
+              }`}
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
+
+            {isAuthenticated ? (
+              <>
+                <Link to="/profile" className="group text-right">
+                  <div
+                    className={`text-[10px] font-bold uppercase tracking-wider ${
+                      isDark ? "text-gray-500 group-hover:text-cyan-400" : "text-slate-muted group-hover:text-indigo-500"
+                    }`}
+                  >
+                    {user?.role}
+                  </div>
+                  <div
+                    className={`text-sm font-bold ${
+                      isDark ? "text-gray-100 group-hover:text-cyan-400" : "text-slate-heading group-hover:text-indigo-500"
+                    }`}
+                  >
+                    {user?.name}
+                  </div>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all ${
+                    isDark
+                      ? "border-dark-border bg-dark-elevated text-gray-400 hover:border-red-500/30 hover:bg-red-900/20 hover:text-red-400"
+                      : "border-slate-border bg-surface-subtle text-slate-muted hover:border-danger/30 hover:bg-danger/10 hover:text-danger"
+                  }`}
+                  title="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className={`text-sm font-bold transition-colors ${
+                    isDark ? "text-gray-300 hover:text-cyan-400" : "text-slate-body hover:text-indigo-500"
+                  }`}
+                >
+                  Log In
+                </Link>
+                <Link to="/register" className="btn-primary px-5 py-2.5 text-sm">
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={toggleTheme}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
+                isDark
+                  ? "border-dark-border bg-dark-elevated text-cyan-400"
+                  : "border-slate-border bg-surface-subtle text-slate-muted"
+              }`}
+            >
+              {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
+                isDark
+                  ? "border-dark-border bg-dark-elevated text-gray-300"
+                  : "border-slate-border bg-surface-subtle text-slate-body"
+              }`}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
 
-        {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className={`md:hidden backdrop-blur-xl border-t rounded-b-2xl overflow-hidden animate-slideDown ${
-            isDark
-              ? 'bg-dark-card/95 border-dark-border/30'
-              : 'bg-white/95 border-slate-border/50'
-          }`}>
-            <div className="px-6 py-6 space-y-3">
+          <div
+            className={`border-t px-5 py-5 md:hidden ${
+              isDark ? "border-dark-border/30 bg-dark-card/95" : "border-slate-border/50 bg-white/95"
+            }`}
+          >
+            <div className="space-y-3">
               {[
-                { name: 'Home', path: '/' },
-                { name: 'Community', path: '/community' },
-                ...(isAuthenticated ? [
-                  { name: 'Courses', path: '/courses' },
-                  { name: 'Exams', path: '/exams' },
-                  { name: 'Portfolio', path: '/portfolio' },
-                  { name: 'Dashboard', path: '/portfolio/dashboard' },
-                  { name: 'AI Chatbot', path: '/chatbot' },
-                  { name: 'Simulator', path: '/simulator' },
-                  { name: 'Profile', path: '/profile' }
-                ] : [
-                  { name: 'Log In', path: '/login' },
-                  { name: 'Get Started', path: '/register' }
-                ])
-              ].map(link => (
+                { to: "/", label: "Home" },
+                { to: "/community", label: "Community" },
+                ...(isAuthenticated
+                  ? authLinks.map(({ to, label }) => ({ to, label }))
+                  : [
+                      { to: "/login", label: "Log In" },
+                      { to: "/register", label: "Get Started" },
+                    ]),
+              ].map((link) => (
                 <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`block py-2 text-lg font-bold transition-all ${
-                    isDark ? 'text-gray-300 hover:text-cyan-400' : 'text-slate-body hover:text-indigo-500'
+                  key={link.to}
+                  to={link.to}
+                  className={`block rounded-xl px-3 py-2 text-sm font-semibold ${
+                    location.pathname === link.to
+                      ? isDark
+                        ? "bg-cyan-400/10 text-cyan-300"
+                        : "bg-indigo-50 text-indigo-700"
+                      : isDark
+                      ? "text-gray-300 hover:bg-dark-elevated"
+                      : "text-slate-body hover:bg-surface-subtle"
                   }`}
                 >
-                  {link.name}
+                  {link.label}
                 </Link>
               ))}
-
-              {isAuthenticated && (
-                <div className={`pt-4 border-t ${isDark ? 'border-dark-border/50' : 'border-slate-border/50'}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <p className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-slate-muted'}`}>{user?.role}</p>
-                      <p className={`text-base font-bold ${isDark ? 'text-gray-200' : 'text-slate-heading'}`}>{user?.name}</p>
-                    </div>
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${
-                      isDark ? 'bg-cyan-400/10 text-cyan-400' : 'bg-indigo-50 text-indigo-500'
-                    }`}>
-                      {user?.name?.[0] || "U"}
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className={`w-full border py-3 rounded-xl text-sm font-bold transition-all ${
-                      isDark
-                        ? 'bg-red-900/20 border-red-500/20 text-red-400 hover:bg-red-900/40'
-                        : 'bg-danger-light border-danger/20 text-danger hover:bg-danger hover:text-white'
-                    }`}
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              )}
             </div>
+
+            {isAuthenticated && (
+              <div
+                className={`mt-5 rounded-2xl border p-4 ${
+                  isDark ? "border-dark-border/30 bg-dark-elevated" : "border-slate-border/50 bg-surface-subtle"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className={`text-xs font-bold uppercase tracking-wider ${isDark ? "text-gray-500" : "text-slate-muted"}`}>
+                      {user?.role}
+                    </p>
+                    <p className={`text-sm font-bold ${isDark ? "text-gray-100" : "text-slate-heading"}`}>
+                      {user?.name}
+                    </p>
+                  </div>
+                  <Link to="/profile" className="btn-outline px-4 py-2 text-xs">
+                    Profile
+                  </Link>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className={`mt-4 w-full rounded-xl border py-2.5 text-sm font-bold transition-all ${
+                    isDark
+                      ? "border-red-500/20 bg-red-900/20 text-red-400 hover:bg-red-900/30"
+                      : "border-danger/20 bg-danger/10 text-danger hover:bg-danger hover:text-white"
+                  }`}
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
           </div>
         )}
       </nav>

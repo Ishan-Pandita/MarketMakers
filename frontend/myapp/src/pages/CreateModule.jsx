@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import API from "../services/api";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
-import { useAuth } from "../context/AuthContext";
 
 function CreateModule() {
   const { courseId } = useParams();
@@ -13,11 +12,22 @@ function CreateModule() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => { if (courseId) fetchCourse(); }, [courseId]);
-  const fetchCourse = async () => { try { const res = await API.get(`/courses/${courseId}`); setCourse(res.data); } catch (err) {} };
+  useEffect(() => {
+    if (!courseId) return;
+
+    const fetchCourse = async () => {
+      try {
+        const res = await API.get(`/courses/${courseId}`);
+        setCourse(res.data);
+      } catch {
+        setCourse(null);
+      }
+    };
+
+    fetchCourse();
+  }, [courseId]);
   const handleChange = (e) => { setFormData({ ...formData, [e.target.name]: e.target.value }); setError(""); };
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,3 +1,4 @@
+const Course = require("../models/Course");
 const Module = require("../models/Module");
 const Lesson = require("../models/Lesson");
 const Progress = require("../models/Progress");
@@ -11,6 +12,21 @@ const createModule = async (req, res) => {
   if (!courseId) {
     res.status(400);
     throw new Error("Course ID is required");
+  }
+
+  const course = await Course.findById(courseId);
+
+  if (!course) {
+    res.status(404);
+    throw new Error("Course not found");
+  }
+
+  if (
+    course.instructor.toString() !== req.user.id &&
+    req.user.role !== "admin"
+  ) {
+    res.status(403);
+    throw new Error("Not authorized to create modules in this course");
   }
 
   const moduleData = {

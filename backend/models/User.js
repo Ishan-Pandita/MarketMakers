@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
+      select: false,
     },
     role: {
       type: String,
@@ -39,6 +40,21 @@ const userSchema = new mongoose.Schema(
     contributorDetails: {
       experience: String,
       reason: String,
+    },
+    onboardingComplete: {
+      type: Boolean,
+      default: false,
+    },
+    riskProfile: {
+      type: String,
+      enum: ["beginner", "intermediate", "advanced"],
+      default: undefined,
+    },
+    literacyScore: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: null,
     },
   },
   { timestamps: true }

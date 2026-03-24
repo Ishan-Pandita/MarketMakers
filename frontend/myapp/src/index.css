@@ -476,10 +476,6 @@ html.dark .text-slate-heading   { color: #DFE2F3 !important; }
 html.dark .text-slate-body      { color: #9CA3AF !important; }
 html.dark .text-slate-muted     { color: #6B7280 !important; }
 html.dark .text-slate-light     { color: #4B5563 !important; }
-html.dark .text-\[\\#1A1A2E\]    { color: #DFE2F3 !important; }
-html.dark .text-\[\\#4A4A68\]    { color: #9CA3AF !important; }
-html.dark .text-\[\\#6B7280\]    { color: #6B7280 !important; }
-
 /* ---- Border overrides ---- */
 html.dark .border-slate-border  { border-color: rgba(60, 73, 76, 0.3) !important; }
 html.dark .border-slate-border\/60 { border-color: rgba(60, 73, 76, 0.2) !important; }

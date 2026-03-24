@@ -12,8 +12,23 @@ function ContributorProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => { fetchProfile(); }, [id]);
-  const fetchProfile = async () => { try { setLoading(true); const res = await API.get(`/users/contributors/${id}`); setProfile(res.data.profile); setCourses(res.data.courses || []); setModules(res.data.modules || []); } catch (err) { setError("Contributor not found"); } finally { setLoading(false); } };
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const res = await API.get(`/users/contributors/${id}`);
+        setProfile(res.data.profile);
+        setCourses(res.data.courses || []);
+        setModules(res.data.modules || []);
+      } catch {
+        setError("Contributor not found");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [id]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-surface"><LoadingSpinner /></div>;
 

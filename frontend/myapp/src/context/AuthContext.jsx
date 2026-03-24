@@ -1,61 +1,89 @@
-// src/context/AuthContext.jsx
-import { createContext, useState, useEffect, useContext } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useEffect, useState } from "react";
+
 import API from "../services/api";
 
 const AuthContext = createContext(null);
 
+const decodeTokenPayload = (token) => {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch (error) {
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [user, setUser] = useState(null);
+  const [appContext, setAppContext] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Load user from token on mount
+  const clearAuthState = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setUser(null);
+    setAppContext(null);
+  };
+
+  const refreshUser = async () => {
+    const res = await API.get("/auth/me");
+    setUser(res.data);
+    return res.data;
+  };
+
+  const refreshAppContext = async () => {
+    const res = await API.get("/auth/me/context");
+    setAppContext(res.data);
+    return res.data;
+  };
+
   useEffect(() => {
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-
-        // Check if token has expired
-        if (payload.exp && payload.exp * 1000 < Date.now()) {
-          console.warn("Token expired, logging out");
-          logout();
-          setLoading(false);
-          return;
-        }
-
-        // Set basic user from token, then fetch full profile
-        setUser({
-          id: payload.id,
-          role: payload.role,
-        });
-
-        // Fetch full user profile to get name/email
-        API.get("/auth/me")
-          .then((res) => {
-            setUser(res.data);
-          })
-          .catch(() => {
-            // Token might be invalid, keep basic info
-          })
-          .finally(() => setLoading(false));
+    const hydrateAuth = async () => {
+      if (!token) {
+        setLoading(false);
         return;
-      } catch (error) {
-        console.error("Invalid token:", error);
-        logout();
       }
-    }
-    setLoading(false);
+
+      const payload = decodeTokenPayload(token);
+
+      if (!payload?.id) {
+        clearAuthState();
+        setLoading(false);
+        return;
+      }
+
+      if (payload.exp && payload.exp * 1000 < Date.now()) {
+        clearAuthState();
+        setLoading(false);
+        return;
+      }
+
+      setUser((currentUser) => ({
+        ...(currentUser || {}),
+        id: payload.id,
+        role: payload.role,
+      }));
+
+      try {
+        await Promise.all([refreshUser(), refreshAppContext()]);
+      } catch (error) {
+        clearAuthState();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    setLoading(true);
+    hydrateAuth();
   }, [token]);
 
   const login = async (email, password) => {
     try {
       const res = await API.post("/auth/login", { email, password });
-      const { token, user } = res.data;
-
-      localStorage.setItem("token", token);
-      setToken(token);
-      setUser(user);
-
+      localStorage.setItem("token", res.data.token);
+      setToken(res.data.token);
+      setUser(res.data.user);
       return { success: true };
     } catch (error) {
       return {
@@ -91,29 +119,64 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = (nextUser) => {
+    setUser((currentUser) => ({
+      ...(currentUser || {}),
+      ...(nextUser || {}),
+    }));
+
+    setAppContext((currentContext) =>
+      currentContext
+        ? {
+            ...currentContext,
+            user: {
+              ...(currentContext.user || {}),
+              ...(nextUser || {}),
+            },
+          }
+        : currentContext
+    );
+  };
+
+  const completeOnboarding = async (payload) => {
+    const res = await API.post("/auth/complete-onboarding", payload);
+    updateUser(res.data.user);
+    await refreshAppContext();
+    return res.data;
+  };
+
   const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUser(null);
+    clearAuthState();
   };
 
-  const value = {
-    user,
-    loading,
-    isAuthenticated: !!token,
-    login,
-    register,
-    logout,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        token,
+        user,
+        appContext,
+        loading,
+        isAuthenticated: Boolean(token),
+        login,
+        register,
+        updateUser,
+        refreshUser,
+        refreshAppContext,
+        completeOnboarding,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-// Custom hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
+
   if (!context) {
     throw new Error("useAuth must be used within AuthProvider");
   }
+
   return context;
 };

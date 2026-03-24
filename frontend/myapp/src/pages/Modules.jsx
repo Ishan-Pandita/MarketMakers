@@ -19,17 +19,35 @@ function Modules() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => { fetchModules(); }, [page]);
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        setLoading(true);
+        let url = `/modules?page=${page}`;
+        if (courseId) {
+          url += `&courseId=${courseId}`;
+          const courseRes = await API.get(`/courses/${courseId}`);
+          setCourse(courseRes.data);
+        }
+        const res = await API.get(url);
+        if (res.data.modules) {
+          setModules(res.data.modules);
+          setPagination(res.data.pagination);
+        } else if (Array.isArray(res.data)) {
+          setModules(res.data);
+        } else {
+          setModules([]);
+        }
+      } catch (error) {
+        console.error("Error fetching modules:", error);
+        setModules([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchModules = async () => {
-    try {
-      setLoading(true);
-      let url = `/modules?page=${page}`;
-      if (courseId) { url += `&courseId=${courseId}`; const courseRes = await API.get(`/courses/${courseId}`); setCourse(courseRes.data); }
-      const res = await API.get(url);
-      if (res.data.modules) { setModules(res.data.modules); setPagination(res.data.pagination); } else if (Array.isArray(res.data)) { setModules(res.data); } else { setModules([]); }
-    } catch (error) { console.error("Error fetching modules:", error); setModules([]); } finally { setLoading(false); }
-  };
+    fetchModules();
+  }, [courseId, page]);
 
   const filteredModules = Array.isArray(modules) ? modules.filter(m => m.title.toLowerCase().includes(searchQuery.toLowerCase()) || m.description?.toLowerCase().includes(searchQuery.toLowerCase())) : [];
 

@@ -3,14 +3,14 @@ const app = require("./app");
 const logger = require("./config/logger");
 
 // Validate required environment variables
-const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"];
+const requiredEnvVars = ["MONGO_URI", "JWT_SECRET", "INTERNAL_TOKEN"];
 const missing = requiredEnvVars.filter((key) => !process.env[key]);
 
 if (missing.length > 0) {
   logger.error(
     `Missing required environment variables: ${missing.join(", ")}`
   );
-  logger.error("Please check your .env file. See .env.example for reference.");
+  logger.error("Please check your .env file and add the missing values.");
   process.exit(1);
 }
 

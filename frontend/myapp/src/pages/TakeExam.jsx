@@ -17,20 +17,75 @@ function TakeExam() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [examStarted, setExamStarted] = useState(false);
 
-  useEffect(() => { fetchExam(); }, [id]);
   useEffect(() => {
-    if (!examStarted || timeRemaining <= 0) return;
-    const timer = setInterval(() => { setTimeRemaining((prev) => { if (prev <= 1) { handleSubmit(); return 0; } return prev - 1; }); }, 1000);
+    const fetchExam = async () => {
+      try {
+        const { data } = await API.get(`/exams/${id}`);
+        setExam(data);
+        setTimeRemaining(data.duration * 60);
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to load exam");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExam();
+  }, [id]);
+
+  useEffect(() => {
+    if (!examStarted || timeRemaining <= 0) return undefined;
+
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => (prev <= 1 ? 0 : prev - 1));
+    }, 1000);
+
     return () => clearInterval(timer);
   }, [examStarted, timeRemaining]);
 
-  const fetchExam = async () => { try { const { data } = await API.get(`/exams/${id}`); setExam(data); setTimeRemaining(data.duration * 60); } catch (err) { setError(err.response?.data?.message || "Failed to load exam"); } finally { setLoading(false); } };
   const startExam = () => setExamStarted(true);
   const handleAnswerSelect = (qi, ai) => setAnswers({ ...answers, [qi]: ai });
+
+  useEffect(() => {
+    if (!examStarted || timeRemaining !== 0 || submitting) return;
+
+    const autoSubmit = async () => {
+      setSubmitting(true);
+      try {
+        const formattedAnswers = Object.entries(answers).map(([qi, sa]) => ({
+          questionIndex: parseInt(qi, 10),
+          selectedAnswer: sa,
+        }));
+        const { data } = await API.post(`/exams/${id}/attempt`, {
+          answers: formattedAnswers,
+        });
+        navigate(`/exams/${id}/result`, { state: { result: data } });
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to submit exam");
+        setSubmitting(false);
+      }
+    };
+
+    void autoSubmit();
+  }, [answers, examStarted, id, navigate, submitting, timeRemaining]);
+
   const handleSubmit = async () => {
     if (!window.confirm("Are you sure you want to submit?")) return;
+
     setSubmitting(true);
-    try { const formattedAnswers = Object.entries(answers).map(([qi, sa]) => ({ questionIndex: parseInt(qi), selectedAnswer: sa })); const { data } = await API.post(`/exams/${id}/attempt`, { answers: formattedAnswers }); navigate(`/exams/${id}/result`, { state: { result: data } }); } catch (err) { setError(err.response?.data?.message || "Failed to submit exam"); setSubmitting(false); }
+    try {
+      const formattedAnswers = Object.entries(answers).map(([qi, sa]) => ({
+        questionIndex: parseInt(qi, 10),
+        selectedAnswer: sa,
+      }));
+      const { data } = await API.post(`/exams/${id}/attempt`, {
+        answers: formattedAnswers,
+      });
+      navigate(`/exams/${id}/result`, { state: { result: data } });
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to submit exam");
+      setSubmitting(false);
+    }
   };
   const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, "0")}`;
   const getAnsweredCount = () => Object.keys(answers).length;

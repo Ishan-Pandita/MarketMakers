@@ -12,6 +12,11 @@ const passwordResetSchema = new mongoose.Schema(
             required: [true, "Reset token is required"],
             unique: true,
         },
+        tokenPrefix: {
+            type: String,
+            required: [true, "Token prefix is required"],
+            index: true,
+        },
         expiresAt: {
             type: Date,
             required: [true, "Expiration date is required"],
@@ -23,8 +28,6 @@ const passwordResetSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-
-
 
 // Index to automatically delete expired tokens
 passwordResetSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });

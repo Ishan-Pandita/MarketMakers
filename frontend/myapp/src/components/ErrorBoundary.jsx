@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+const isDevelopment = import.meta.env.DEV;
+
 class ErrorBoundary extends Component {
     constructor(props) {
         super(props);
@@ -32,7 +34,7 @@ class ErrorBoundary extends Component {
                         >
                             Restart Node
                         </button>
-                        {process.env.NODE_ENV === "development" && this.state.error && (
+                        {isDevelopment && this.state.error && (
                             <details className="mt-8 text-left">
                                 <summary className="cursor-pointer text-[10px] text-gray-600 font-black uppercase tracking-widest hover:text-gray-400 transition-colors">
                                     Debug Trace (Dev Only)
