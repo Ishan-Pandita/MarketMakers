@@ -1,4 +1,4 @@
-// src/pages/Lessons.jsx — Light Theme
+﻿// src/pages/Lessons.jsx -- Light Theme
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../services/api";
@@ -81,7 +81,7 @@ function Lessons() {
 
         {lessons.length === 0 ? (
           <div className="card py-16 text-center">
-            <div className="text-4xl mb-4 opacity-40">📝</div>
+            <div className="text-4xl mb-4 opacity-40"></div>
             <h3 className="text-lg font-bold text-slate-heading mb-2">No Lessons Yet</h3>
             <p className="text-slate-muted text-sm">Lessons will be added to this module soon.</p>
           </div>
@@ -94,7 +94,7 @@ function Lessons() {
                   <div className="flex items-center gap-5">
                     <div className="flex-shrink-0">
                       {isCompleted ? (
-                        <div className="w-11 h-11 bg-success-light border border-success/20 text-success rounded-xl flex items-center justify-center text-lg font-bold">✓</div>
+                        <div className="w-11 h-11 bg-success-light border border-success/20 text-success rounded-xl flex items-center justify-center text-lg font-bold">ok</div>
                       ) : (
                         <div className="w-11 h-11 bg-surface-subtle border border-slate-border text-slate-muted rounded-xl flex items-center justify-center text-sm font-bold group-hover:bg-indigo-50 group-hover:border-indigo-200 group-hover:text-indigo-500 transition-all">{index + 1}</div>
                       )}
@@ -107,10 +107,10 @@ function Lessons() {
                       <p className="text-slate-muted text-sm line-clamp-1">{lesson.explanation || "Click to view lesson"}</p>
                       <div className="flex items-center gap-4 mt-1.5 text-xs text-slate-light">
                         {lesson.estimatedTime && <span>🕐 {lesson.estimatedTime} min</span>}
-                        {lesson.videoLinks?.length > 0 && <span>🎬 {lesson.videoLinks.length} video{lesson.videoLinks.length > 1 ? "s" : ""}</span>}
+                        {lesson.videoLinks?.length > 0 && <span> {lesson.videoLinks.length} video{lesson.videoLinks.length > 1 ? "s" : ""}</span>}
                       </div>
                     </div>
-                    <div className="text-slate-light group-hover:text-indigo-500 transition-colors font-bold flex-shrink-0">→</div>
+                    <div className="text-slate-light group-hover:text-indigo-500 transition-colors font-bold flex-shrink-0">-></div>
                   </div>
                 </Link>
               );

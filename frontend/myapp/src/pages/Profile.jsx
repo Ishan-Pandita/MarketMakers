@@ -1,4 +1,4 @@
-// src/pages/Profile.jsx — Light Theme
+﻿// src/pages/Profile.jsx -- Light Theme
 import usePageTitle from "../hooks/usePageTitle";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";

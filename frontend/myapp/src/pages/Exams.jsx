@@ -1,4 +1,4 @@
-// src/pages/Exams.jsx — Light Theme
+﻿// src/pages/Exams.jsx -- Light Theme
 import usePageTitle from "../hooks/usePageTitle";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -81,7 +81,7 @@ function Exams() {
                   </div>
                   {passed && (
                     <div className="flex flex-col items-end gap-2">
-                      <span className="badge badge-success">✓ Passed</span>
+                      <span className="badge badge-success">ok Passed</span>
                       <button 
                         onClick={() => downloadCertificate(getBestAttempt(exam._id)._id)}
                         className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"

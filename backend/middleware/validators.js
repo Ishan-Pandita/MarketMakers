@@ -1,5 +1,5 @@
-/**
- * Request validators — validates incoming data before it reaches controllers.
+﻿/**
+ * Request validators -- validates incoming data before it reaches controllers.
  */
 const { body, validationResult } = require("express-validator");
 

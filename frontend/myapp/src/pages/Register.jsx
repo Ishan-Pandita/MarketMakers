@@ -1,4 +1,4 @@
-// src/pages/Register.jsx — Dual Theme
+﻿// src/pages/Register.jsx -- Dual Theme
 import usePageTitle from "../hooks/usePageTitle";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -108,11 +108,11 @@ function Register() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className={`block text-xs font-semibold ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Password</label>
-                  <input type="password" name="password" value={formData.password} onChange={handleChange} className="input-field" placeholder="••••••••" disabled={loading} />
+                  <input type="password" name="password" value={formData.password} onChange={handleChange} className="input-field" placeholder="********" disabled={loading} />
                 </div>
                 <div className="space-y-1.5">
                   <label className={`block text-xs font-semibold ml-0.5 ${isDark ? 'text-gray-400' : 'text-slate-body'}`}>Confirm Password</label>
-                  <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="input-field" placeholder="••••••••" disabled={loading} />
+                  <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="input-field" placeholder="********" disabled={loading} />
                 </div>
               </div>
 

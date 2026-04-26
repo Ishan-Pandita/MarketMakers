@@ -1,4 +1,4 @@
-// src/pages/AdminDashboard.jsx — Admin Platform Analytics
+﻿// src/pages/AdminDashboard.jsx -- Admin Platform Analytics
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../services/api";

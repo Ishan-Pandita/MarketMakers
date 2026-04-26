@@ -1,5 +1,5 @@
-/**
- * ⚠️  DEVELOPMENT ONLY — DO NOT RUN IN PRODUCTION
+﻿/**
+ * [WARNING] DEVELOPMENT ONLY -- DO NOT RUN IN PRODUCTION
  * This script seeds the database with sample data for development/testing.
  * It will DESTROY all existing data before seeding.
  *
@@ -23,19 +23,19 @@ const Watchlist = require("../models/Watchlist");
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
-        console.log("✅ MongoDB Connected");
+        console.log("[OK] MongoDB Connected");
     } catch (error) {
-        console.error("❌ MongoDB Connection Error:", error);
+        console.error("[ERROR] MongoDB Connection Error:", error);
         process.exit(1);
     }
 };
 
 const seedDatabase = async () => {
     try {
-        console.log("🌱 Starting database seeding...\n");
+        console.log("Starting database seeding...\n");
 
         // Clear ALL existing data
-        console.log("🗑️  Clearing existing data...");
+        console.log("Clearing existing data...");
         await Promise.all([
             User.deleteMany({}),
             Course.deleteMany({}),
@@ -47,12 +47,12 @@ const seedDatabase = async () => {
             Suggestion.deleteMany({}),
             Watchlist.deleteMany({}),
         ]);
-        console.log("✅ All existing data cleared\n");
+        console.log("[OK] All existing data cleared\n");
 
-        // ─── USERS ───
-        // NOTE: Using plain passwords — the User model pre-save hook
+        // --- USERS ---
+        // NOTE: Using plain passwords -- the User model pre-save hook
         // will automatically hash them before storing in the database.
-        console.log("👥 Creating users...");
+        console.log("Creating users...");
 
         const users = await User.create([
             {
@@ -109,14 +109,14 @@ const seedDatabase = async () => {
                 literacyScore: 67,
             },
         ]);
-        console.log(`✅ Created ${users.length} users\n`);
+        console.log(`[OK] Created ${users.length} users\n`);
 
         const admin = users[0];
         const priya = users[1];
         const rajesh = users[2];
 
-        // ─── COURSES ───
-        console.log("🎓 Creating courses...");
+        // --- COURSES ---
+        console.log("Creating courses...");
         const course1 = await Course.create({
             title: "Stock Market Mastery",
             description: "A comprehensive course covering everything from stock market basics to advanced trading strategies. Perfect for beginners who want to build a solid foundation in equity markets.",
@@ -140,12 +140,12 @@ const seedDatabase = async () => {
             order: 3,
             tags: ["crypto", "blockchain", "digital-assets", "beginner", "volatility"],
         });
-        console.log("✅ Created 3 courses\n");
+        console.log("[OK] Created 3 courses\n");
 
-        // ─── MODULES ───
-        console.log("📚 Creating modules...");
+        // --- MODULES ---
+        console.log("Creating modules...");
         const c1Modules = await Module.create([
-            { courseId: course1._id, title: "Introduction to Stock Markets", description: "Learn the fundamentals of stock markets — how they work, why they exist, and their role in the global economy.", order: 1, contributor: priya._id },
+            { courseId: course1._id, title: "Introduction to Stock Markets", description: "Learn the fundamentals of stock markets -- how they work, why they exist, and their role in the global economy.", order: 1, contributor: priya._id },
             { courseId: course1._id, title: "Understanding Market Mechanics", description: "Dive into order types, bid-ask spreads, market participants, and how trades are executed on exchanges.", order: 2, contributor: priya._id },
             { courseId: course1._id, title: "Technical Analysis Fundamentals", description: "Master chart reading, candlestick patterns, support/resistance levels, and key technical indicators.", order: 3, contributor: priya._id },
             { courseId: course1._id, title: "Fundamental Analysis", description: "Learn to evaluate companies using financial statements, key ratios, and economic indicators.", order: 4, contributor: priya._id },
@@ -156,7 +156,7 @@ const seedDatabase = async () => {
         const c2Modules = await Module.create([
             { courseId: course2._id, title: "Forex Market Overview", description: "Understand the structure of the forex market, major currency pairs, and what drives currency movements.", order: 1, contributor: rajesh._id },
             { courseId: course2._id, title: "Currency Pairs & Pip Calculations", description: "Learn to read currency quotes, calculate pip values, and understand lot sizes for proper trade sizing.", order: 2, contributor: rajesh._id },
-            { courseId: course2._id, title: "Forex Technical Analysis", description: "Apply technical analysis specifically to forex charts — identify trends, patterns, and key levels in currency markets.", order: 3, contributor: rajesh._id },
+            { courseId: course2._id, title: "Forex Technical Analysis", description: "Apply technical analysis specifically to forex charts -- identify trends, patterns, and key levels in currency markets.", order: 3, contributor: rajesh._id },
             { courseId: course2._id, title: "Forex Trading Strategies", description: "Discover proven forex strategies including scalping, carry trades, and news-based trading approaches.", order: 4, contributor: rajesh._id },
             { courseId: course2._id, title: "Leverage & Money Management", description: "Master the proper use of leverage, margin requirements, and capital preservation in forex trading.", order: 5, contributor: rajesh._id },
             { courseId: course2._id, title: "Global Economics for Forex Traders", description: "Understand how central bank policies, GDP reports, and geopolitical events impact currency valuations.", order: 6, contributor: rajesh._id },
@@ -164,18 +164,18 @@ const seedDatabase = async () => {
 
         const c3Modules = await Module.create([
             { courseId: course3._id, title: "Blockchain & Crypto Basics", description: "Understand blockchain technology, how cryptocurrencies work, and the difference between coins and tokens.", order: 1, contributor: priya._id },
-            { courseId: course3._id, title: "Bitcoin & Major Altcoins", description: "Deep dive into Bitcoin, Ethereum, and other major cryptocurrencies — their use cases, technology, and market dynamics.", order: 2, contributor: priya._id },
+            { courseId: course3._id, title: "Bitcoin & Major Altcoins", description: "Deep dive into Bitcoin, Ethereum, and other major cryptocurrencies -- their use cases, technology, and market dynamics.", order: 2, contributor: priya._id },
             { courseId: course3._id, title: "Crypto Trading Strategies", description: "Learn crypto-specific trading strategies including HODLing, DCA, swing trading, and how to navigate extreme volatility.", order: 3, contributor: priya._id },
             { courseId: course3._id, title: "DeFi & NFTs Explained", description: "Explore decentralized finance protocols, yield farming, liquidity pools, and the NFT ecosystem.", order: 4, contributor: priya._id },
-            { courseId: course3._id, title: "Crypto Security & Wallets", description: "Learn to secure your crypto assets — hardware wallets, seed phrases, exchange security, and common scams to avoid.", order: 5, contributor: priya._id },
+            { courseId: course3._id, title: "Crypto Security & Wallets", description: "Learn to secure your crypto assets -- hardware wallets, seed phrases, exchange security, and common scams to avoid.", order: 5, contributor: priya._id },
             { courseId: course3._id, title: "Crypto Regulation & Tax Planning", description: "Navigate the evolving regulatory landscape and understand tax implications of crypto trading in India.", order: 6, contributor: priya._id },
         ]);
 
         const allModules = [...c1Modules, ...c2Modules, ...c3Modules];
-        console.log(`✅ Created ${allModules.length} modules\n`);
+        console.log(`[OK] Created ${allModules.length} modules\n`);
 
-        // ─── LESSONS ───
-        console.log("📖 Creating lessons...");
+        // --- LESSONS ---
+        console.log("Creating lessons...");
         const createLessons = (moduleId, lessonsData) =>
             Lesson.create(lessonsData.map((l, i) => ({ moduleId, ...l, order: i + 1 })));
 
@@ -236,7 +236,7 @@ const seedDatabase = async () => {
         const c2m3 = await createLessons(c2Modules[2]._id, [
             { title: "Forex Chart Patterns", explanation: "Chart patterns like head and shoulders, double tops/bottoms, and triangles are powerful tools for forex traders. Learn to identify these patterns on currency charts and use them to predict future price movements with high probability.", videoLinks: ["https://www.youtube.com/watch?v=GBtDRfg8y9Y"] },
             { title: "Fibonacci Retracement in Forex", explanation: "Fibonacci levels are widely used by forex traders to identify potential support and resistance areas. Learn to draw Fibonacci retracements and extensions, and how to combine them with other technical tools for confluence-based trading.", videoLinks: ["https://www.youtube.com/watch?v=PQMF_vPV_1o"] },
-            { title: "Multi-Timeframe Analysis", explanation: "Professional forex traders analyze multiple timeframes simultaneously. Learn the top-down approach — start with weekly charts for trend direction, daily for context, and 4-hour or 1-hour charts for precise entries and exits.", videoLinks: ["https://www.youtube.com/watch?v=08c8dKCxhBw"] },
+            { title: "Multi-Timeframe Analysis", explanation: "Professional forex traders analyze multiple timeframes simultaneously. Learn the top-down approach -- start with weekly charts for trend direction, daily for context, and 4-hour or 1-hour charts for precise entries and exits.", videoLinks: ["https://www.youtube.com/watch?v=08c8dKCxhBw"] },
         ]);
 
         const c2m4 = await createLessons(c2Modules[3]._id, [
@@ -283,8 +283,8 @@ const seedDatabase = async () => {
 
         const c3m5 = await createLessons(c3Modules[4]._id, [
             { title: "Crypto Wallet Types", explanation: "Your crypto is only as safe as your wallet. Learn the differences between hot wallets (MetaMask, Trust Wallet) and cold wallets (Ledger, Trezor). Understand when to use each type and how to properly back up your wallet.", videoLinks: ["https://www.youtube.com/watch?v=7pwKL_km9hg"] },
-            { title: "Securing Your Seed Phrase", explanation: "Your seed phrase is the master key to your crypto. Learn best practices for storing it safely — metal backups, split storage, and why you should never store it digitally. Understand what happens if your seed phrase is compromised.", videoLinks: ["https://www.youtube.com/watch?v=qhHOmZVAqBE"] },
-            { title: "Common Crypto Scams", explanation: "The crypto space is rife with scams — phishing attacks, rug pulls, fake airdrops, and Ponzi schemes. Learn to identify red flags, verify smart contracts before interacting, and protect yourself from the most common crypto fraud tactics.", videoLinks: ["https://www.youtube.com/watch?v=7pwKL_km9hg"] },
+            { title: "Securing Your Seed Phrase", explanation: "Your seed phrase is the master key to your crypto. Learn best practices for storing it safely -- metal backups, split storage, and why you should never store it digitally. Understand what happens if your seed phrase is compromised.", videoLinks: ["https://www.youtube.com/watch?v=qhHOmZVAqBE"] },
+            { title: "Common Crypto Scams", explanation: "The crypto space is rife with scams -- phishing attacks, rug pulls, fake airdrops, and Ponzi schemes. Learn to identify red flags, verify smart contracts before interacting, and protect yourself from the most common crypto fraud tactics.", videoLinks: ["https://www.youtube.com/watch?v=7pwKL_km9hg"] },
         ]);
 
         const c3m6 = await createLessons(c3Modules[5]._id, [
@@ -295,10 +295,10 @@ const seedDatabase = async () => {
 
         const totalLessons = [c1m1, c1m2, c1m3, c1m4, c1m5, c1m6, c2m1, c2m2, c2m3, c2m4, c2m5, c2m6, c3m1, c3m2, c3m3, c3m4, c3m5, c3m6]
             .reduce((sum, arr) => sum + arr.length, 0);
-        console.log(`✅ Created ${totalLessons} lessons\n`);
+        console.log(`[OK] Created ${totalLessons} lessons\n`);
 
-        // ─── EXAMS ───
-        console.log("📝 Creating exams...");
+        // --- EXAMS ---
+        console.log("Creating exams...");
         const exam1 = await Exam.create({
             title: "Stock Market Fundamentals Certification",
             description: "Test your knowledge of stock market fundamentals, technical analysis, and risk management. Score 80% or higher to earn your certification.",
@@ -338,18 +338,18 @@ const seedDatabase = async () => {
                 { question: "Which factor most directly affects currency values?", options: ["Stock market performance", "Central bank interest rate decisions", "Real estate prices", "Commodity exports only"], correctAnswer: 1 },
             ],
         });
-        console.log(`✅ Created 2 exams\n`);
+        console.log(`[OK] Created 2 exams\n`);
 
         // Summary
         console.log("=".repeat(50));
-        console.log("🎉 DATABASE SEEDING COMPLETED!\n");
-        console.log("📊 Summary:");
-        console.log(`   👥 Users: ${users.length}`);
-        console.log(`   🎓 Courses: 3`);
-        console.log(`   📚 Modules: ${allModules.length}`);
-        console.log(`   📖 Lessons: ${totalLessons}`);
-        console.log(`   📝 Exams: 2`);
-        console.log("\n🔐 Login Credentials (all use password: password123):");
+        console.log("DATABASE SEEDING COMPLETED!\n");
+        console.log("Summary:");
+        console.log(`   Users: ${users.length}`);
+        console.log(`   Courses: 3`);
+        console.log(`   Modules: ${allModules.length}`);
+        console.log(`   Lessons: ${totalLessons}`);
+        console.log(`   Exams: 2`);
+        console.log("\nLogin Credentials (all use password: password123):");
         console.log("   Admin:        admin@marketmakers.com");
         console.log("   Contributor:   priya@marketmakers.com");
         console.log("   Contributor:   rajesh@marketmakers.com");
@@ -359,7 +359,7 @@ const seedDatabase = async () => {
 
         process.exit(0);
     } catch (error) {
-        console.error("❌ Seeding Error:", error);
+        console.error("[ERROR] Seeding Error:", error);
         process.exit(1);
     }
 };

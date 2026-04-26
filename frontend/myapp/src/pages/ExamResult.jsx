@@ -1,4 +1,4 @@
-// src/pages/ExamResult.jsx — Light Theme
+﻿// src/pages/ExamResult.jsx -- Light Theme
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useEffect } from "react";
 import API from "../services/api";

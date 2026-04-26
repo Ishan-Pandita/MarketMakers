@@ -1,4 +1,4 @@
-// src/components/Pagination.jsx — Light Theme
+﻿// src/components/Pagination.jsx -- Light Theme
 import { Link } from "react-router-dom";
 
 function Pagination({ pagination, baseUrl }) {
@@ -68,11 +68,11 @@ function Pagination({ pagination, baseUrl }) {
 
       {hasNextPage ? (
         <Link to={`${baseUrl}?page=${currentPage + 1}`} className="px-4 py-2 bg-white border border-slate-border rounded-xl text-sm font-semibold text-slate-body hover:bg-surface-subtle hover:border-indigo-200 transition-all">
-          Next →
+          Next ->
         </Link>
       ) : (
         <button disabled className="px-4 py-2 bg-surface-subtle border border-slate-border/50 rounded-xl text-sm text-slate-light cursor-not-allowed">
-          Next →
+          Next ->
         </button>
       )}
     </div>

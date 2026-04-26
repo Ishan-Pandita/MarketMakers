@@ -1,4 +1,4 @@
-// src/pages/ResetPassword.jsx — Light Theme
+﻿// src/pages/ResetPassword.jsx -- Light Theme
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import API from "../services/api";
@@ -34,8 +34,8 @@ function ResetPassword() {
           {success && <div className="mb-4"><SuccessMessage message={success} /><p className="text-xs text-center text-slate-muted mt-2">Redirecting to login...</p></div>}
           {!success && (
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="space-y-1.5"><label htmlFor="newPassword" className="block text-xs font-semibold text-slate-body">New Password</label><input id="newPassword" type="password" required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="input-field" placeholder="••••••••" minLength={6} /></div>
-              <div className="space-y-1.5"><label htmlFor="confirmPassword" className="block text-xs font-semibold text-slate-body">Confirm Password</label><input id="confirmPassword" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="input-field" placeholder="••••••••" minLength={6} /></div>
+              <div className="space-y-1.5"><label htmlFor="newPassword" className="block text-xs font-semibold text-slate-body">New Password</label><input id="newPassword" type="password" required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="input-field" placeholder="********" minLength={6} /></div>
+              <div className="space-y-1.5"><label htmlFor="confirmPassword" className="block text-xs font-semibold text-slate-body">Confirm Password</label><input id="confirmPassword" type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="input-field" placeholder="********" minLength={6} /></div>
               <button type="submit" className="btn-primary w-full py-3" disabled={loading}>{loading ? "Updating..." : "Reset Password"}</button>
             </form>
           )}

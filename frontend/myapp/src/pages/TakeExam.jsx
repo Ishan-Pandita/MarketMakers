@@ -1,4 +1,4 @@
-// src/pages/TakeExam.jsx — Light Theme
+﻿// src/pages/TakeExam.jsx -- Light Theme
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../services/api";
@@ -134,8 +134,8 @@ function TakeExam() {
         <div className="card p-5 mb-6 sticky top-4 z-50">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-lg">📝</div>
-              <div><h2 className="font-bold text-slate-heading">{exam.title}</h2><p className="text-xs text-slate-muted">Question {currentQuestion + 1} of {exam.questions.length} • {getAnsweredCount()} answered</p></div>
+              <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-lg"></div>
+              <div><h2 className="font-bold text-slate-heading">{exam.title}</h2><p className="text-xs text-slate-muted">Question {currentQuestion + 1} of {exam.questions.length} * {getAnsweredCount()} answered</p></div>
             </div>
             <div className="flex items-center gap-6">
               <div className="text-right">
@@ -189,7 +189,7 @@ function TakeExam() {
             <div className="flex items-center justify-between gap-4">
               <button onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))} disabled={currentQuestion === 0} className="btn-outline px-6 py-3 text-sm disabled:opacity-30">← Previous</button>
               {currentQuestion < exam.questions.length - 1 ? (
-                <button onClick={() => setCurrentQuestion(Math.min(exam.questions.length - 1, currentQuestion + 1))} className="btn-secondary px-6 py-3 text-sm">Next Question →</button>
+                <button onClick={() => setCurrentQuestion(Math.min(exam.questions.length - 1, currentQuestion + 1))} className="btn-secondary px-6 py-3 text-sm">Next Question -></button>
               ) : (
                 <button onClick={handleSubmit} disabled={submitting} className="btn-primary px-8 py-3 text-sm">{submitting ? "Submitting..." : "Submit Exam"}</button>
               )}

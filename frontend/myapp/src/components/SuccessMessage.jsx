@@ -1,4 +1,4 @@
-// src/components/SuccessMessage.jsx — Light Theme
+﻿// src/components/SuccessMessage.jsx -- Light Theme
 function SuccessMessage({ message }) {
   if (!message) return null;
 

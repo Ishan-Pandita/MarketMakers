@@ -1,5 +1,5 @@
-/**
- * ⚠️  DEVELOPMENT ONLY — DO NOT RUN IN PRODUCTION
+﻿/**
+ * [WARNING] DEVELOPMENT ONLY -- DO NOT RUN IN PRODUCTION
  * Deletes all admin users and creates a fresh admin account.
  *
  * Usage: npm run reset:admin

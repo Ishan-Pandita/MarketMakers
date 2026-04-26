@@ -1,4 +1,4 @@
-// src/components/ErrorMessage.jsx — Light Theme
+﻿// src/components/ErrorMessage.jsx -- Light Theme
 function ErrorMessage({ message }) {
   if (!message) return null;
 

@@ -1,4 +1,4 @@
-// src/pages/Contributors.jsx — Light Theme
+﻿// src/pages/Contributors.jsx -- Light Theme
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../services/api";
@@ -24,7 +24,7 @@ function Contributors() {
 
         {contributors.length === 0 ? (
           <div className="card py-16 text-center max-w-lg mx-auto">
-            <div className="text-4xl mb-4 opacity-40">👤</div>
+            <div className="text-4xl mb-4 opacity-40"></div>
             <p className="text-slate-body text-lg mb-4">No contributors yet. Be the first!</p>
             <Link to="/register" className="btn-primary inline-block px-8 py-3 text-sm">Create Account</Link>
           </div>
@@ -36,7 +36,7 @@ function Contributors() {
                 <h3 className="text-lg font-bold text-slate-heading mb-1 group-hover:text-indigo-500 transition-colors">{c.name}</h3>
                 <div className="flex items-center justify-center gap-2 text-xs text-slate-muted mb-4">
                   <span className="badge badge-role text-[10px]">Contributor</span>
-                  <span>•</span>
+                  <span>*</span>
                   <span>Since {new Date(c.createdAt).getFullYear()}</span>
                 </div>
                 <div className="bg-surface-subtle rounded-xl p-3 text-left">

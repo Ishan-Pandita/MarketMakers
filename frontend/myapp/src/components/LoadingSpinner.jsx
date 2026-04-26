@@ -1,4 +1,4 @@
-// src/components/LoadingSpinner.jsx — Light Theme
+﻿// src/components/LoadingSpinner.jsx -- Light Theme
 function LoadingSpinner() {
   return (
     <div className="flex justify-center items-center py-20">

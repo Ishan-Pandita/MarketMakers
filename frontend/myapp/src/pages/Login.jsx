@@ -1,4 +1,4 @@
-// src/pages/Login.jsx — Dual Theme
+﻿// src/pages/Login.jsx -- Dual Theme
 import usePageTitle from "../hooks/usePageTitle";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,7 +28,7 @@ function Login() {
 
   return (
     <div className={`min-h-screen flex relative overflow-hidden ${isDark ? 'bg-dark-bg' : 'bg-surface'}`}>
-      {/* Left Panel — Decorative */}
+      {/* Left Panel -- Decorative */}
       <div className={`hidden lg:flex lg:w-[55%] bg-gradient-to-br relative items-center justify-center p-16 ${
         isDark ? 'from-cyan-600 via-cyan-700 to-violet-700' : 'from-indigo-500 via-indigo-600 to-teal-500'
       }`}>
@@ -53,7 +53,7 @@ function Login() {
         </div>
       </div>
 
-      {/* Right Panel — Form */}
+      {/* Right Panel -- Form */}
       <div className="flex-1 flex items-center justify-center px-6 py-24">
         <div className="max-w-md w-full animate-slideIn">
           <div className="mb-8">
@@ -81,7 +81,7 @@ function Login() {
                   </Link>
                 </div>
                 <input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setError(""); }}
-                  className="input-field" placeholder="••••••••" disabled={loading} />
+                  className="input-field" placeholder="********" disabled={loading} />
               </div>
 
               <div className="flex items-center">

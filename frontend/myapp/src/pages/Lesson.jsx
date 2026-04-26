@@ -1,4 +1,4 @@
-// src/pages/Lesson.jsx — Light Theme
+﻿// src/pages/Lesson.jsx -- Light Theme
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../services/api";
@@ -95,11 +95,11 @@ function Lesson() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 {lesson.difficulty && <span className={`badge text-[10px] ${lesson.difficulty === 'beginner' ? 'badge-success' : lesson.difficulty === 'intermediate' ? 'badge-warning' : 'bg-danger-light text-danger-dark border border-danger/20'}`}>{lesson.difficulty}</span>}
-                {lesson.estimatedTime && <span className="text-xs text-slate-muted">⏱️ {lesson.estimatedTime} min</span>}
+                {lesson.estimatedTime && <span className="text-xs text-slate-muted">️ {lesson.estimatedTime} min</span>}
               </div>
               <h1 className="text-3xl md:text-4xl font-extrabold text-slate-heading tracking-tight leading-tight font-display">{lesson.title}</h1>
             </div>
-            {isCompleted && <span className="badge badge-success text-sm px-4 py-2">✓ Completed</span>}
+            {isCompleted && <span className="badge badge-success text-sm px-4 py-2">ok Completed</span>}
           </div>
         </div>
 
@@ -112,7 +112,7 @@ function Lesson() {
                   key={activeVideoId}
                   className="absolute top-0 left-0 w-full h-full"
                   src={`https://www.youtube.com/embed/${activeVideoId}?rel=0&modestbranding=1`}
-                  title={`Video ${activeVideoIndex + 1} — ${lesson.title}`}
+                  title={`Video ${activeVideoIndex + 1} -- ${lesson.title}`}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
@@ -133,7 +133,7 @@ function Lesson() {
             {lesson.videoLinks.length > 1 && (
               <div className="bg-surface-subtle p-4 border-t border-slate-border/40">
                 <h3 className="text-xs font-semibold text-slate-muted mb-3 uppercase tracking-wider">
-                  {lesson.videoLinks.length} Videos — Playing {activeVideoIndex + 1} of {lesson.videoLinks.length}
+                  {lesson.videoLinks.length} Videos -- Playing {activeVideoIndex + 1} of {lesson.videoLinks.length}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {lesson.videoLinks.map((video, i) => (
@@ -176,7 +176,7 @@ function Lesson() {
               <p className="text-sm text-slate-muted">{isCompleted ? "Great work! Move on to the next lesson." : "Mark this lesson as complete to track your progress."}</p>
             </div>
             <button onClick={markCompleted} disabled={isCompleted || submitting} className={`w-full md:w-auto px-8 py-3 rounded-xl font-bold text-sm transition-all ${isCompleted ? 'bg-success/10 text-success border border-success/20 cursor-default' : 'btn-primary'}`}>
-              {submitting ? "Saving..." : isCompleted ? "✓ Completed" : "Mark Complete"}
+              {submitting ? "Saving..." : isCompleted ? "ok Completed" : "Mark Complete"}
             </button>
           </div>
         </div>

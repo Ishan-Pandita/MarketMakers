@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+﻿import React, { Component } from "react";
 
 const isDevelopment = import.meta.env.DEV;
 
@@ -21,7 +21,7 @@ class ErrorBoundary extends Component {
             return (
                 <div className="min-h-screen flex items-center justify-center bg-[#050505] p-6">
                     <div className="max-w-md w-full glass-dark rounded-[40px] border-white/5 p-12 text-center shadow-[0_0_80px_#000000]">
-                        <div className="text-6xl mb-6 opacity-50">⚠️</div>
+                        <div className="text-6xl mb-6 opacity-50">[!]</div>
                         <h1 className="text-2xl font-black text-white mb-3 tracking-tight">
                             System Fault Detected.
                         </h1>

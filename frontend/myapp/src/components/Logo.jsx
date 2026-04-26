@@ -1,4 +1,4 @@
-// src/components/Logo.jsx — MarketMakers Brand Identity (Dual Theme)
+﻿// src/components/Logo.jsx -- MarketMakers Brand Identity (Dual Theme)
 import { useTheme } from "../context/ThemeContext";
 
 function Logo({ variant = "abbreviated", size = "md", className = "" }) {

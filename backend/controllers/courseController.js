@@ -1,4 +1,4 @@
-const Course = require("../models/Course");
+﻿const Course = require("../models/Course");
 const Module = require("../models/Module");
 const Lesson = require("../models/Lesson");
 const Progress = require("../models/Progress");
@@ -88,7 +88,7 @@ const deleteCourse = async (req, res) => {
     throw new Error("Not authorized to delete this course");
   }
 
-  // Cascade delete: modules → lessons → progress & suggestions
+  // Cascade delete: modules -> lessons -> progress & suggestions
   const modules = await Module.find({ courseId: req.params.id });
   const moduleIds = modules.map((m) => m._id);
 

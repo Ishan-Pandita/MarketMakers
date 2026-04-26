@@ -1,4 +1,4 @@
-// src/components/ProgressBar.jsx — Light Theme
+﻿// src/components/ProgressBar.jsx -- Light Theme
 function ProgressBar({ progress = 0, size = "md" }) {
   const heights = { sm: "h-1.5", md: "h-2.5", lg: "h-4" };
   const h = heights[size] || heights.md;

@@ -1,4 +1,4 @@
-// src/pages/StaticPage.jsx — Light Theme
+﻿// src/pages/StaticPage.jsx -- Light Theme
 function StaticPage({ title, content }) {
   return (
     <div className="min-h-screen bg-surface py-16 px-4 sm:px-6 lg:px-8">

@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
+﻿const jwt = require("jsonwebtoken");
 
 /**
- * Authentication middleware — verifies JWT Bearer token
+ * Authentication middleware -- verifies JWT Bearer token
  * Sets req.user = { id, role } from decoded token payload
  */
 const protect = (req, res, next) => {

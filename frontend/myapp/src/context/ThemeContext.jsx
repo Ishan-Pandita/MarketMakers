@@ -1,5 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
-// src/context/ThemeContext.jsx — Dark/Light Theme Toggle
+﻿/* eslint-disable react-refresh/only-export-components */
+// src/context/ThemeContext.jsx -- Dark/Light Theme Toggle
 import { createContext, useState, useEffect, useContext } from "react";
 
 const ThemeContext = createContext(null);

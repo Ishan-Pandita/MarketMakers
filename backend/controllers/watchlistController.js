@@ -1,5 +1,5 @@
-/**
- * Watchlist controller — extracted from watchlistRoutes.js for proper MVC separation.
+﻿/**
+ * Watchlist controller -- extracted from watchlistRoutes.js for proper MVC separation.
  */
 const Watchlist = require("../models/Watchlist");
 const { callAIService } = require("../services/aiClient");

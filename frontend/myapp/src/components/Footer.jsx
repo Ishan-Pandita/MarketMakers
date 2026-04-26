@@ -1,4 +1,4 @@
-// src/components/Footer.jsx — Dual Theme
+﻿// src/components/Footer.jsx -- Dual Theme
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import Logo from "./Logo";

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowRight, Bot, Briefcase, Pencil, Plus, Trash2 } from "lucide-react";
@@ -502,8 +502,8 @@ function Portfolio() {
                     {asset.hasPurchasePrice ? (
                       <span>
                         Buy at <strong>{formatCurrency(asset.purchasePrice)}</strong>
-                        {asset.quantity ? ` • Approx. ${Number(asset.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })} units` : ""}
-                        {asset.hasLivePrice ? ` • Live API price ${formatPrice(asset.livePrice)}` : " • Live quote unavailable right now"}
+                        {asset.quantity ? ` * Approx. ${Number(asset.quantity).toLocaleString("en-US", { maximumFractionDigits: 4 })} units` : ""}
+                        {asset.hasLivePrice ? ` * Live API price ${formatPrice(asset.livePrice)}` : " * Live quote unavailable right now"}
                       </span>
                     ) : (
                       <span>

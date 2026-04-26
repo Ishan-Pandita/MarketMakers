@@ -1,4 +1,4 @@
-// src/pages/Modules.jsx — Light Theme
+﻿// src/pages/Modules.jsx -- Light Theme
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { Link, useSearchParams, useParams } from "react-router-dom";

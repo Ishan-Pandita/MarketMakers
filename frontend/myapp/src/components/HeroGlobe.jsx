@@ -1,4 +1,4 @@
-// src/components/HeroGlobe.jsx — CSS-based 3D animated globe with orbit rings
+﻿// src/components/HeroGlobe.jsx -- CSS-based 3D animated globe with orbit rings
 import { useEffect, useRef } from "react";
 
 export default function HeroGlobe() {
