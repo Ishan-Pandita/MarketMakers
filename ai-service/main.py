@@ -55,9 +55,13 @@ app = FastAPI(
     version="4.0.0",
 )
 
+DEFAULT_CORS_ORIGINS = ["http://localhost:5001", "http://localhost:5173"]
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "").split(",") if os.getenv("CORS_ORIGINS") else DEFAULT_CORS_ORIGINS
+CORS_ORIGINS = [o.strip() for o in CORS_ORIGINS if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5001", "http://localhost:5173"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -255,7 +259,8 @@ async def asset_search(query: str):
 
 async def _small_pause():
     """Introduce a tiny delay so streamed chunks render progressively."""
-    await __import__("asyncio").sleep(0.02)
+    import asyncio
+    await asyncio.sleep(0.02)
 
 
 if __name__ == "__main__":
