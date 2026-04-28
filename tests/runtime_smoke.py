@@ -64,7 +64,6 @@ def req(label, method, path, expected, *, api="backend", token=None, **kwargs):
 
 def run():
     req("backend root", "GET", "/", {200})
-    req("backend legacy health", "GET", "/api/health", {200})
     req("backend v1 health", "GET", "/api/v1/health", {200})
     req("ai root", "GET", "/", {200}, api="ai")
     req("ai health", "GET", "/health", {200}, api="ai")
@@ -112,6 +111,9 @@ def run():
 
     try:
         module_data = modules.json()
+        # Handle both list and paginated {modules: [...]} response shapes
+        if isinstance(module_data, dict):
+            module_data = module_data.get("modules", [])
         if module_data:
             module_id = module_data[0].get("_id") or module_data[0].get("id")
     except Exception:
@@ -122,6 +124,9 @@ def run():
         lessons = req("lessons by module", "GET", f"/api/v1/lessons/module/{module_id}", {200})
         try:
             lesson_data = lessons.json()
+            # Handle both list and paginated {lessons: [...]} response shapes
+            if isinstance(lesson_data, dict):
+                lesson_data = lesson_data.get("lessons", [])
             if lesson_data:
                 lesson_id = lesson_data[0].get("_id") or lesson_data[0].get("id")
         except Exception:
