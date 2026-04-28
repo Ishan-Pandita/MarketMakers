@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-refresh/only-export-components */
 // src/context/ThemeContext.jsx -- Dark/Light Theme Toggle
 import { createContext, useState, useEffect, useContext } from "react";
 
@@ -9,8 +9,7 @@ export const ThemeProvider = ({ children }) => {
     // Check localStorage first
     const stored = localStorage.getItem("mm-theme");
     if (stored === "dark" || stored === "light") return stored;
-    // Fall back to system preference
-    if (window.matchMedia?.("(prefers-color-scheme: dark)").matches) return "dark";
+    // Default to light mode for first-time visitors
     return "light";
   });
 
