@@ -1,4 +1,4 @@
-﻿// src/pages/ResetPassword.jsx -- Light Theme
+// src/pages/ResetPassword.jsx -- Light Theme
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import API from "../services/api";
@@ -40,7 +40,7 @@ function ResetPassword() {
             </form>
           )}
           <div className="mt-6 text-center border-t border-slate-border/40 pt-5">
-            <Link to="/login" className="text-sm font-semibold text-slate-muted hover:text-indigo-500 transition-colors">← Back to Login</Link>
+            <Link to="/login" className="text-sm font-semibold text-slate-muted hover:text-indigo-500 transition-colors">&larr; Back to Login</Link>
           </div>
         </div>
       </div>

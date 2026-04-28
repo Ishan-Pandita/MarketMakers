@@ -1,4 +1,4 @@
-﻿// src/pages/ForgotPassword.jsx -- Light Theme
+// src/pages/ForgotPassword.jsx -- Light Theme
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../services/api";
@@ -35,10 +35,10 @@ function ForgotPassword() {
             <button type="submit" className="btn-primary w-full py-3" disabled={loading}>{loading ? "Sending..." : "Send Reset Link"}</button>
           </form>
           <div className="mt-6 text-center border-t border-slate-border/40 pt-5">
-            <Link to="/login" className="text-sm font-semibold text-slate-muted hover:text-indigo-500 transition-colors">← Back to Login</Link>
+            <Link to="/login" className="text-sm font-semibold text-slate-muted hover:text-indigo-500 transition-colors">&larr; Back to Login</Link>
           </div>
           <div className="mt-4 p-3 bg-indigo-50/60 border border-indigo-100 rounded-xl">
-            <p className="text-xs text-indigo-500 font-semibold mb-1">ℹ️ Note</p>
+            <p className="text-xs text-indigo-500 font-semibold mb-1">Note</p>
             <p className="text-xs text-slate-body leading-relaxed">If email service is not configured, the reset link will be logged to the server console.</p>
           </div>
         </div>
