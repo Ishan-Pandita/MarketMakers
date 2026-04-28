@@ -1,4 +1,4 @@
-﻿// src/pages/ContributorProfile.jsx -- Light Theme
+// src/pages/ContributorProfile.jsx -- Light Theme
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import API from "../services/api";
@@ -84,7 +84,7 @@ function ContributorProfile() {
                       <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-lg flex-shrink-0"></div>
                       <div className="min-w-0"><h3 className="font-bold text-slate-heading group-hover:text-indigo-500 transition-colors truncate">{c.title}</h3><p className="text-xs text-slate-muted line-clamp-1">{c.description}</p></div>
                     </div>
-                    <span className="text-slate-light group-hover:text-indigo-500 font-bold ml-4 flex-shrink-0">-></span>
+                    <span className="text-slate-light group-hover:text-indigo-500 font-bold ml-4 flex-shrink-0">&rarr;</span>
                   </Link>
                 ))}
               </div>
@@ -97,7 +97,7 @@ function ContributorProfile() {
                   {modules.map((m) => (
                     <Link key={m._id} to={`/module/${m._id}`} className="card p-5 group hover:border-teal-200 flex justify-between items-center">
                       <div className="min-w-0"><h3 className="font-bold text-slate-heading group-hover:text-teal-500 transition-colors">{m.title}</h3><p className="text-xs text-slate-muted line-clamp-1">{m.description}</p></div>
-                      <span className="text-slate-light group-hover:text-teal-500 font-bold ml-4 flex-shrink-0">-></span>
+                      <span className="text-slate-light group-hover:text-teal-500 font-bold ml-4 flex-shrink-0">&rarr;</span>
                     </Link>
                   ))}
                 </div>

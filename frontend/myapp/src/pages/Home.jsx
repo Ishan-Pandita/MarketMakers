@@ -1,4 +1,4 @@
-﻿// src/pages/Home.jsx -- Immersive 3D Scroll-Driven Homepage (Dual Theme)
+// src/pages/Home.jsx -- Immersive 3D Scroll-Driven Homepage (Dual Theme)
 import usePageTitle from "../hooks/usePageTitle";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
@@ -196,7 +196,7 @@ function Home() {
               <div ref={heroCTARef} className="flex flex-col sm:flex-row gap-4">
                 {isAuthenticated ? (
                   <Link to="/courses" className="btn-primary px-10 py-4 text-base">
-                    Continue Learning ->
+                    Continue Learning &rarr;
                   </Link>
                 ) : (
                   <>
@@ -302,7 +302,7 @@ function Home() {
               </h2>
             </div>
             <Link to="/courses" className={`text-sm font-bold transition-colors flex items-center gap-2 group ${isDark ? 'text-cyan-400 hover:text-cyan-300' : 'text-indigo-500 hover:text-indigo-700'}`}>
-              View All <span className="group-hover:translate-x-1 transition-transform">-></span>
+              View All <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
             </Link>
           </div>
 
@@ -367,7 +367,7 @@ function Home() {
                           </span>
                         </div>
                         <span className={`text-xs font-bold group-hover:translate-x-1 transition-transform ${isDark ? 'text-cyan-400' : 'text-indigo-500'}`}>
-                          Explore ->
+                          Explore &rarr;
                         </span>
                       </div>
                     </div>
@@ -534,7 +534,7 @@ function Home() {
                 : 'bg-indigo-600 text-white shadow-indigo-500/25 hover:shadow-indigo-500/30'
             }`}
           >
-            Get Started Free <span className="text-xl">-></span>
+            Get Started Free <span className="text-xl">&rarr;</span>
           </Link>
 
           <div className="flex flex-wrap justify-center gap-10 mt-16">

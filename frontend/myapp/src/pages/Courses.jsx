@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BarChart3, Bitcoin, Sparkles, TrendingUp } from "lucide-react";
 
@@ -186,7 +186,7 @@ function Courses() {
                       </p>
                       <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 dark:text-cyan-300">
                         Start course
-                        <span className="transition-transform group-hover:translate-x-1">-></span>
+                        <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
                       </div>
                     </div>
                   </Link>

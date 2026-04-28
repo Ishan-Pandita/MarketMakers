@@ -1,4 +1,4 @@
-﻿// src/pages/Lessons.jsx -- Light Theme
+// src/pages/Lessons.jsx -- Light Theme
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../services/api";
@@ -106,11 +106,11 @@ function Lessons() {
                       </div>
                       <p className="text-slate-muted text-sm line-clamp-1">{lesson.explanation || "Click to view lesson"}</p>
                       <div className="flex items-center gap-4 mt-1.5 text-xs text-slate-light">
-                        {lesson.estimatedTime && <span>🕐 {lesson.estimatedTime} min</span>}
+                        {lesson.estimatedTime && <span>{lesson.estimatedTime} min</span>}
                         {lesson.videoLinks?.length > 0 && <span> {lesson.videoLinks.length} video{lesson.videoLinks.length > 1 ? "s" : ""}</span>}
                       </div>
                     </div>
-                    <div className="text-slate-light group-hover:text-indigo-500 transition-colors font-bold flex-shrink-0">-></div>
+                    <div className="text-slate-light group-hover:text-indigo-500 transition-colors font-bold flex-shrink-0">&rarr;</div>
                   </div>
                 </Link>
               );
