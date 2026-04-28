@@ -6,10 +6,13 @@
 
 Built with React, Express, FastAPI, and MongoDB -- 3 services, 12 data models, 75 tested endpoints, ~28K lines of code.
 
+**[Live Demo](https://market-makers-taupe.vercel.app/)** | **[API Documentation](#api-reference)**
+
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?logo=vercel&logoColor=white)](https://market-makers-taupe.vercel.app/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue)](LICENSE)
 
 </div>
