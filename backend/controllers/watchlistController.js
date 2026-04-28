@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Watchlist controller -- extracted from watchlistRoutes.js for proper MVC separation.
  */
 const Watchlist = require("../models/Watchlist");
@@ -92,7 +92,7 @@ const deleteWatchlistItem = async (req, res) => {
   }
 
   watchlist.items = watchlist.items.filter(
-    (item) => item.symbol !== req.params.symbol.toUpperCase()
+    (item) => item.symbol !== decodeURIComponent(req.params.symbol).toUpperCase()
   );
   await watchlist.save();
 
@@ -107,7 +107,7 @@ const addToPortfolio = async (req, res) => {
     throw new Error("Watchlist not found");
   }
 
-  const normalizedSymbol = req.params.symbol.toUpperCase();
+  const normalizedSymbol = decodeURIComponent(req.params.symbol).toUpperCase();
   const selectedItem = watchlist.items.find(
     (item) => item.symbol === normalizedSymbol
   );

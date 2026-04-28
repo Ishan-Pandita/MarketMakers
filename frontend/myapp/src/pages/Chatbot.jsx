@@ -344,7 +344,7 @@ function Chatbot() {
           </div>
         </aside>
 
-        <div className="flex min-h-[calc(100vh-80px)] flex-col">
+        <div className="flex h-[calc(100vh-80px)] flex-col">
           <div className={`border-b px-4 py-4 sm:px-6 ${isDark ? "border-dark-border/30 bg-dark-surface/80" : "border-slate-border/60 bg-white/80"}`}>
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex items-center gap-3">
@@ -408,7 +408,7 @@ function Chatbot() {
             )}
           </div>
 
-          <div className={`border-t px-4 py-4 sm:px-6 ${isDark ? "border-dark-border/30 bg-dark-surface" : "border-slate-border/60 bg-white"}`}>
+          <div className={`flex-shrink-0 relative z-10 border-t px-4 py-4 sm:px-6 ${isDark ? "border-dark-border/30 bg-dark-surface" : "border-slate-border/60 bg-white"}`}>
             <div className="mx-auto max-w-4xl">
               <form onSubmit={(event) => { event.preventDefault(); sendMessage(); }} className="flex gap-3">
                 <textarea

@@ -79,7 +79,7 @@ function Watchlist() {
 
   const handleRemove = async (symbol) => {
     try {
-      await API.delete(`/watchlist/${symbol}`);
+      await API.delete(`/watchlist/${encodeURIComponent(symbol)}`);
       await refreshWatchlist();
       toast.success("Removed from watchlist.");
     } catch (error) {
@@ -89,7 +89,7 @@ function Watchlist() {
 
   const handleMoveToPortfolio = async (symbol) => {
     try {
-      const res = await API.post(`/watchlist/${symbol}/add-to-portfolio`);
+      const res = await API.post(`/watchlist/${encodeURIComponent(symbol)}/add-to-portfolio`);
       await refreshWatchlist();
       navigate("/portfolio", {
         state: {
